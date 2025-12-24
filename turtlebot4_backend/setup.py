@@ -8,7 +8,7 @@ setup(
     packages=[package_name],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Saadhvi',
+    maintainer='sasr01-kit',
     maintainer_email='uswup@student.kit.edu',
     description='Backend package for TurtleBot4',
     license='MIT',
