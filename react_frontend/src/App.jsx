@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Homepage from './pages/homepage/Homepage.jsx';
-import Pixelbot from './pages/pixelbot/Pixelbot.jsx';
-import Turtlebot from './pages/turtlebot/Turtlebot.jsx';
+import Homepage from './modules/robotSelection/Homepage.jsx';
+import Pixelbot from './modules/pixelbot/Pixelbot.jsx';
+import Turtlebot from './modules/turtlebot/Turtlebot.jsx';
 
 function App() {
   return (
