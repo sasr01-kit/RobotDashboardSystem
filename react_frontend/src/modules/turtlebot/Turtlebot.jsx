@@ -1,50 +1,25 @@
-/*CHANGE THIS TO PIXELBOT REDIRECTION FILE*/ 
+/*CHANGE THIS TO TURTLEBOT REDIRECTION FILE*/
 
-import { Link } from 'react-router-dom';
 
-function Homepage() {
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { ModeProvider } from './ModeUtil/ModeProvider.jsx';
+import TurtlebotLayout from './TurtlebotLayout.jsx';
+import TurtlebotStatusPage from './TurtlebotStatusPage.jsx';
+import TurtlebotMapPage from './TurtlebotMapPage.jsx';
+import TurtlebotFeedbackPage from './TurtlebotFeedbackPage.jsx';
+
+
+export default function Turtlebot() {
     return (
-        <div className="page">
-            {/* Header */}
-            <header className="header">
-                <span className="header-line">Dashboard</span>
-                <img
-                    src={kitLogo}
-                    alt="KIT Logo"
-                    className="logo"
-                />
-            </header>
-
-            {/* Title section */}
-            <section className="title-section">
-                <h1 className="title">SARAI</h1>
-                <p className="subtitle">
-                    Socially Assistive Robotics with Artificial Intelligence
-                </p>
-            </section>
-
-            {/* Buttons */}
-            <section className="button-section">
-                <Link to="/pixelbot" className="card pixelbot">
-                    <img
-                    src={pixelbotLogo}
-                    alt="Pixelbot Logo"
-                    className="logo"
-                    />
-                    <p>Pixelbot</p>
-                </Link>
-
-                <Link to="/turtlebot" className="card turtlebot">
-                    <img
-                    src={turtlebotLogo}
-                    alt="Turtlebot Logo"
-                    className="logo"
-                    />
-                    <p>Turtlebot4</p>
-                </Link>
-            </section>
-        </div>
+        <ModeProvider>
+            <Routes>
+                <Route element={<TurtlebotLayout />}>
+                    <Route path="status" element={<TurtlebotStatusPage />} />
+                    <Route path="map" element={<TurtlebotMapPage />} />
+                    <Route path="feedback" element={<TurtlebotFeedbackPage />} />
+                    <Route index element={<Navigate to="status" replace />} />
+                </Route>
+            </Routes>
+        </ModeProvider>
     );
 }
-
-export default Homepage;

@@ -6,6 +6,7 @@
     min-height: 100vh;
 }
 
+
 .header {
     color: #000;
     font-size: 1.8rem;
@@ -15,59 +16,53 @@
     border-bottom: 1px solid #aaa;
 }
 
+
 .header-line {
     font-weight: 600;
 }
+
 
 .logo {
     height: 100px;
 }
 
-.title-section {
-    margin-top: 5rem;
-}
 
-.title {
-    color: #000;
-    font-size: 6rem;
-    letter-spacing: 1rem;
-}
-
-.subtitle {
-    color: #555;
-    font-size: 1.5rem;
-    margin-top: 2rem;
-}
-
-.button-section {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    margin-top: 4rem;
-}
-
-.card {
-    width: 220px;
-    height: 140px;
-    border-radius: 20px;
-    color: white;
+.tab-button {
+    position: relative;
+    cursor: pointer;
+    color: #333;
     text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    transition: transform 0.2s ease;
+    padding-bottom: 4px;
+    transition: color 0.2s ease;
 }
 
-    .card:hover {
-        transform: scale(1.05);
-    }
 
-.pixelbot {
+.tab-button:hover:not(.disabled) {
+    background-color: #828dab;
+}
+
+
+.tab-button.active {
     background-color: #5faea1;
 }
 
-.turtlebot {
-    background-color: #1f3a63;
+
+.tab-button.disabled {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+
+/* Turtlebot Layout */
+.turtlebot-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+.turtlebot-content {
+    flex: 1;
+    padding: 2rem;
+    background-color: #f6f6f6;
 }
