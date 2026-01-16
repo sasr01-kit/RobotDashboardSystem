@@ -1,57 +1,80 @@
-.page {
-    font-family: Helvetica, sans-serif;
-    text-align: center;
-    background-color: #F6F6F6;
-    min-width: 100vw;
-    min-height: 100vh;
-}
+/* Page styling */
 
-
-.header {
+.turtlebot-status-page {
     color: #000;
     font-size: 1.8rem;
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #aaa;
+    font-family: Helvetica, sans-serif;
+    padding: 2rem;
 }
 
-
-.header-line {
-    font-weight: 600;
+.turtlebot-map-page {
+    color: #000;
+    font-size: 1.8rem;
+    font-family: Helvetica, sans-serif;
+    padding: 2rem;
 }
 
-
-.logo {
-    height: 100px;
+.turtlebot-feedback-page {
+    color: #000;
+    font-size: 1.8rem;
+    font-family: Helvetica, sans-serif;
+    padding: 2rem;
 }
 
+/* Navbar Styling*/
+
+.turtlebot-navbar {
+    font-family: Helvetica, sans-serif;
+    padding-left: 2rem;
+    text-align: left;
+    background-color: #F6F6F6;
+    min-width: 100vw;
+}
 
 .tab-button {
     font-size: 1rem;
     padding: 0.5rem 1rem; 
     margin: 0 0.5rem; 
-    border: none; 
     border-bottom: 2px solid transparent; 
+    border: none;
     background-color: transparent; 
-    color: #555; 
+    color: #000; 
     cursor: pointer; 
     transition: all 0.2s ease;
+    position: relative;
+}
+
+.tab-button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.tab-button::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #242626;
+    transition: width 0.3s ease, left 0.3s ease;
 }
 
 
 .tab-button:hover:not(.disabled) {
-    color: #007b8f; 
-    border-bottom: 2px solid #007b8f; 
-    background-color: #f0f8fa;
+    color: #00A699; 
 }
 
 
 .tab-button.active {
    color: #007b8f; 
    font-weight: 600; 
-   border-bottom: 2px solid #007b8f; 
-   background-color: #e6f7f9;
+}
+
+
+.tab-button.active::after {
+    width: 100%;
+    left: 0;
 }
 
 

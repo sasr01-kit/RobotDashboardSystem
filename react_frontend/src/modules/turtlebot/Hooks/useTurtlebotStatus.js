@@ -10,7 +10,7 @@ function useTurtlebotStatus() {
         wifi: true,
         raspberryPi: true,
         comms: true,
-        mode: 'Teleoperating',
+        mode: 'Running Path Module',
         docking: false, },
         isLoading: false,
         error: null,

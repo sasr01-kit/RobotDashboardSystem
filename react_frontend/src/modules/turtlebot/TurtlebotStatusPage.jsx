@@ -11,7 +11,7 @@ export default function TurtlebotStatusPage() {
    
     return (
         <div className="turtlebot-status-page">
-            <h1>Turtlebot Status</h1>
+            <h2>Turtlebot Status</h2>
             <p>Mode: {mode || 'Unknown'}</p>
             <p>Battery: {statusDTO?.battery}%</p>
             <p>WiFi: {statusDTO?.wifi ? 'Connected' : 'Disconnected'}</p>
