@@ -1,7 +1,6 @@
 # DirectionCommand.py
 from enum import Enum
 from dataclasses import dataclass
-from geometry_msgs.msg import Twist  # ROS message type
 
 
 @dataclass(frozen=True)
@@ -13,17 +12,18 @@ class VelocityPair:
 class DirectionCommand(Enum):
     FORWARD = VelocityPair(linear=0.5, angular=0.0)
     BACKWARD = VelocityPair(linear=-0.5, angular=0.0)
-    LEFT = VelocityPair(linear=0.0, angular=0.5)   # angular constant
-    RIGHT = VelocityPair(linear=0.0, angular=-0.5) # angular constant
+    LEFT = VelocityPair(linear=0.0, angular=0.5)
+    RIGHT = VelocityPair(linear=0.0, angular=-0.5)
 
-    def to_twist(self) -> Twist:
+    def to_dict(self) -> dict:
         """
-        Convert this command to a ROS Twist message.
+        Convert this command into a JSON-friendly dictionary
+        representing linear and angular velocity.
         """
-        twist = Twist()
-        twist.linear.x = self.value.linear
-        twist.angular.z = self.value.angular
-        return twist
+        return {
+            "linear": self.value.linear,
+            "angular": self.value.angular
+        }
 
     def __str__(self) -> str:
         return self.name

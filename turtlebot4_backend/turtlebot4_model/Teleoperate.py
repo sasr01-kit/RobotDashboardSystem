@@ -2,7 +2,6 @@
 from typing import List, Dict, Any
 from turtlebot4_model.Subject import Subject
 from DirectionCommand import DirectionCommand
-from geometry_msgs.msg import Twist  # ROS Twist message
 
 
 class Teleoperate(Subject):
@@ -51,14 +50,15 @@ class Teleoperate(Subject):
             "queuedCommands": [str(cmd) for cmd in self._commands],
         }
 
-    # Convert queued commands into Twist messages
-    def get_twist_messages(self) -> List[Twist]:
+    # Return queued commands as a list of Python dictionaries
+    def get_teleop_commands(self) -> List[Dict[str, float]]:
         """
-        Returns a list of ROS Twist messages for all queued commands.
+        Returns a list of dictionaries representing the linear and angular
+        velocities for each queued DirectionCommand.
         """
-        return [cmd.to_twist() for cmd in self._commands]
+        return [cmd.to_dict() for cmd in self._commands]
 
-    # Optional: clear the command queue after sending to the robot
+    # Optional: clear the command queue after processing
     def clear_commands(self) -> None:
         self._commands.clear()
         self.notifyObservers(self.toJSON())
