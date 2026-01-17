@@ -6,6 +6,7 @@ function useTurtlebotStatus() {
 
 
      return { statusDTO: {
+        isOn: true,
         battery: 10,
         wifi: true,
         raspberryPi: false,
@@ -50,10 +51,11 @@ export function useTurtlebotStatus() {
 
                 // Mapping received data
                 const status = {
-                    battery: data.battery,
-                    wifi: data.wifi,
-                    raspberryPi: data.raspberryPi,
-                    comms: data.comms,
+                    isOn: data.power,
+                    batteryPercentage: data.battery,
+                    isWifiConnected: data.wifi,
+                    isCommsConnected: data.comms,
+                    isRaspberryPiConnected: data.raspberryPi,
                     mode: data.mode,
                     docking: data.docking,
                 };

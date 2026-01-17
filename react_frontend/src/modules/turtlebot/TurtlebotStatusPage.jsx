@@ -1,4 +1,5 @@
 import "./StatusPage.css";
+import PowerStatus from './PowerStatus.jsx';
 import battery from './assets/battery.svg';
 import wifi from './assets/wifi.svg';
 import raspberryPi from './assets/raspberry.svg';
@@ -6,6 +7,7 @@ import comms from './assets/comms.svg';
 import ModeStatus from './ModeStatus.jsx';
 import { useTurtlebotStatus } from './Hooks/useTurtlebotStatus.js';
 import GeneralStatusBlock from './GeneralStatusBlock.jsx';
+import TeleoperationBlock from './TeleoperationBlock';
 
 
 export default function TurtlebotStatusPage() {
@@ -21,8 +23,8 @@ export default function TurtlebotStatusPage() {
    
     return (
         <div className="turtlebot-status-page">
-            <h2>Turtlebot Status</h2>
-            <div className="status-blocks">
+            <div className="status-row">
+                <PowerStatus isOn={statusDTO?.isOn} />
                 <GeneralStatusBlock icon={
                                 <img
                                     src={battery}
@@ -64,6 +66,9 @@ export default function TurtlebotStatusPage() {
             </div>
             <div className="mode-status-container">
                 <ModeStatus />
+            </div>
+            <div className="teleop-section">
+                <TeleoperationBlock />
             </div>
         </div>
     );

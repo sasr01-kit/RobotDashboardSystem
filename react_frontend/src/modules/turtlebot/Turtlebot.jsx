@@ -1,5 +1,3 @@
-/*CHANGE THIS TO TURTLEBOT REDIRECTION FILE*/
-
 import "./Turtlebot.css";
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ModeProvider } from './ModeUtil/ModeProvider.jsx';
