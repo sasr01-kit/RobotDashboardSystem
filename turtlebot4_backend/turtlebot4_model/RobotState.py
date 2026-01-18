@@ -1,6 +1,7 @@
 
 from typing import Dict, Any
 from Subject import Subject
+from Path import Path
 
 class RobotState(Subject):
     def __init__(
@@ -74,4 +75,5 @@ class RobotState(Subject):
             "isWifiConnected": self._is_wifi_connected,
             "isCommsConnected": self._is_comms_connected,
             "isRaspberryPiConnected": self._is_raspberry_pi_connected,
+            "mode" : Path.get_is_path_module_active(),
         }
