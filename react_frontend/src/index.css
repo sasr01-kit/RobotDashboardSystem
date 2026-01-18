@@ -1,4 +1,25 @@
+/*
+  Global base styles and layout variables
+  - Use border-box for predictable sizing
+  - Define fixed header/nav heights as variables for consistent layout math
+  - Prevent horizontal/vertical scrolling by default; pages should fit the viewport
+*/
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100vh; /* root takes full viewport height */
+}
+
 :root {
+  /* Fixed heights for header and nav (tweak as needed) */
+  --header-height: 96px;
+  --nav-height: 56px;
+
+  /* Typography and color defaults (kept from Vite template) */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -23,11 +44,14 @@ a:hover {
 }
 
 body {
+  /* Do not use 100vw here, it can cause horizontal scroll when scrollbars appear */
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  height: 100vh;
+  overflow-x: hidden; /* Prevent horizontal scroll due to over-wide children */
+  overflow-y: hidden; /* Pages are designed to fit viewport height, so no scrolling */
+
+  background-color:#f6f6f6;
 }
 
 h1 {
@@ -52,6 +76,25 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* leave space for a fixed header so pages don't sit underneath it */
+.page {
+  /* Page is the main content area below the fixed header */
+  margin-top: var(--header-height);
+  width: 100%;
+  height: calc(100vh - var(--header-height));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Make each page non-scrollable by design */
+  background-color: #f6f6f6;
+}
+
+/* Generic responsive media defaults */
+img, svg, canvas, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 @media (prefers-color-scheme: light) {

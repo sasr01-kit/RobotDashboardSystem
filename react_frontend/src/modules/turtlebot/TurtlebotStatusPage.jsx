@@ -5,7 +5,7 @@ import raspberryPi from './assets/raspberry.svg';
 import comms from './assets/comms.svg'; 
 import ModeStatus from './ModeStatus.jsx';
 import { useTurtlebotStatus } from './Hooks/useTurtlebotStatus.js';
-import GeneralStatusBlock from './GeneralStatusBlock.jsx';
+import GeneralDataBlock from '../global/GeneralDataBlock.jsx';
 
 
 export default function TurtlebotStatusPage() {
@@ -23,7 +23,7 @@ export default function TurtlebotStatusPage() {
         <div className="turtlebot-status-page">
             <h2>Turtlebot Status</h2>
             <div className="status-blocks">
-                <GeneralStatusBlock icon={
+                <GeneralDataBlock icon={
                                 <img
                                     src={battery}
                                     alt="Battery Icon"
@@ -33,7 +33,7 @@ export default function TurtlebotStatusPage() {
                     status={`${statusDTO?.battery}%`}
                     statusColor={batteryColor}
                 />
-                <GeneralStatusBlock icon={
+                <GeneralDataBlock icon={
                                 <img
                                     src={wifi}
                                     alt="WiFi Icon"
@@ -43,7 +43,7 @@ export default function TurtlebotStatusPage() {
                     status={statusDTO?.wifi ? 'Connected' : 'Disconnected'}
                     statusColor={wifiColor}
                 />
-                <GeneralStatusBlock icon={<img
+                <GeneralDataBlock icon={<img
                                     src={raspberryPi}
                                     alt="Raspberry Pi Icon"
                                     className="raspberry-icon"
@@ -52,7 +52,7 @@ export default function TurtlebotStatusPage() {
                     status={statusDTO?.raspberryPi ? 'Online' : 'Offline'}
                     statusColor={piColor}
                 />
-                <GeneralStatusBlock icon={<img
+                <GeneralDataBlock icon={<img
                                     src={comms}
                                     alt="Comms Icon"
                                     className="comms-icon"

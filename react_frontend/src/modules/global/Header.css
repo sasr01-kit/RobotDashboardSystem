@@ -1,0 +1,50 @@
+/* Fixed header aligned to viewport, with an inner container to align content */
+.global-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center; /* center the inner container, not the content */
+    align-items: center;
+    height: var(--header-height);
+    border-bottom: 1px solid #aaa;
+    background-color: #F6F6F6;
+}
+
+/* Container keeps header content aligned with page content width */
+.header-container {
+    width: 100%;
+    max-width: 1200px; /* adjust if you use a different page max width */
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* left title, right logo */
+}
+
+.header-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 1;
+}
+
+.header-title {
+    font-weight: 700;
+    font-size: 2rem;
+    color: #000;
+    text-align: left;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.header-logo {
+    height: 4rem;
+    width: auto;
+}

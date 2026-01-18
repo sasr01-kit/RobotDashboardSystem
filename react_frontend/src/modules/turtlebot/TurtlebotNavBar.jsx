@@ -1,33 +1,30 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useModeContext } from './ModeUtil/ModeContext.js';
+import NavBar from '../global/NavBar.jsx';
 
+const tabs = [
+    { label: 'Status', value: 'status' },
+    { label: 'Map', value: 'map' },
+    { label: 'Feedback', value: 'feedback' },
+];
 
-const tabNames = ['Status', 'Map', 'Feedback'];
 export default function TurtlebotNavBar() {
     const navigate = useNavigate();
     const location = useLocation();
     const { mode } = useModeContext();
 
+    const active = tabs.find(t => location.pathname.endsWith(t.value))?.value || 'status';
 
-    const activeTab = tabNames.find(tab => location.pathname.endsWith(tab.toLowerCase())) || 'Status';
-    const switchTab = (tabName) => {if (mode === 'Teleoperating' && (tabName === 'Map' || tabName === 'Feedback')) return;
-        navigate(`/turtlebot/${tabName.toLowerCase()}`);
+    const isDisabled = (value) => (
+        mode === 'Teleoperating' && (value === 'map' || value === 'feedback')
+    );
+
+    const onSelect = (value) => {
+        if (isDisabled(value)) return;
+        navigate(`/turtlebot/${value}`);
     };
 
-
     return (
-        <div className="turtlebot-navbar">
-            {tabNames.map((tabName) => (
-                <button
-                    key={tabName}
-                    className={`tab-button ${activeTab === tabName ? 'active' : ''}
-                        ${mode === 'Teleoperating' && (tabName === 'Map' || tabName === 'Feedback') ? 'disabled' : ''}`}
-                    onClick={() => switchTab(tabName)}
-                    disabled={mode === 'Teleoperating' && (tabName === 'Map' || tabName === 'Feedback')}
-                    >
-                    {tabName}      
-                </button>
-            ))}
-        </div>
+        <NavBar tabs={tabs} active={active} onSelect={onSelect} isDisabled={isDisabled} />
     );
 }

@@ -1,10 +1,4 @@
-.page {
-    font-family: Helvetica, sans-serif;
-    text-align: center;
-    background-color: #F6F6F6;
-    min-width: 100vw;
-    min-height: 100vh;
-}
+/* Use global .page layout; keep only pixelbot-specific styles here */
 
 .header {
     color: #000;

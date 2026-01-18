@@ -1,0 +1,47 @@
+/* Generic nav bar using global variables for consistent height */
+.nav-bar {
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 2rem;
+  background-color: #F6F6F6;
+  border-bottom: 1px solid #ddd;
+}
+
+.nav-tab {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  position: relative;
+}
+
+.nav-tab:hover:not(.disabled) {
+  color: #1f3a63;
+}
+
+.nav-tab.active {
+  font-weight: 600;
+}
+
+/* underline indicator */
+.nav-tab.active::after,
+.nav-tab:not(.disabled):hover::after {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: -0.5rem;
+  height: 3px;
+  background-color: #1f3a63;
+  border-radius: 3px;
+}
+
+.nav-tab.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
