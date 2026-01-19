@@ -1,42 +1,25 @@
-.page {
-    font-family: Helvetica, sans-serif;
-    text-align: center;
-    background-color: #F6F6F6;
-    min-width: 100vw;
-    min-height: 100vh;
-}
-
-.header {
-    color: #000;
-    font-size: 1.8rem;
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #aaa;
-}
-
-.header-line {
-    font-weight: 600;
-}
 
 .logo {
-    height: 100px;
+    height: 5em;
 }
 
 .title-section {
     margin-top: 5rem;
+    align-self: center;
 }
 
 .title {
     color: #000;
     font-size: 6rem;
     letter-spacing: 1rem;
+    text-align: center;
 }
 
 .subtitle {
-    color: #555;
+    color: #444;
     font-size: 1.5rem;
     margin-top: 2rem;
+    text-align: center;
 }
 
 .button-section {
@@ -59,9 +42,17 @@
     font-size: 1.2rem;
     transition: transform 0.2s ease;
 }
-
+    
     .card:hover {
         transform: scale(1.05);
+    }
+
+    .card.pixelbot:hover {
+        filter: drop-shadow(0 0 1em #5faea1);
+    }
+
+    .card.turtlebot:hover {
+        filter: drop-shadow(0 0 1em #1f3a63);
     }
 
 .pixelbot {

@@ -1,6 +1,6 @@
 import "./Homepage.css";
 
-import kitLogo from './assets/kitLogo.svg';
+import Header from '../global/Header.jsx';
 import pixelbotLogo from './assets/pixelbotLogo.svg';
 import turtlebotLogo from './assets/turtlebotLogo.svg';
 
@@ -9,15 +9,9 @@ import { Link } from 'react-router-dom';
 function Homepage() {
     return (
         <div className="page">
-            {/* Header */}
-            <header className="header">
-                <span className="header-line">Dashboard</span>
-                <img
-                    src={kitLogo}
-                    alt="KIT Logo"
-                    className="logo"
-                />
-            </header>
+            <Header 
+                title="SARAI Dashboard" 
+            />
 
             {/* Title section */}
             <section className="title-section">

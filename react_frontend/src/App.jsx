@@ -13,7 +13,7 @@ function App() {
         <Route path="/turtlebot/*" element={<Turtlebot />} />
         {/*Here you can add in more routes for more robots after adding their resources
         in the file tree*/}
-        <Route path="*" element={<Navigate to="./homepage" replace />} /> {"Fallback"}
+        <Route path="*" element={<Navigate to="/homepage" replace />} /> {"Fallback"}
       </Routes>
     </BrowserRouter>
   );

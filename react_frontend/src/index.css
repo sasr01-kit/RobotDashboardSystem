@@ -1,11 +1,28 @@
+/*
+  Global base styles and layout variables
+  - Use border-box for predictable sizing
+  - Define fixed header/nav heights as variables for consistent layout math
+  - Prevent horizontal/vertical scrolling by default; pages should fit the viewport
+*/
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 :root {
+  /* Fixed heights for header and nav (tweak as needed) */
+  --header-height: 100px;
+  --nav-height: 56px;
+
+  /* Typography and color defaults (kept from Vite template) */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --background-color: #f6f6f6;
+  background-color: var(--background-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,54 +30,74 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  /* Do not use 100vw here, it can cause horizontal scroll when scrollbars appear */
+  margin: 0;
+  min-width: 320px;
+}
+
+/* ===== Links ===== */
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: var(--kit-blue);
+  text-decoration: none;
 }
+
 a:hover {
-  color: #535bf2;
+  opacity: 0.85;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
+/* ===== Headings ===== */
 h1 {
-  font-size: 3.2em;
+  font-size: 3rem;
   line-height: 1.1;
+  margin: 0;
+  color: var(--kit-blue);
 }
 
+/* ===== Buttons ===== */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
+  font-weight: 600;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: white;
+  color: var(--kit-blue);
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.2s ease;
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: var(--kit-green);
 }
+
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 166, 153, 0.25);
+}
+
+/* leave space for a fixed header so pages don't sit underneath it */
+.page {
+  /* Page is the main content area below the fixed header */
+  margin-top: var(--header-height);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Generic responsive media defaults */
+img, svg, canvas, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
   }
   button {
     background-color: #f9f9f9;

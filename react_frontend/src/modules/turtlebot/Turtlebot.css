@@ -1,73 +1,109 @@
-.page {
-    font-family: Helvetica, sans-serif;
-    text-align: center;
-    background-color: #F6F6F6;
-    min-width: 100vw;
-    min-height: 100vh;
-}
+/* Page styling */
 
-.header {
+.turtlebot-map-page {
     color: #000;
     font-size: 1.8rem;
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #aaa;
+    font-family: Helvetica, sans-serif;
+    padding: 2rem;
 }
 
-.header-line {
-    font-weight: 600;
-}
-
-.logo {
-    height: 100px;
-}
-
-.title-section {
-    margin-top: 5rem;
-}
-
-.title {
+.turtlebot-feedback-page {
     color: #000;
-    font-size: 6rem;
-    letter-spacing: 1rem;
+    font-size: 1.8rem;
+    font-family: Helvetica, sans-serif;
+    padding: 2rem;
 }
 
-.subtitle {
-    color: #555;
-    font-size: 1.5rem;
-    margin-top: 2rem;
+/* Navbar Styling*/
+
+.turtlebot-navbar {
+    position: fixed;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 2rem;
+    text-align: left;
+    background-color: #F6F6F6;
+    min-width: 100vw;
 }
 
-.button-section {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    margin-top: 4rem;
+.tab-button {
+    font-size: 1rem;
+    padding: 0.5rem 1rem; 
+    margin: 0 0.5rem; 
+    border-bottom: 2px solid transparent; 
+    border: none;
+    background-color: transparent; 
+    color: #000; 
+    cursor: pointer; 
+    transition: all 0.2s ease;
+    position: relative;
 }
 
-.card {
-    width: 220px;
-    height: 140px;
-    border-radius: 20px;
-    color: white;
-    text-decoration: none;
+.tab-button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.tab-button::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #242626;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+
+.tab-button:hover:not(.disabled) {
+    color: #00A699; 
+}
+
+
+.tab-button.active {
+   color: #242626;; 
+   font-weight: 600; 
+}
+
+
+.tab-button.active::after {
+    width: 100%;
+    left: 0;
+}
+
+
+.tab-button.disabled {
+    color: #aaa;
+    position: relative;
+}
+
+.tab-button.disabled:hover::after { 
+    content: "Not available while teleoperating"; 
+    position: absolute; 
+    bottom: -0.8rem; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    background: #5e5d5d; 
+    color: #fff; 
+    padding: 0.3rem 0.6rem; 
+    border-radius: 4px; 
+    font-size: 0.75rem; 
+    white-space: nowrap; 
+    z-index: 10; 
+    width: max-content;
+    height: max-content;    
+}
+
+
+/* Turtlebot Layout */
+.turtlebot-layout {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    transition: transform 0.2s ease;
 }
 
-    .card:hover {
-        transform: scale(1.05);
-    }
 
-.pixelbot {
-    background-color: #5faea1;
-}
-
-.turtlebot {
-    background-color: #1f3a63;
+.turtlebot-content {
+    flex: 1;
+    padding: 2rem;
 }

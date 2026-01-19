@@ -14,7 +14,7 @@ setup(
     license='MIT',
     entry_points={
         'console_scripts': [
-            # Example: 'node = turtlebot4_backend.turtlebot4_controller:main'
+        'status_controller = turtlebot4_backend.StatusController:main',
         ],
     },
 )
