@@ -36,28 +36,47 @@ body {
   min-width: 320px;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* ===== Links ===== */
+a {
+  font-weight: 500;
+  color: var(--kit-blue);
+  text-decoration: none;
 }
 
+a:hover {
+  opacity: 0.85;
+}
+
+/* ===== Headings ===== */
+h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--kit-blue);
+}
+
+/* ===== Buttons ===== */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
+  font-weight: 600;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: white;
+  color: var(--kit-blue);
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.2s ease;
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: var(--kit-green);
 }
+
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 166, 153, 0.25);
 }
 
 /* leave space for a fixed header so pages don't sit underneath it */
