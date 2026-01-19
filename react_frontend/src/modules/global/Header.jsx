@@ -12,6 +12,7 @@
 import './Header.css';
 import kitLogo from './assets/kitLogo.svg';
 // OPT: import homeButton and translationButton
+import HomeButton from './HomeButton';
 
 export default function Header({ 
     title = 'Dashboard', // Standard value for header title, should be replaced for each module
@@ -23,6 +24,7 @@ export default function Header({
             {/* Inner container aligns with page max-width and paddings */}
             <div className="header-container">
                 <div className="header-left">
+                    {showHomeButton && <HomeButton />}
                     <span className="header-title">{title}</span>
                 </div>
                 <div className="header-right">

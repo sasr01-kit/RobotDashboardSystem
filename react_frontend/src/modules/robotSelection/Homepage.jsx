@@ -11,6 +11,7 @@ function Homepage() {
         <div className="page">
             <Header 
                 title="SARAI Dashboard" 
+                showHomeButton={false}
             />
 
             {/* Title section */}
