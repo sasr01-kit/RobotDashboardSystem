@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import './Pixelbot.css';
 
 const tabNames = ['Summary', 'Child'];
 
