@@ -1,20 +1,25 @@
-import './Pixelbot.css'
+import { Routes, Route } from "react-router-dom";
+import PixelbotLayout from "./PixelbotLayout.jsx";
 
-import { Routes, Route, Navigate } from "react-router-dom";
 import PixelbotSummary from "./pages/PixelbotSummary";
 import PixelbotChildRecap from "./pages/PixelbotChildRecap";
 import PixelbotSession from "./pages/PixelbotSession";
-import PixelbotLayout from "./PixelbotLayout";
 
 export default function Pixelbot() {
   return (
     <Routes>
-      <Route element={<PixelbotLayout />}>
+      <Route path="/" element={<PixelbotLayout />}>
         <Route index element={<PixelbotSummary />} />
-        <Route path="children/:childId" element={<PixelbotChildRecap />} />
-        // Change routing to children/:childId/:sessionId
-        <Route path="sessions/:sessionId" element={<PixelbotSession />} />
-        <Route path="*" element={<Navigate to="/pixelbot" replace />} /> {"Fallback"}
+
+        <Route
+          path="child/:childId"
+          element={<PixelbotChildRecap />}
+        />
+
+        <Route
+          path="child/:childId/session/:sessionId"
+          element={<PixelbotSession />}
+        />
       </Route>
     </Routes>
   );

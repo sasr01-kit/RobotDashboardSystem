@@ -1,22 +1,35 @@
-/* Use global .page layout; keep only pixelbot-specific styles here */
+//* =========================================================
+   Pixelbot module styles
+   Uses global .page layout
+   ========================================================= */
 
-/* Pixelbot navbar + content area */
+/* ---------- Layout shell ---------- */
+
+.pixelbot-layout {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-light);
+    min-height: 100vh;
+    color: black;
+}
+
+/* ---------- Navbar ---------- */
+
 .pixelbot-navbar {
     position: fixed;
-    top: var(--header-height); /* place below header*/
-    height: var(--navbar-height); /* consistent navbar height */
-    z-index: 900;                   /* below header (header has 1000) */
+    top: var(--header-height);          /* below global header */
+    height: var(--navbar-height);
+    z-index: 900;                       /* below header (1000) */
 
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    padding-left: 2rem;
+    padding: 1rem 2rem;
     text-align: left;
     background-color: var(--bg-light);
 
-    max-height: var(--navbar-height);
     min-width: 100vw;
+
 }
 
+/* Navbar buttons */
 .tab-button {
     background: transparent;
     border: none;
@@ -34,16 +47,322 @@
 
 .tab-button.active {
     color: #242626;
-;
 }
+
+/* ---------- Content area ---------- */
+/* Push content below fixed navbar */
 
 .pixelbot-content {
     flex: 1;
-    padding: 1.5rem 2rem;
-    color: black;
+    padding-top: calc(var(--navbar-height) + 1.5rem);
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
-.pixelbot-layout {
+/* Centered content width */
+.pb-content {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+/* ---------- Summary cards ---------- */
+
+.pb-3col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+    align-items: stretch;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .pb-3col {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- Cards (Robot Usage History etc.) ---------- */
+
+.pb-card {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,0.10);
+    padding: 18px;
+}
+
+.pb-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.pb-card-title {
+    font-weight: 800;
+}
+
+.pb-icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: white;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 0;
+}
+
+.pb-heatmap {
+    border-radius: 12px;
+    border: 1px dashed rgba(0,0,0,0.18);
+    background: var(--bg-light);
+    height: 260px;
+    display: grid;
+    place-items: center;
+    color: rgba(0,0,0,0.55);
+    margin-top: 12px;
+}
+
+.pb-footnote {
+    margin-top: 10px;
+    font-size: 11px;
+    opacity: 0.6;
+}
+
+/* ---------- Child recap layout ---------- */
+
+.pb-recap-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    align-items: stretch;
+}
+
+.pb-recap-col {
     display: flex;
     flex-direction: column;
+    gap: 18px;
+    height: 100%;
 }
+
+.pb-recap-col .pb-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.pb-kpi {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pb-kpi-sub {
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+@media (max-width: 900px) {
+    .pb-recap-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- Image carousel ---------- */
+
+.pb-carousel {
+    display: grid;
+    grid-template-columns: 36px 1fr 36px;
+    align-items: center;
+    gap: 12px;
+}
+
+.pb-carousel-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: white;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 0;
+}
+
+.pb-carousel-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.pb-carousel-image img {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.08);
+}
+
+.pb-carousel-placeholder {
+    border-radius: 12px;
+    border: 1px dashed rgba(0,0,0,0.18);
+    background: var(--bg-light);
+    height: 200px;
+    display: grid;
+    place-items: center;
+    color: rgba(0,0,0,0.55);
+}
+
+/* ---------- Child menu (requirement-style dropdown) ---------- */
+
+.child-menu {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+
+
+.tab-strip {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding-bottom: 10px;
+}
+
+.tab-underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 120px;
+    background: #242626;
+    border-radius: 3px;
+    transition: transform 0.22s ease;
+}
+
+/* Default position: Summary */
+.pixelbot-navbar[data-active="summary"] .tab-underline {
+    transform: translateX(0);
+}
+
+/* Active route: Child */
+.pixelbot-navbar[data-active="child"] .tab-underline {
+    transform: translateX(155px);
+}
+
+
+
+
+/* --- Child menu --- */
+
+.child-menu {
+    position: relative;
+    display: inline-block;
+  }
+
+  .child-menu-panel--wide {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 12px);
+    transform: none;
+    z-index: 2000;
+
+    display: flex;
+    gap: 12px;
+
+    width: 420px;
+    padding: 12px;
+
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.14);
+    border-radius: 14px;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.12);
+
+  }
+
+  /* Left list: small and clean */
+  .child-list {
+    max-height: 240px;   /* how tall the dropdown can get */
+    overflow-y: auto;
+    width: 150px;
+    padding: 8px;
+    border-radius: 12px;
+    background: #f5f6f7;
+    border: 1px solid rgba(0,0,0,0.10);
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .child-list-item {
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+    background: transparent;
+    border: none;
+    text-align: left;
+
+    padding: 10px 10px;
+    border-radius: 10px;
+
+    font-weight: 700;
+    color: #1f2933;
+    cursor: pointer;
+  }
+
+  .child-list-item.active {
+    background: rgba(95, 174, 161, 0.18);
+    color: #0b5b52;
+  }
+
+  /* Right panel: subtle green, not huge */
+  .child-actions-panel {
+    flex: 1;
+    padding: 10px;
+    border-radius: 12px;
+
+    background: rgba(95, 174, 161, 0.16);
+    border: 1px solid rgba(95, 174, 161, 0.28);
+  }
+
+  /* Buttons smaller */
+  .child-action-btn {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.14);
+    border-radius: 12px;
+
+    padding: 8px 12px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .child-action-btn.recap {
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  /* Sessions: 2 columns, compact */
+  .session-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .child-action-btn.session {
+    width: 100%;
+    justify-content: center;
+  }/* Optional placeholder area when no child selected */
+.child-actions-placeholder {
+    width: 240px;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.03);
+    border: 1px dashed rgba(0,0,0,0.18);
+    color: rgba(0,0,0,0.55);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }

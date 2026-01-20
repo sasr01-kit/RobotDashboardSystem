@@ -1,0 +1,49 @@
+/* Use global .page layout; keep only pixelbot-specific styles here */
+
+/* Pixelbot navbar + content area */
+.pixelbot-navbar {
+    position: fixed;
+    top: var(--header-height); /* place below header*/
+    height: var(--navbar-height); /* consistent navbar height */
+    z-index: 900;                   /* below header (header has 1000) */
+
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 2rem;
+    text-align: left;
+    background-color: var(--bg-light);
+
+    max-height: var(--navbar-height);
+    min-width: 100vw;
+}
+
+.tab-button {
+    background: transparent;
+    border: none;
+    padding: 0.5rem 0.9rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    color: #1f2933;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.tab-button:hover {
+    background: rgba(95,174,161,0.08);
+}
+
+.tab-button.active {
+    color: #242626;
+;
+}
+
+.pixelbot-content {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    color: black;
+}
+
+.pixelbot-layout {
+    display: flex;
+    flex-direction: column;
+}
