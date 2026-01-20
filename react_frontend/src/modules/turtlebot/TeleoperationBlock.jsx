@@ -1,7 +1,9 @@
 import { useModeContext } from "./ModeUtil/ModeContext";
+import { motion } from "framer-motion";
 import { useState } from 'react';
 import TeleoperationButton from "./TeleoperationButton.jsx";
 import { useRef, useEffect } from "react";
+import teleopIcon from './assets/teleopIcon.svg';
 import upIcon from './assets/upButton.svg';
 import leftIcon from './assets/leftButton.svg';
 import rightIcon from './assets/rightButton.svg';
@@ -90,49 +92,65 @@ export default function TeleoperationBlock() {
     };
 
     return (
-        <div className={`teleoperation-block ${isTeleoperating ? '' : 'disabled'}`}>
-            <div className="direction-pad">
-                <TeleoperationButton 
-                    direction="UP" 
-                    onClick={handleInput} 
-                    icon={<img src={upIcon} alt="up" className="teleop-icon" />}
-                />
-                <div className="horizontal-row">
+        <motion.div 
+            className={`teleoperation-block ${isTeleoperating ? '' : 'disabled'}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{
+                opacity: isTeleoperating ? 1 : 0.4, y: 0,
+            }}
+            transition={{ duration: 0.2 }}
+        >
+            <div className="top-left-logo"> 
+                <img src={teleopIcon} alt="Teleoperation Logo" className="teleop-logo" /> 
+            </div> 
+            <div className="control-zone">
+                <div className="direction-pad">
                     <TeleoperationButton 
-                        direction="LEFT" 
+                        direction="UP" 
                         onClick={handleInput} 
-                        icon={<img src={leftIcon} alt="left" className="teleop-icon" />}
+                        icon={<img src={upIcon} alt="up" className="teleop-icon" />}
                     />
+                    <div className="horizontal-row">
+                        <TeleoperationButton 
+                            direction="LEFT" 
+                            onClick={handleInput} 
+                            icon={<img src={leftIcon} alt="left" className="teleop-icon" />}
+                        />
+                        <TeleoperationButton 
+                            direction="RIGHT" 
+                            onClick={handleInput} 
+                            icon={<img src={rightIcon} alt="right" className="teleop-icon" />}
+                        />
+                    </div>
                     <TeleoperationButton 
-                        direction="RIGHT" 
+                        direction="DOWN" 
                         onClick={handleInput} 
-                        icon={<img src={rightIcon} alt="right" className="teleop-icon" />}
+                        icon={<img src={downIcon} alt="down" className="teleop-icon down" />}
                     />
                 </div>
-                <TeleoperationButton 
-                    direction="DOWN" 
-                    onClick={handleInput} 
-                    icon={<img src={downIcon} alt="down" className="teleop-icon down" />}
-                />
+                <div className="action-buttons">
+                    <TeleoperationButton 
+                        direction="ROTATE_CCW" 
+                        onClick={handleInput} 
+                        icon={<img src={rotateLeftIcon} alt="rotate left" className="teleop-icon" />} 
+                    />
+                    <TeleoperationButton 
+                        direction="ROTATE_CW" 
+                        onClick={handleInput} 
+                        icon={<img src={rotateRightIcon} alt="rotate right" className="teleop-icon" />} 
+                    />
+                    <TeleoperationButton 
+                        direction="STOP" 
+                        onClick={handleInput} 
+                        icon={<img src={stopIcon} alt="stop" className="teleop-icon" />} 
+                    />
+                </div>
             </div>
-            <div className="action-buttons">
-                <TeleoperationButton 
-                    direction="ROTATE_CCW" 
-                    onClick={handleInput} 
-                    icon={<img src={rotateLeftIcon} alt="rotate left" className="teleop-icon" />} 
-                />
-                <TeleoperationButton 
-                    direction="ROTATE_CW" 
-                    onClick={handleInput} 
-                    icon={<img src={rotateRightIcon} alt="rotate right" className="teleop-icon" />} 
-                />
-                <TeleoperationButton 
-                    direction="STOP" 
-                    onClick={handleInput} 
-                    icon={<img src={stopIcon} alt="stop" className="teleop-icon" />} 
-                />
-            </div>
-            {/* Mock message log */}
+        </motion.div>
+    );
+}
+
+/* Mock message log
             <div className="teleop-log">
                 <h3>Sent Commands</h3>
                 <ul>
@@ -140,7 +158,4 @@ export default function TeleoperationBlock() {
                         <li key={i}>{msg}</li>
                     ))}
                 </ul>
-            </div>
-        </div>
-    );
-}
+            </div> */

@@ -1,13 +1,18 @@
-import "./StatusPage.css";
-import PowerStatus from './PowerStatus.jsx';
+import './styles/StatusPage.css';
+import './styles/Teleoperation.css';
+import './styles/StatusComponents.css';
+import './styles/CommandExecution.css';
 import battery from './assets/battery.svg';
 import wifi from './assets/wifi.svg';
 import raspberryPi from './assets/raspberry.svg';
 import comms from './assets/comms.svg'; 
+import PowerStatus from './PowerStatus.jsx';
 import ModeStatus from './ModeStatus.jsx';
 import { useTurtlebotStatus } from './Hooks/useTurtlebotStatus.js';
 import GeneralStatusBlock from './GeneralStatusBlock.jsx';
 import TeleoperationBlock from './TeleoperationBlock';
+import PathExecutionBlock from "./PathExecutionBlock.jsx";
+import DockingBlock from "./DockingBlock.jsx";
 
 
 export default function TurtlebotStatusPage() {
@@ -64,11 +69,13 @@ export default function TurtlebotStatusPage() {
                     statusColor={commsColor}
                 />
             </div>
-            <div className="mode-status-container">
-                <ModeStatus />
-            </div>
-            <div className="teleop-section">
-                <TeleoperationBlock />
+            <div className="teleop-and-commands-container">
+                    <TeleoperationBlock />
+                   <div className="commands-column-container">
+                    <ModeStatus />
+                    <PathExecutionBlock />
+                    <DockingBlock />
+                </div>
             </div>
         </div>
     );

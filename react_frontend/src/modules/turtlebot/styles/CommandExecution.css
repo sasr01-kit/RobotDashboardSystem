@@ -1,0 +1,94 @@
+/* Styling for components that execute commands, like PathExecutionBlock and DockingBlock */
+
+.command-execution-block {
+    display: flex;
+    flex-direction: row;
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    color: #333;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.command-execution-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.label-column {
+    display: flex;
+    padding-right: 2rem;
+    width: 10rem;
+    flex-direction: column;
+}
+
+.path-icon {
+    width: 3rem;
+    height: 3rem;
+}
+
+.dock-icon {
+    width: 3rem;
+    height: 3rem;
+}
+
+.command-label {
+    font-size: 1.1rem;
+    font-weight: 650;
+}
+
+.command-status {
+    font-weight: 400;
+}
+
+.command-status.on {
+    color: #5AAE61;
+}
+
+.command-status.off {
+    color: #FF5A5F;
+}
+
+.execution-button {
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    min-width: 120px;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+}
+
+.button-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.execution-button.start {
+    background: #5AAE61;
+}
+
+.execution-button.stop {
+    background: #FF5A5F;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

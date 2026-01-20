@@ -14,8 +14,8 @@ export default function TeleoperationButton({ direction, icon, onClick }) {
         <motion.button 
             className={`teleop-button ${direction} ${clicked ? 'clicked' : ''}`} 
             onClick={handleClick} 
-            whileTap={{ scale: 0.94 }} 
-            transition={{ type: "spring", stiffness: 400, damping: 10 }} 
+            whileTap={{ scale: 0.90 }} 
+            transition={{ type: "spring", stiffness: 300, damping: 10 }} 
         >
             {icon}
         </motion.button>
