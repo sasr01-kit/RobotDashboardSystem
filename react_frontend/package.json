@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "framer-motion": "^12.27.0",
+    "highcharts": "^12.5.0",
+    "highcharts-react-official": "^3.2.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.12.0"

@@ -1,0 +1,71 @@
+/* Child Recap View Styles */
+
+.child-recap-page {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: black;
+    margin-bottom: 1rem;
+}
+
+.child-recap-view {
+    padding: 0 4rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.child-session-view {
+    padding: 2rem 4rem;
+}
+
+.recap-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr 0.6fr;
+    grid-template-rows: auto auto;
+    gap: 1.5rem 6rem;
+}
+
+.recap-column {
+    display: contents;
+}
+
+.recap-column:nth-child(1)> :nth-child(1) {
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.recap-column:nth-child(1)> :nth-child(2) {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+.recap-column:nth-child(2)> :nth-child(1) {
+    grid-row: 1;
+    grid-column: 2;
+}
+
+.recap-column:nth-child(2)> :nth-child(2) {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+.recap-column:nth-child(3) {
+    grid-row: 1 / 3;
+    grid-column: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
