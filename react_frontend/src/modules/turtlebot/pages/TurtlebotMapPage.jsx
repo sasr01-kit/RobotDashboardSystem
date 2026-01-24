@@ -1,11 +1,11 @@
-import './styles/MapPage.css';
-import './styles/GoalLog.css';
+import '../styles/MapPage.css';
+import '../styles/GoalLog.css';
 import { useRef } from 'react';
-import { useTurtlebotGoal } from './Hooks/useTurtlebotGoal';
-import { useTurtlebotGoalMock } from './Hooks/useTurtlebotGoalMock'; //MOCK DELETE
-import { GoalLogPanel } from "./GoalLogPanel";
-import { PathLogDropdownNav } from './PathLogDropdownNav';
-import { MinimizedStatusBar } from './MinimizedStatusBar';
+import { useTurtlebotGoal } from '../Hooks/useTurtlebotGoal';
+import { useTurtlebotGoalMock } from '../Hooks/useTurtlebotGoalMock'; //MOCK DELETE
+import { GoalLogPanel } from "../components/GoalLogPanel";
+import { PathLogDropdownNav } from '../components/PathLogDropdownNav';
+import { MinimizedStatusBar } from '../components/MinimizedStatusBar';
 
 export default function TurtlebotMapPage() {
     const { logs, isLoading } = useTurtlebotGoalMock(); //MOCK CHANGE TO REAL

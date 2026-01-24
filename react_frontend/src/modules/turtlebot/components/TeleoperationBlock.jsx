@@ -1,16 +1,16 @@
-import { useModeContext } from "./ModeUtil/ModeContext";
+import { useModeContext } from "../ModeUtil/ModeContext.js";
 import { motion } from "framer-motion";
 import { useState } from 'react';
 import TeleoperationButton from "./TeleoperationButton.jsx";
 import { useRef, useEffect } from "react";
-import teleopIcon from './assets/teleopIcon.svg';
-import upIcon from './assets/upButton.svg';
-import leftIcon from './assets/leftButton.svg';
-import rightIcon from './assets/rightButton.svg';
-import downIcon from './assets/downButton.svg';
-import rotateLeftIcon from './assets/rotateLeftButton.svg';
-import rotateRightIcon from './assets/rotateRightButton.svg';
-import stopIcon from './assets/stopButton.svg';
+import teleopIcon from '../assets/teleopIcon.svg';
+import upIcon from '../assets/upButton.svg';
+import leftIcon from '../assets/leftButton.svg';
+import rightIcon from '../assets/rightButton.svg';
+import downIcon from '../assets/downButton.svg';
+import rotateLeftIcon from '../assets/rotateLeftButton.svg';
+import rotateRightIcon from '../assets/rotateRightButton.svg';
+import stopIcon from '../assets/stopButton.svg';
 
 export default function TeleoperationBlock() {
     const { mode } = useModeContext(); 

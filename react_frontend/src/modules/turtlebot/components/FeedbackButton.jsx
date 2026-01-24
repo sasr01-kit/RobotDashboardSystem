@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useWebSocketContext } from './WebsocketUtil/WebsocketContext';
+import { useWebSocketContext } from '../WebsocketUtil/WebsocketContext';
 
 /* MOCK VERSION : */
 export const FeedbackButton = ({ className, label, goalId }) => { 

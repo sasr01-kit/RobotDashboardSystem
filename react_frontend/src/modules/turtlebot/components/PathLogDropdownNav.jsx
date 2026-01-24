@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export const PathLogDropdownNav = ({ logs, onSelect }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -9,7 +10,11 @@ export const PathLogDropdownNav = ({ logs, onSelect }) => {
     }
   
     return (
-    <div className="path-log-dropdown-nav">
+    <motion.div 
+      className="path-log-dropdown-nav"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
       <div className={`dropdown-label ${isOpen ? "open" : ""}`}
       onClick={() => setIsOpen((prev) => !prev)}
       >
@@ -25,6 +30,6 @@ export const PathLogDropdownNav = ({ logs, onSelect }) => {
           ))}
         </ul>
       )}
-    </div>
+    </motion.div>
   );
 };

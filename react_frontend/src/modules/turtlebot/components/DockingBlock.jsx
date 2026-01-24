@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
-import { useModeContext } from './ModeUtil/ModeContext.js';
-import { useWebSocketContext } from './WebsocketUtil/WebsocketContext.js';
+import { useModeContext } from '../ModeUtil/ModeContext.js';
+import { useWebSocketContext } from '../WebsocketUtil/WebsocketContext.js';
 import { motion } from "framer-motion";
-import dockIcon from './assets/dockIcon.svg';
-import { useTurtlebotStatus } from "./Hooks/useTurtlebotStatus.js";
+import dockIcon from '../assets/dockIcon.svg';
+import { useTurtlebotStatus } from "../Hooks/useTurtlebotStatus.js";
 
 /* MOCK */
 const MOCK_LATENCY = 600;

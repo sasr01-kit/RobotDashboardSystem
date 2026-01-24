@@ -1,13 +1,42 @@
+/* Styling for the feedback page */
+
+.turtlebot-feedback-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: var(--bg-light);
+}
+
+.feedback-summary-chart {
+    width: 70%;
+    max-height: fit-content;
+    justify-self: center;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    padding: 1rem;
+    overflow: hidden;
+}
+
+.feedback-summary-title, .feedback-log-title { 
+    font-size: 1.4rem; 
+    font-weight: 550; 
+    margin-bottom: 1rem; 
+    text-align: center; 
+}
 
 .feedback-history-container {
     display: flex;
     flex-direction: column;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    padding: 1rem;
     gap: 0.7rem;
 }
 
 .feedback-label-row {
     display: grid;
-    width: 98%;
+    width: 96%;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     font-weight: 600;
     font-size: 0.9rem;
@@ -19,7 +48,7 @@
 }
 
 .feedback-log-panel {
-    max-height: 60vh;
+    max-height: 48vh;
     display: flex;
     flex-direction: column;
     gap: 0.7rem;
@@ -45,7 +74,7 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     padding: 0.6rem 1rem;
     border-radius: 8px;
-    background-color: #fff;
+    background-color: var(--bg-light);
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     font-size: 0.9rem;
     border-left: 6px solid var(--neutral-gray);

@@ -1,11 +1,16 @@
-import { getBatteryIcon } from "./assets/batteryMap";
-import { useTurtlebotStatus } from "./Hooks/useTurtlebotStatus";
+import { getBatteryIcon } from "../assets/batteryMap";
+import { useTurtlebotStatus } from "../Hooks/useTurtlebotStatus";
+import { motion } from "framer-motion";
 
 export const MinimizedStatusBar = () => {
   const { statusDTO } = useTurtlebotStatus();
 
   return (
-    <div className="minimized-status-bar">
+    <motion.div 
+      className="minimized-status-bar"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
 
       <div
         className="mini-status-icon mini-power-icon"
@@ -33,6 +38,6 @@ export const MinimizedStatusBar = () => {
         style={{ backgroundColor: statusDTO?.comms ? "var(--success-green)" : "var(--error-red)" }}
       />
 
-    </div>
+    </motion.div>
   );
 };

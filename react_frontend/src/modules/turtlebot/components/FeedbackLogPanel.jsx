@@ -1,8 +1,13 @@
 import { FeedbackEntryBlock } from "./FeedbackEntryBlock";
+import { motion } from 'framer-motion';
 
 export const FeedbackLogPanel = ({ entries }) => {
   return (
-    <div className="feedback-history-container">
+    <motion.div 
+      className="feedback-history-container"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
         <div className="feedback-label-row">
                 <span>Start Point</span>
                 <span>End Point</span>
@@ -18,6 +23,6 @@ export const FeedbackLogPanel = ({ entries }) => {
             ))
         )}
         </div>
-    </div>
+    </motion.div>
   );
 };
