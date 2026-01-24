@@ -1,28 +1,142 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import './Pixelbot.css';
-
-const tabNames = ['Summary', 'Child'];
+import chevron from './assets/chevron.svg';
+import { useEffect, useRef, useState } from 'react';
+import { usePixelbotChildren } from './hooks/usePixelbotChildren';
 
 export default function PixelbotNavBar() {
+    // Comes from URL params
+    const { childId, sessionId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
 
-    const activeTab = tabNames.find(tab => location.pathname.endsWith(tab.toLowerCase())) || 'Summary';
-    const switchTab = (tabName) => {
-        navigate(`/pixelbot/${tabName.toLowerCase()}`);
-    };
+    const { children, isLoading } = usePixelbotChildren(); // Custom hook to fetch children and their sessions
+
+    const [isChildDropDownOpen, toggleChildMenu] = useState(false);
+    const [selectedChildId, setSelectedChildId] = useState(null);
+    const dropdownRef = useRef(null);
+
+    // Sync selectedChildId with URL param childId
+    useEffect(() => {
+        if (childId) {
+            if (children) {
+                const child = children.find(c => c.childId == childId);
+                if (child) {
+                    setSelectedChildId(child.childId);
+                }
+            }
+        } else {
+            // Clear selection when navigating to summary or other non-child pages
+            setSelectedChildId(null);
+        }
+    }, [childId, children]);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                toggleChildMenu(false);
+                // Only reset selectedChildId if no session was actually navigated to
+                if (!childId && !sessionId) {
+                    setSelectedChildId(null);
+                }
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [childId, sessionId]);
+
+    // Navigation handlers
+    function navigateToSection(section) {
+        navigate(`/pixelbot/${section}`);
+        toggleChildMenu(false);
+    }
+
+    function handleChildSelect(childId) {
+        setSelectedChildId(childId);
+    }
+
+    function handleSessionSelect(sessionId) {
+        if (selectedChildId) {
+            toggleChildMenu(false);
+            if (sessionId === 'recap') {
+                navigate(`/pixelbot/session/${selectedChildId}`);
+            }
+            else {
+                navigate(`/pixelbot/session/${selectedChildId}/${sessionId}`);
+            }
+        }
+    }
+
+    const isSummaryActive = location.pathname.includes('summary') || location.pathname === '/pixelbot';
+    const isChildActive = !isSummaryActive;
 
     return (
         <div className="pixelbot-navbar">
-            {tabNames.map((tabName) => (
+            <button
+                className={`nav-button ${isSummaryActive ? 'active' : ''}`}
+                onClick={() => navigateToSection('summary')}
+            >
+                Summary
+            </button>
+
+            <div className="nav-dropdown-wrapper" ref={dropdownRef}>
                 <button
-                    key={tabName}
-                    className={`tab-button ${activeTab === tabName ? 'active' : ''}`}
-                    onClick={() => switchTab(tabName)}
+                    className={`nav-button ${isChildActive ? 'active' : ''}`}
+                    onClick={() => toggleChildMenu(!isChildDropDownOpen)}
                 >
-                    {tabName}
+                    Child
+                    <img src={chevron} alt="chevron" className={`chevron-icon ${isChildDropDownOpen ? 'open' : ''}`} />
                 </button>
-            ))}
+
+                {(isLoading || !children) ? (
+                    <div>Loading...</div>
+                ) : (
+                    isChildDropDownOpen && (
+                        <div className="dropdown-container">
+                            <div className="dropdown-panel">
+                                <div className="dropdown-items-grid">
+                                    {children.map((child, index) => (
+                                        <div
+                                            key={index}
+                                            className={`dropdown-item ${selectedChildId === child.childId ? 'selected' : ''}`}
+                                            onClick={() => handleChildSelect(child.childId)}
+                                        >
+                                            {child.name}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {selectedChildId && (
+                                <div className="dropdown-panel sessions-panel">
+                                    <div className="dropdown-items-grid">
+                                        <div
+                                            className={`dropdown-item ${childId && sessionId == null ? 'session-selected' : ''}`}
+                                            onClick={() => handleSessionSelect('recap')}
+                                        >
+                                            Recap
+                                        </div>
+                                        {children.find(c => c.childId == selectedChildId).sessions.map((session, index) => (
+                                            <div
+                                                key={index}
+                                                className={`dropdown-item ${sessionId === session.sessionId ? 'session-selected' : ''}`}
+                                                onClick={() => handleSessionSelect(session.sessionId)}
+                                            >
+                                                {session.sessionId}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )
+                )}
+            </div>
         </div>
     );
 }
+
+
