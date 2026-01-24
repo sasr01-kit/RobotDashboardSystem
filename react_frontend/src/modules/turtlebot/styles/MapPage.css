@@ -1,0 +1,62 @@
+.turtlebot-map-page {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: var(--bg-light);
+    padding: 2rem;
+}
+
+.map-page-grid {
+  display: grid; 
+  grid-template-columns: 3fr 2fr; 
+  gap: 2rem; 
+  box-sizing: border-box;
+}
+
+.left-panel, .right-panel {
+  display: flex; 
+  flex-direction: column; 
+}
+
+/* Minimized Status Bar Styling */
+.minimized-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 0.4rem 0.8rem;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); 
+  border-radius: 12px;
+}
+
+.mini-status-icon {
+  width: 30px;
+  height: 30px;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+/* Masks for boolean icons */
+.mini-power-icon {
+  mask-image: url('../assets/power.svg');
+}
+
+.mini-wifi-icon {
+  mask-image: url('../assets/wifi.svg');
+}
+
+.mini-pi-icon {
+  mask-image: url('../assets/raspberry.svg');
+}
+
+.mini-comms-icon {
+  mask-image: url('../assets/comms.svg');
+}
+
+.mini-battery-icon {
+  width: 45px;
+  height: 45px;
+}
+
+

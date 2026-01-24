@@ -1,0 +1,24 @@
+.home-button {
+  width: 2rem;
+  height: 2rem;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--header-foreground, #111);
+  background-color:#00A699;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-right: 12px;
+}
+
+.home-button:hover {
+  background: #00A69977;
+}
+
+.home-button img {
+  width: 32px;
+  height: 32px;
+}

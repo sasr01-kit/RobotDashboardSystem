@@ -35,20 +35,7 @@ export default function PixelbotSummary() {
           margin: 0, // left aligned
         }}
       >
-        {/* Pixelbot title + optional KIT logo */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 14,
-          }}
-        >
-          <div style={{ fontWeight: 800, fontSize: 18 }}>Pixelbot</div>
-
-          {/* Logo (optional) */}
-          {/* <img src={kitLogo} alt="KIT" style={{ height: 34 }} /> */}
-        </div>
+     
 
         {/* Tabs row (Summary | Child ▾) */}
         <PixelbotTopBar childrenList={childrenList} />
