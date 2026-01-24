@@ -2,9 +2,9 @@ import "./Turtlebot.css";
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ModeProvider } from './ModeUtil/ModeProvider.jsx';
 import TurtlebotLayout from './TurtlebotLayout.jsx';
-import TurtlebotStatusPage from './TurtlebotStatusPage.jsx';
-import TurtlebotMapPage from './TurtlebotMapPage.jsx';
-import TurtlebotFeedbackPage from './TurtlebotFeedbackPage.jsx';
+import TurtlebotStatusPage from './pages/TurtlebotStatusPage.jsx';
+import TurtlebotMapPage from './pages/TurtlebotMapPage.jsx';
+import TurtlebotFeedbackPage from './pages/TurtlebotFeedbackPage.jsx';
 
 export default function Turtlebot() {
     return (

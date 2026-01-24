@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
-import { useModeContext } from './ModeUtil/ModeContext.js';
-import { useWebSocketContext } from './WebsocketUtil/WebsocketContext.js';
+import { useModeContext } from '../ModeUtil/ModeContext.js';
+import { useWebSocketContext } from '../WebsocketUtil/WebsocketContext.js';
 import { motion } from "framer-motion";
-import pathIcon from './assets/pathExecution.svg';
+import pathIcon from '../assets/pathExecution.svg';
 
 /* MOCK */
 const MOCK_LATENCY = 600;

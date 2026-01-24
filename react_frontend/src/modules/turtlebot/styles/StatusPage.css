@@ -2,7 +2,7 @@
 
 .turtlebot-status-page { 
     padding: 2rem; 
-    background-color: var(--background-color); 
+    background-color: var(--bg-light); 
     color: #333; 
 }
 

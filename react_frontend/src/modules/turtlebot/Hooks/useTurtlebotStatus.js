@@ -8,9 +8,9 @@ function useTurtlebotStatus() {
 
      return { statusDTO: {
         isOn: true,
-        battery: 90,
+        battery: 100,
         wifi: true,
-        raspberryPi: false,
+        raspberryPi: true,
         comms: true,
         mode: 'Running Path Module',
         docking: false, },
@@ -39,6 +39,8 @@ export function useTurtlebotStatus() {
     const handleMessage = (event) => {
       try {
         const data = JSON.parse(event.data);
+
+        if (data.type !== "STATUS_UPDATE") { return; }
 
         const status = {
           isOn: data.power,

@@ -1,4 +1,4 @@
-import { useModeContext } from './ModeUtil/ModeContext.js';
+import { useModeContext } from '../ModeUtil/ModeContext.js';
 
 export default function ModeStatus() {
     const { mode } = useModeContext();
