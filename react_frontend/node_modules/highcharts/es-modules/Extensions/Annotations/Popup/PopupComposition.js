@@ -1,0 +1,70 @@
+/* *
+ *
+ *  Popup generator for Stock tools
+ *
+ *  (c) 2009-2026 Highsoft AS
+ *  Author: Sebastian Bochan
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *
+ * */
+'use strict';
+import H from '../../../Core/Globals.js';
+const { composed } = H;
+import Popup from './Popup.js';
+import U from '../../../Core/Utilities.js';
+const { addEvent, pushUnique, wrap } = U;
+/* *
+ *
+ *  Functions
+ *
+ * */
+/** @internal */
+function compose(NagivationBindingsClass, PointerClass) {
+    if (pushUnique(composed, 'Popup')) {
+        addEvent(NagivationBindingsClass, 'closePopup', onNavigationBindingsClosePopup);
+        addEvent(NagivationBindingsClass, 'showPopup', onNavigationBindingsShowPopup);
+        wrap(PointerClass.prototype, 'onContainerMouseDown', wrapPointerOnContainerMouserDown);
+    }
+}
+/** @internal */
+function onNavigationBindingsClosePopup() {
+    if (this.popup) {
+        this.popup.closePopup();
+    }
+}
+/** @internal */
+function onNavigationBindingsShowPopup(config) {
+    if (!this.popup) {
+        // Add popup to main container
+        this.popup = new Popup(this.chart.container, (this.chart.options.navigation.iconsURL ||
+            (this.chart.options.stockTools &&
+                this.chart.options.stockTools.gui.iconsURL) ||
+            'https://code.highcharts.com/12.5.0/gfx/stock-icons/'), this.chart);
+    }
+    this.popup.showForm(config.formType, this.chart, config.options, config.onSubmit);
+}
+/**
+ * `onContainerMouseDown` blocks internal popup events, due to e.preventDefault.
+ * Related issue #4606
+ * @internal
+ */
+function wrapPointerOnContainerMouserDown(proceed, e) {
+    // Elements is not in popup
+    if (!this.inClass(e.target, 'highcharts-popup')) {
+        proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+    }
+}
+/* *
+ *
+ *  Default Export
+ *
+ * */
+/** @internal */
+const PopupComposition = {
+    compose
+};
+/** @internal */
+export default PopupComposition;
