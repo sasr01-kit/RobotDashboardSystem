@@ -1,48 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
-import { useWebSocketContext } from '../WebsocketUtil/WebsocketContext.js';
+import { useState, useEffect } from "react";
+import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext";
 
-
-// TEMPORARY MOCK — replace later with real WebSocket version
-function useTurtlebotStatus() {
-
-
-     return { statusDTO: {
-        isOn: true,
-        battery: 100,
-        wifi: true,
-        raspberryPi: true,
-        comms: true,
-        mode: 'Running Path Module',
-        docking: false, },
-        isLoading: false,
-        error: null,
-        connectWebSocket: () => {},
-        disconnectWebSocket: () => {},
-    };
-}
-
-
-export { useTurtlebotStatus };
-
-
-/* REAL VERSION
 export function useTurtlebotStatus() {
-  const { socket } = useWebSocketContext();
+  const { subscribe } = useWebSocketContext();
 
   const [statusDTO, setStatusDTO] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!subscribe) return;
 
-    const handleMessage = (event) => {
+    return subscribe((data) => {
       try {
-        const data = JSON.parse(event.data);
+        if (data.type !== "STATUS_UPDATE") return;
 
-        if (data.type !== "STATUS_UPDATE") { return; }
-
-        const status = {
+        setStatusDTO({
           isOn: data.power,
           batteryPercentage: data.battery,
           isWifiConnected: data.wifi,
@@ -50,23 +23,16 @@ export function useTurtlebotStatus() {
           isRaspberryPiConnected: data.raspberryPi,
           mode: data.mode,
           docking: data.docking,
-        };
+        });
 
-        setStatusDTO(status);
         setIsLoading(false);
         setError(null);
-      } catch (err) {
+      } catch {
         setError("Failed to parse Turtlebot status");
         setIsLoading(false);
       }
-    };
-
-    socket.addEventListener("message", handleMessage);
-
-    return () => {
-      socket.removeEventListener("message", handleMessage);
-    };
-  }, [socket]);
+    });
+  }, [subscribe]);
 
   return { statusDTO, isLoading, error };
-} */
+}

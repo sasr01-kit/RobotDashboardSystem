@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext";
 
 export function useTurtlebotFeedback() {
-  const { socket } = useWebSocketContext();
+  const { subscribe } = useWebSocketContext();
 
   const [feedbackSummaryDTO, setFeedbackSummaryDTO] = useState(null);
   const [feedbackEntries, setFeedbackEntries] = useState([]);
@@ -10,51 +10,38 @@ export function useTurtlebotFeedback() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!subscribe) return;
 
-    const handleMessage = (event) => {
+    return subscribe((data) => {
       try {
-        const data = JSON.parse(event.data);
-
         if (data.type === "FEEDBACK_SUMMARY") {
-          const summary = {
+          setFeedbackSummaryDTO({
             goodRatio: data.goodRatio ?? 0,
-            badRatio: data.badRatio ?? 0
-          };
-
-          setFeedbackSummaryDTO(summary);
+            badRatio: data.badRatio ?? 0,
+          });
           setIsLoading(false);
           setError(null);
-          return;
         }
 
         if (data.type === "FEEDBACK_ENTRY") {
-          const entry = {
-            startPoint: data.startPoint,
-            endPoint: data.endPoint,
-            duration: data.duration,
-            feedback: data.feedback
-          };
-
-          setFeedbackEntries((prev) => [...prev, entry]);
-
+          setFeedbackEntries((prev) => [
+            ...prev,
+            {
+              startPoint: data.startPoint,
+              endPoint: data.endPoint,
+              duration: data.duration,
+              feedback: data.feedback,
+            },
+          ]);
           setIsLoading(false);
           setError(null);
-          return;
         }
-
-      } catch (err) {
+      } catch {
         setError("Failed to parse Turtlebot feedback");
         setIsLoading(false);
       }
-    };
-
-    socket.addEventListener("message", handleMessage);
-
-    return () => {
-      socket.removeEventListener("message", handleMessage);
-    };
-  }, [socket]);
+    });
+  }, [subscribe]);
 
   return { feedbackSummaryDTO, feedbackEntries, isLoading, error };
 }
