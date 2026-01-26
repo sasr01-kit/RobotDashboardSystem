@@ -1,5 +1,5 @@
 # ConcreteObserver.py
-from Observer import Observer
+from turtlebot4_backend.turtlebot4_model.Observer import Observer
 
 class ConcreteObserver(Observer):
     def __init__(self, websocket_client: WebSocket) -> None:

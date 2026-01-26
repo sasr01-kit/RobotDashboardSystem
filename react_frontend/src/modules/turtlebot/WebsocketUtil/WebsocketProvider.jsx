@@ -1,14 +1,25 @@
-import { useWebSocket } from '../../Hooks/useWebsocket';
+import { useRef } from "react";
+import { useWebSocket } from '../Hooks/useWebsocket';
 import { WebSocketContext } from './WebsocketContext';
 
-const WebSocketProvider = ({ children }) => {
-  const ws = useWebSocket("ws://localhost:9090");
+export default function WebSocketProvider({ children }) { 
+  const { socket, lastMessage } = useWebSocket("ws://localhost:9090/ws"); 
+  
+  const subscribersRef = useRef(new Set()); 
+  
+  if (lastMessage) { 
+    subscribersRef.current.forEach((callback) => callback(lastMessage)); 
+  } 
+  
+  const subscribe = (callback) => { 
+    subscribersRef.current.add(callback); 
+    return () => { subscribersRef.current.delete(callback); }; 
+  }; 
 
-  return (
-    <WebSocketContext.Provider value={ws}>
-      {children}
-    </WebSocketContext.Provider>
-  );
-};
+  return ( 
+  <WebSocketContext.Provider 
+    value={{ subscribe }}> {children} 
+    </WebSocketContext.Provider> 
+  ); 
+}
 
-export default WebSocketProvider;

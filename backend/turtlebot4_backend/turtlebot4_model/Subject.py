@@ -1,7 +1,7 @@
 # Subject.py
 from abc import ABC
 from typing import List
-from Observer import Observer
+from turtlebot4_backend.turtlebot4_model.Observer import Observer
 
 
 class Subject(ABC):

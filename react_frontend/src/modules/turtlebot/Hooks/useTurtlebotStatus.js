@@ -15,14 +15,12 @@ export function useTurtlebotStatus() {
       try {
         if (data.type !== "STATUS_UPDATE") return;
 
-        setStatusDTO({
-          isOn: data.power,
-          batteryPercentage: data.battery,
-          isWifiConnected: data.wifi,
-          isCommsConnected: data.comms,
-          isRaspberryPiConnected: data.raspberryPi,
-          mode: data.mode,
-          docking: data.docking,
+        setStatusDTO({ 
+          isOn: data.isOn, 
+          batteryPercentage: data.batteryPercentage, 
+          isWifiConnected: data.isWifiConnected, 
+          isCommsConnected: data.isCommsConnected, 
+          isRaspberryPiConnected: data.isRaspberryPiConnected,  
         });
 
         setIsLoading(false);
