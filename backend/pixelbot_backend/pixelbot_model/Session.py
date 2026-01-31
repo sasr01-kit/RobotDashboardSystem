@@ -1,0 +1,61 @@
+from pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
+from pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
+from pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
+from pixelbot_model.DrawingData import DrawingData
+
+class Session:
+    def __init__(self, session_id: str, drawing: DrawingData, story_summary: str, transcript: str,
+                 speech_width: SpeechSelfDisclosureWidth, speech_depth: SpeechSelfDisclosureDepth,
+                 drawing_width: DrawingSelfDisclosureWidth):
+        self.session_id = session_id
+        self.drawing = drawing
+        self.story_summary = story_summary
+        self.transcript = transcript
+        self.speech_width = speech_width
+        self.speech_depth = speech_depth
+        self.drawing_width = drawing_width
+
+    def to_dict(self):
+        return {
+            "sessionId": self.session_id,
+            "drawing": self.drawing.to_dict(),
+            "storySummary": self.story_summary,
+            "transcript": self.transcript,
+            "speechWidth": self.speech_width.to_dict(),
+            "speechDepth": self.speech_depth.to_dict(),
+            "drawingWidth": self.drawing_width.to_dict()
+        }
+    
+    def getSessionId(self):
+        return self.session_id
+    
+    def getDrawing(self):
+        return self.drawing
+    
+    def getStorySummary(self):
+        return self.story_summary
+    
+    def getTranscript(self):
+        return self.transcript  
+    
+    def getSpeechWidth(self):
+        return self.speech_width
+    
+    def getSpeechDepth(self):
+        return self.speech_depth
+    
+    def getDrawingWidth(self):
+        return self.drawing_width
+   
+    @staticmethod
+    def from_dict(data):
+        return Session(
+            session_id=data["sessionId"],
+            drawing=DrawingData.from_dict(data["drawing"]),
+            story_summary=data["storySummary"],
+            transcript=data["transcript"],
+            speech_width=SpeechSelfDisclosureWidth.from_dict(data["speechWidth"]),
+            speech_depth=SpeechSelfDisclosureDepth.from_dict(data["speechDepth"]),
+            drawing_width=DrawingSelfDisclosureWidth.from_dict(data["drawingWidth"])
+        )
+   
