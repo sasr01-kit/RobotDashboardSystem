@@ -1,16 +1,16 @@
 # Teleoperate.py
 from typing import List, Dict, Any
 from turtlebot4_model.Subject import Subject
-from DirectionCommand import DirectionCommand
+from .DirectionCommand import DirectionCommand
 
 
 class Teleoperate(Subject):
     def __init__(self) -> None:
         super().__init__()
-        self._commands: List[DirectionCommand] = []
+        self._commands: List[str] # = ["FORWARD", "LEFT"]
 
     # Getter
-    def get_commands(self) -> List[DirectionCommand]:
+    def get_commands(self) -> List[str]:
         return self._commands
 
     # Setter
@@ -24,22 +24,16 @@ class Teleoperate(Subject):
         self.notifyObservers(self.toJSON())
 
     # Deserialize frontend JSON into DirectionCommand(s)
-    def fromJSON(self, msg: Dict[str, Any]) -> None:
-        """
-        Parses teleoperation input from the frontend.
-        Example msg format:
-        { "commands": ["FORWARD", "LEFT"] }
-        """
-        command_strs = msg.get("commands", [])
-        for cmd_str in command_strs:
-            try:
-                # Convert string to DirectionCommand enum
-                command = DirectionCommand[cmd_str.upper()]
-                self.add_command(command)
-            except KeyError:
-                # Invalid command; ignore or log warning
-                print(f"Warning: Invalid teleop command received: {cmd_str}")
 
+    def fromJSON(self, msg: Dict[str, Any]):
+        """
+        Parse JSON commands and append them as strings to the existing list.
+        Expected format: { "commands": ["UP", "LEFT"] }
+        """
+        for cmd in msg["commands"]:
+            self._commands.append(cmd.upper())  # normalize to uppercase
+
+   
     # Serialize commands to JSON for frontend confirmation
     def toJSON(self) -> Dict[str, Any]:
         """
@@ -47,7 +41,7 @@ class Teleoperate(Subject):
         """
         return {
             "teleoperationActive": len(self._commands) > 0,
-            "queuedCommands": [str(cmd) for cmd in self._commands],
+            #"queuedCommands": [str(cmd) for cmd in self._commands],
         }
 
     # Return queued commands as a list of Python dictionaries
