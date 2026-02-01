@@ -1,25 +1,27 @@
 # session_api.py
-from pixelbot_storage.DataRepository import DataRepository
 
 class SessionAPI:
-    def __init__(self, repository: DataRepository):
-        self.repository = repository
+
+    def __init__(self, child_api):
+        self.child_api = child_api
+        self.children = self.child_api._load_children_objects()
 
     def send_session(self, child_id, session_id):
-        children = self.repository.load_children()
+        for child in self.children:
+            if child.child_id == child_id:
+                for session in child.sessions:
+                    if session.session_id == session_id:
+                        return session.to_dict()
 
-        for child in children:
-            if child.get("childId") == child_id:
-                for session in child.get("sessions", []):
-                    if session.get("sessionId") == session_id:
-                        # Serialize session to a dictionary
-                        return {
-                            "sessionId": session.get("sessionId"),
-                            "storySummary": session.get("storySummary"),
-                            "transcript": session.get("transcript"),
-                            "drawing": session.get("drawing", {}),
-                            "speechWidth": session.get("speechWidth", {}),
-                            "speechDepth": session.get("speechDepth", {}),
-                            "drawingWidth": session.get("drawingWidth", {}),
-                        }
         return None
+    
+    
+    def send_all_sessions(self):
+        all_sessions = []
+
+        for child in self.children:
+            for session in child.sessions:
+                session_dict = session.to_dict()
+                # add child ID to session data
+                session_dict["childId"] = child.child_id
+                all_sessions.append(session_dict)

@@ -154,9 +154,6 @@ export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint 
                 highcharts={Highcharts}
                 options={options}
             />
-            <div className="heatmap-footer">
-                Mockup graph from https://github.com/highcharts
-            </div>
         </div>
     );
 }

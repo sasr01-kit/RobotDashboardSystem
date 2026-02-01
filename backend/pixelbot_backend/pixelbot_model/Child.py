@@ -1,4 +1,4 @@
-import pixelbot_model.Session as Session
+import pixelbot_backend.pixelbot_model.Session as Session
 from typing import List
 
 class Child:

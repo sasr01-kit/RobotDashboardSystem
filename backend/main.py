@@ -34,9 +34,15 @@ async def websocket_endpoint(websocket: WebSocket):
 import asyncio
 import random
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware # avoid fetch errors
+
+from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository 
+from pixelbot_backend.pixelbot_controller.ChildAPI import ChildAPI 
+from pixelbot_backend.pixelbot_controller.SessionAPI import SessionAPI
 
 app = FastAPI()
 
+# Turtlebot mockup websocket API
 # Store all connected WebSocket clients
 connected_clients = set()
 
@@ -97,3 +103,34 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         print("Client disconnected")
         connected_clients.remove(websocket)
+
+# Pixelbot REST API
+repository = DataRepository() 
+child_api = ChildAPI("C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing", repository) 
+session_api = SessionAPI(child_api) 
+
+app.add_middleware( 
+    CORSMiddleware, 
+    allow_origins=["*"], 
+    allow_credentials=True, 
+    allow_methods=["*"], 
+    allow_headers=["*"], 
+)
+
+@app.get("/pixelbot/children") 
+def get_children(): 
+    return child_api.send_children() 
+
+@app.get("/pixelbot/children/{child_id}") 
+def get_child(child_id: str): 
+    child = child_api.send_child(child_id) 
+    if child is None: 
+        raise HTTPException(status_code=404, detail="Child not found") 
+    return child 
+
+@app.get("/pixelbot/children/{child_id}/sessions/{session_id}") 
+def get_session(child_id: str, session_id: str): 
+    session = session_api.send_session(child_id, session_id) 
+    if session is None: 
+        raise HTTPException(status_code=404, detail="Session not found") 
+    return session

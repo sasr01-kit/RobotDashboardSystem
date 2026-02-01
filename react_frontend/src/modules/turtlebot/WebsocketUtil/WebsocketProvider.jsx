@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useWebSocket } from '../Hooks/useWebsocket';
 import { WebSocketContext } from './WebsocketContext';
 
@@ -7,9 +7,10 @@ export default function WebSocketProvider({ children }) {
   
   const subscribersRef = useRef(new Set()); 
   
-  if (lastMessage) { 
+  useEffect(() => { 
+    if (!lastMessage) return; 
     subscribersRef.current.forEach((callback) => callback(lastMessage)); 
-  } 
+  }, [lastMessage]);
   
   const subscribe = (callback) => { 
     subscribersRef.current.add(callback); 

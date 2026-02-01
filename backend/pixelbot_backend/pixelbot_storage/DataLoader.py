@@ -1,11 +1,12 @@
-from pixelbot_model.DrawingData import DrawingData
-from pixelbot_model.Session import Session
-from pixelbot_model.Child import Child
-from pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
-from pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
-from pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
+from pixelbot_backend.pixelbot_model.DrawingData import DrawingData
+from pixelbot_backend.pixelbot_model.Session import Session
+from pixelbot_backend.pixelbot_model.Child import Child
+from pixelbot_backend.pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
+from pixelbot_backend.pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
+from pixelbot_backend.pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
 import os
 import csv
+import json
 
 class DataLoader:
     DRAWING_FILE_NAME = "drawing.png"
@@ -48,7 +49,8 @@ class DataLoader:
         transcript = self.loadTxt(transcript_path)
 
         story_summary_path = os.path.join(session_path, self.STORY_SUMMARY_FILE_NAME)
-        story_summary = self.loadTxt(story_summary_path)
+        story_summary_text = self.loadTxt(story_summary_path)
+        story_summary = self.parse_story_summary(story_summary_text)
 
         speech_depth_path = os.path.join(session_path, "speech_self_disclosure_depth_data.csv") 
         speech_width_path = os.path.join(session_path, "speech_self_disclosure_width_data.csv")
@@ -77,11 +79,26 @@ class DataLoader:
 
     # Helper to load text file
     def loadTxt(self, file_path):
-            content = ""
-            if os.path.exists(file_path):
-                with open(file_path, "r", encoding="utf-8") as f:
-                    content = f.read()
-            return content
+        content = ""
+        if os.path.exists(file_path):
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+        return content
+    
+    def parse_story_summary(self, text):
+        try:
+            object_dict = json.loads(text)
+        except json.JSONDecodeError as e:
+            print(f"Error: Could not parse story summary as JSON. {e}")
+            return []
+
+        summary_list = []
+        for name, description in object_dict.items():
+            summary_list.append({
+                "name": name,
+                "description": description
+            })
+        return summary_list
 
     # Helper to load CSV file into a dictionary
     def loadCsv(self, file_path):
