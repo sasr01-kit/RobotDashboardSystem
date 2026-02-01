@@ -170,7 +170,7 @@ class RosbridgeConnection:
             self.client = None
         self.isConnected = False
 
-# Small example to illustrate usage (very minimal)
+
 if __name__ == '__main__':
     def print_battery(msg):
         # msg is a dict delivered by roslibpy for sensor_msgs/msg/BatteryState
@@ -191,6 +191,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         pass
     finally:
-        conn.terminate()
-
-        
+        conn.disconnect()
+        print('Disconnected')
