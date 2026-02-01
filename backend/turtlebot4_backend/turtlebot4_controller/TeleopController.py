@@ -1,73 +1,74 @@
-#!/usr/bin/env python3
-import rclpy     
+import time
+import threading
+import roslibpy
 from turtlebot4_model.Teleoperate import Teleoperate
 from turtlebot4_model.DirectionCommand import DirectionCommand
 
-from rclpy.node import Node
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist  # Only for message structure, not ROS 2
 
-class TeleopNode(Node):
-    def __init__(self):
-        super().__init__("teleoperation")
-        self.cmd_vel_pub_ = self.create_publisher(Twist, "/cmd_vel", 10)
-        self.timer_= self.create_timer(0.5, self.send_velocity_command)
-         # Create an instance of Teleoperate
+class TeleopRosbridge:
+    def __init__(self, rosbridge_url='ws://localhost:9090'):
+        # Connect to rosbridge
+        self.client = roslibpy.Ros(host='localhost', port=9090)
+        self.client.run()
+        print("Connected to ROSBridge")
+
+        # Teleoperate instance
         self.teleop = Teleoperate()
-        self.get_logger().info("Teleop communiction established")
+
+        # ROS topic
+        self.cmd_vel_topic = roslibpy.Topic(self.client, '/cmd_vel', 'geometry_msgs/Twist')
+
+        # Start publishing loop
+        self.running = True
+        self.timer = threading.Thread(target=self._publish_loop)
+        self.timer.start()
+
+    def _publish_loop(self):
+        while self.running:
+            self.send_drive_command()
+            time.sleep(0.5)  # equivalent to timer period
 
     def send_drive_command(self):
-            commandQueue_ = self.teleop.get_commands()
-            if not commandQueue_:
-            # No commands in the queue; do nothing
-                 # Queue is empty → stop node
-                self.get_logger().info("Command queue empty. Shutting down node.")
-                self.timer_.cancel()       # Stop the timer
-                rclpy.shutdown()           # Shutdown ROS 2
-                return
+        command_queue = self.teleop.get_commands()
+        if not command_queue:
+            print("Command queue empty. Stopping publisher.")
+            self.running = False
+            self.cmd_vel_topic.unadvertise()
+            self.client.terminate()
+            return
 
-            cmd = commandQueue_.pop(0)
-            msg = Twist()
+        cmd = command_queue.pop(0)
+        msg = {
+            'linear': {'x': 0.0, 'y': 0.0, 'z': 0.0},
+            'angular': {'x': 0.0, 'y': 0.0, 'z': 0.0}
+        }
 
-            if cmd == "FORWARD":
-                msg.linear.x = DirectionCommand.FORWARD.value
-                msg.angular.z = 0.0
+        if cmd == "FORWARD":
+            msg['linear']['x'] = DirectionCommand.FORWARD.value
+            print("Command detected: FORWARD")
+        elif cmd == "BACKWARD":
+            msg['linear']['x'] = DirectionCommand.BACKWARD.value
+            print("Command detected: BACKWARD")
+        elif cmd == "LEFT":
+            msg['linear']['x'] = DirectionCommand.FORWARD.value
+            msg['angular']['z'] = DirectionCommand.LEFT.value
+            print("Command detected: LEFT")
+        elif cmd == "RIGHT":
+            msg['linear']['x'] = DirectionCommand.FORWARD.value
+            msg['angular']['z'] = DirectionCommand.RIGHT.value
+            print("Command detected: RIGHT")
+        elif cmd == "ROTATE_LEFT":
+            msg['angular']['z'] = DirectionCommand.LEFT.value
+            print("Command detected: ROTATE_LEFT")
+        elif cmd == "ROTATE_RIGHT":
+            msg['angular']['z'] = DirectionCommand.RIGHT.value
+            print("Command detected: ROTATE_RIGHT")
 
-                self.get_logger().info("Command detected: UP")
+        self.cmd_vel_topic.publish(roslibpy.Message(msg))
 
-
-            elif cmd == "BACKWARD":
-                msg.linear.x = DirectionCommand.BACKWARD.value
-                msg.angular.z = 0.0
-                self.get_logger().info("Command detected: DOWN")
-
-            elif cmd == "LEFT":
-                msg.linear.x = DirectionCommand.FORWARD.value
-                msg.angular.z = DirectionCommand.LEFT.value
-                self.get_logger().info("Command detected: LEFT")
-
-            elif cmd == "RIGHT":
-                msg.linear.x = DirectionCommand.FORWARD.value
-                msg.angular.z = DirectionCommand.RIGHT.value            
-                self.get_logger().info("Command detected: RIGHT")
-
-            elif cmd == "ROTATE_RIGHT":
-                msg.angular.z = DirectionCommand.RIGHT.value
-                self.get_logger().info("Command detected: ROTATE_RIGHT")
-
-            elif cmd == "ROTATE_LEFT":
-                msg.angular.z = DirectionCommand.LEFT.value
-                self.get_logger().info("Command detected: ROTATE_RIGHT")
-                
-            self.cmd_vel_pub_.publish(msg)
-
-    def stop_robot():
-        pass
-
-def main (args=None):
-    rclpy.init(args=args)
-    node = TeleopNode()
-    rclpy.spin(node)
-
-'''
-
-'''
+    def stop(self):
+        self.running = False
+        self.cmd_vel_topic.unadvertise()
+        self.client.terminate()
+        print("Teleop stopped")
