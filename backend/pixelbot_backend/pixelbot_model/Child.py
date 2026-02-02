@@ -1,8 +1,8 @@
-import pixelbot_model.Session as Session
+import backend.pixelbot_backend.pixelbot_model.Session as Session
 from typing import List
 
 class Child:
-    def __init__(self, child_id: str, name: str, sessions: List[Session]):
+    def __init__(self, child_id: str, name: str, sessions: list):
         self.child_id = child_id
         self.name = name
         self.sessions = sessions  # List of Session objects

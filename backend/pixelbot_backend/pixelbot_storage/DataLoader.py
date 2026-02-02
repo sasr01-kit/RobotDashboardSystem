@@ -1,11 +1,14 @@
-from pixelbot_model.DrawingData import DrawingData
-from pixelbot_model.Session import Session
-from pixelbot_model.Child import Child
-from pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
-from pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
-from pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
+from backend.pixelbot_backend.pixelbot_model.DrawingData import DrawingData
+from backend.pixelbot_backend.pixelbot_model.Session import Session
+from backend.pixelbot_backend.pixelbot_model.Child import Child
+from backend.pixelbot_backend.pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
+from backend.pixelbot_backend.pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
+from backend.pixelbot_backend.pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
 import os
 import csv
+import json
+import hashlib
+import re
 
 class DataLoader:
     DRAWING_FILE_NAME = "drawing.png"
@@ -35,12 +38,14 @@ class DataLoader:
             if os.path.isdir(session_path):
                 session = self.load_session(session_id, session_path)
                 sessions.append(session)
-        return Child(child_name, child_name , sessions)
+                child_id = self.short_hash(child_name, length=8)
+        return Child(child_id=child_id, name=child_name, sessions=sessions)
 
     def load_session(self, session_id, session_path):
         drawing_path = self.find_drawing_file(session_path)
         if os.path.exists(drawing_path):
             drawing = DrawingData(drawing_path)
+            session_date = self.extract_day_from_filename(drawing_path)
         else: 
             drawing = DrawingData("")
         
@@ -48,7 +53,8 @@ class DataLoader:
         transcript = self.loadTxt(transcript_path)
 
         story_summary_path = os.path.join(session_path, self.STORY_SUMMARY_FILE_NAME)
-        story_summary = self.loadTxt(story_summary_path)
+        story_summary_text = self.loadTxt(story_summary_path)
+        story_summary = self.parse_story_summary(story_summary_text)
 
         speech_depth_path = os.path.join(session_path, "speech_self_disclosure_depth_data.csv") 
         speech_width_path = os.path.join(session_path, "speech_self_disclosure_width_data.csv")
@@ -60,6 +66,7 @@ class DataLoader:
         
         return Session(
             session_id,
+            session_date,
             drawing,
             story_summary,
             transcript,
@@ -75,13 +82,37 @@ class DataLoader:
                 return os.path.join(session_path, file)
         return ""  
 
+    def extract_day_from_filename(self, filename):
+        # get base name without extension
+        base_name = os.path.splitext(os.path.basename(filename))[0]
+        # Extracts date in MM-DD-YYYY format from filename
+        match = re.match(r".+_(\d{2}-\d{2}-\d{4})", base_name)
+        if match:
+            return match.group(1)
+        return None
+
     # Helper to load text file
     def loadTxt(self, file_path):
-            content = ""
-            if os.path.exists(file_path):
-                with open(file_path, "r", encoding="utf-8") as f:
-                    content = f.read()
-            return content
+        content = ""
+        if os.path.exists(file_path):
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+        return content
+    
+    def parse_story_summary(self, text):
+        try:
+            object_dict = json.loads(text)
+        except json.JSONDecodeError as e:
+            print(f"Error: Could not parse story summary as JSON. {e}")
+            return []
+
+        summary_list = []
+        for name, description in object_dict.items():
+            summary_list.append({
+                "name": name,
+                "description": description
+            })
+        return summary_list
 
     # Helper to load CSV file into a dictionary
     def loadCsv(self, file_path):
@@ -90,3 +121,9 @@ class DataLoader:
                 reader = csv.DictReader(f)
                 return next(reader, {})
         return {}
+    
+    def short_hash(self, name, length=8):
+        full_hash = hashlib.sha256(name.encode()).hexdigest()
+        return full_hash[:length]
+
+    

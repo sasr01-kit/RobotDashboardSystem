@@ -1,13 +1,14 @@
-from pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
-from pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
-from pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
-from pixelbot_model.DrawingData import DrawingData
+from backend.pixelbot_backend.pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
+from backend.pixelbot_backend.pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
+from backend.pixelbot_backend.pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
+from backend.pixelbot_backend.pixelbot_model.DrawingData import DrawingData
 
 class Session:
-    def __init__(self, session_id: str, drawing: DrawingData, story_summary: str, transcript: str,
+    def __init__(self, session_id: str, session_date: str, drawing: DrawingData, story_summary: list, transcript: str,
                  speech_width: SpeechSelfDisclosureWidth, speech_depth: SpeechSelfDisclosureDepth,
                  drawing_width: DrawingSelfDisclosureWidth):
         self.session_id = session_id
+        self.session_date = session_date
         self.drawing = drawing
         self.story_summary = story_summary
         self.transcript = transcript
@@ -18,6 +19,7 @@ class Session:
     def to_dict(self):
         return {
             "sessionId": self.session_id,
+            "sessionDate": self.session_date,
             "drawing": self.drawing.to_dict(),
             "storySummary": self.story_summary,
             "transcript": self.transcript,
@@ -28,6 +30,9 @@ class Session:
     
     def getSessionId(self):
         return self.session_id
+    
+    def getSessionDate(self):
+        return self.session_date
     
     def getDrawing(self):
         return self.drawing
@@ -51,6 +56,7 @@ class Session:
     def from_dict(data):
         return Session(
             session_id=data["sessionId"],
+            session_date=data["sessionDate"],
             drawing=DrawingData.from_dict(data["drawing"]),
             story_summary=data["storySummary"],
             transcript=data["transcript"],
