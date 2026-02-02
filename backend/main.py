@@ -106,7 +106,9 @@ async def websocket_endpoint(websocket: WebSocket):
 
 # Pixelbot REST API
 repository = DataRepository() 
-child_api = ChildAPI("C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing", repository) 
+# Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
+# Pixelbot path: "http://192.168.2.70:8000"
+child_api = ChildAPI("C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing", repository) 
 session_api = SessionAPI(child_api) 
 
 app.add_middleware( 

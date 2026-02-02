@@ -7,6 +7,8 @@ from pixelbot_backend.pixelbot_model.DrawingSelfDisclosureWidth import DrawingSe
 import os
 import csv
 import json
+import re
+import hashlib
 
 class DataLoader:
     DRAWING_FILE_NAME = "drawing.png"
