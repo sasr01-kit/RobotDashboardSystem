@@ -2,11 +2,16 @@ import '../styles/ChildSessionView.css';
 import DashboardCard from '../components/DashboardCard';
 import ImageCarousel from '../components/ImageCarousel';
 import { usePixelbotSession } from '../hooks/usePixelbotSession';
+import { usePixelbotChildren } from '../hooks/usePixelbotChildren';
 import { useParams } from 'react-router-dom';
 
 export default function ChildSessionView() {
     const { childId, sessionId } = useParams();
+    const { children } = usePixelbotChildren(); // Fetch all children data with hook
     const { session, isLoading } = usePixelbotSession(childId, sessionId); // Fetch specific session data with hook
+
+    const child = children ? children.find(c => c.childId == childId) : null;
+    const name = child ? child.name : 'Unknown Child';
 
     function handlePrint(elementId) { // Print function
         if (elementId) {
@@ -41,7 +46,7 @@ export default function ChildSessionView() {
                     <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                     <rect x="6" y="14" width="12" height="8"></rect>
                 </svg>
-                <h3>{childId} - {sessionId}</h3>
+                <h3>{name} - {sessionId}</h3>
             </div>
 
             <div className="child-recap-view">

@@ -11,7 +11,7 @@ export function usePixelbotChildren() {
         setIsLoading(true);
         setError(null);
 
-        const res = await fetch("http://localhost:9090/pixelbot/children");
+        const res = await fetch("http://localhost:8080/pixelbot/children");
         if (!res.ok) throw new Error("Failed to fetch children");
 
         const data = await res.json();

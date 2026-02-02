@@ -21,7 +21,7 @@ export function usePixelbotSession(childId, sessionId = null) {
       try {
         if (!sessionId) {
           // Fetch child recap
-          const res = await fetch(`http://localhost:9090/pixelbot/children/${childId}`);
+          const res = await fetch(`http://localhost:8080/pixelbot/children/${childId}`);
           if (!res.ok) throw new Error("Child not found");
 
           const data = await res.json();
@@ -30,7 +30,7 @@ export function usePixelbotSession(childId, sessionId = null) {
         } else {
           // Fetch specific session
           const res = await fetch(
-            `http://localhost:9090/pixelbot/children/${childId}/sessions/${sessionId}`
+            `http://localhost:8080/pixelbot/children/${childId}/sessions/${sessionId}`
           );
           if (!res.ok) throw new Error("Session not found");
 
