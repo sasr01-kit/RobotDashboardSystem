@@ -52,7 +52,7 @@ export default function ChildSessionView() {
             <div className="child-recap-view">
                 <div className="session-grid">
                     {/* Left Column */}
-                    <div className="session-column">
+                    <div className="session-column-drawing-and-transcript">
                         <DashboardCard id="session-drawing" title="Drawing" onPrint={() => handlePrint('session-drawing')}>
                             <ImageCarousel images={session.drawing} />
                         </DashboardCard>

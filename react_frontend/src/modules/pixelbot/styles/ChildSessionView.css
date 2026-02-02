@@ -13,6 +13,14 @@
     display: contents;
 }
 
+.session-column-drawing-and-transcript {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;       
+    flex: 1;       
+    min-height: 0;    
+}
+
 .session-column-specific-metrics {
     display: grid;
     grid-template-rows: 1fr 1fr;
