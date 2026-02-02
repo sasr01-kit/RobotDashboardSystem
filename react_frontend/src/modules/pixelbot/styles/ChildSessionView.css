@@ -14,8 +14,8 @@
 }
 
 .session-column-specific-metrics {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
     gap: 1rem;       
     flex: 1;       
     min-height: 0;    
