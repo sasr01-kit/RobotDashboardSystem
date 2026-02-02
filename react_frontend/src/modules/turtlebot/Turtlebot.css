@@ -18,11 +18,16 @@
 
 .turtlebot-navbar {
     position: fixed;
-    padding-top: 1rem;
+    top: var(--header-height); /* place below header*/
+    height: var(--navbar-height); /* consistent navbar height */
+    z-index: 900; /* below header (header has 1000) */
+
     padding-bottom: 1rem;
     padding-left: 2rem;
     text-align: left;
-    background-color: #F6F6F6;
+    background-color: var(--bg-light);
+
+    max-height: var(--navbar-height);
     min-width: 100vw;
 }
 
@@ -62,7 +67,7 @@
 
 
 .tab-button.active {
-   color: #242626;; 
+   color: #242626;
    font-weight: 600; 
 }
 

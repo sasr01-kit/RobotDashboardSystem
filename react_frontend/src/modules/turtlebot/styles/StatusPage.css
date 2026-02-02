@@ -1,0 +1,63 @@
+/* Status Page and its Main Containers Styling */
+
+.turtlebot-status-page { 
+    padding: 2rem; 
+    background-color: var(--bg-light); 
+    color: #333; 
+}
+
+.status-row {
+    display: flex;
+    gap: 3.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.teleop-and-commands-container {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.commands-column-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+
+/* MOCK TELEOP STYLE DELETE AFTER
+.teleop-log { 
+    margin-left: 2rem; 
+    padding: 1rem;
+    background: #ffffff; 
+    border-radius: 12px; 
+    width: 250px; 
+    max-height: 300px; 
+    overflow-y: auto; 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+} 
+
+.teleop-log h3 { 
+    margin-top: 0; 
+    font-size: 1rem; 
+    font-weight: 600; 
+} 
+
+.teleop-log ul { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+} 
+    
+.teleop-log li { 
+    font-family: monospace; 
+    font-size: 0.85rem; 
+    padding: 4px 0; 
+    border-bottom: 1px solid #eee; 
+}
+End of MOCK TELEOP STYLE DELETE AFTER */

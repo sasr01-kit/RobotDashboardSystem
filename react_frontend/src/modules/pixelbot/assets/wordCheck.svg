@@ -1,0 +1,15 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&amp;display=swap');
+    </style>
+  </defs>
+  <!-- Letter A -->
+  <text x="3" y="18" font-family="'Inter', sans-serif" font-weight="700" font-size="20" fill="#333">A</text>
+  
+  <!-- Checkmark -->
+  <!-- White stroke to separate from the letter -->
+  <path d="M11 16L15 20L22 10" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- The checkmark itself -->
+  <path d="M11 16L15 20L22 10" stroke="#20A090" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

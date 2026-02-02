@@ -1,0 +1,38 @@
+/* Metric Card Styles */
+
+.metric-card {
+    background-color: #fff;
+    border-radius: 30px;
+    border: 1px solid #e0e0e0;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.metric-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.metric-card-title {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.metric-card-icon {
+    font-size: 1.5rem;
+}
+
+.metric-card-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.metric-card-subtitle {
+    font-size: 0.9rem;
+    color: #999;
+}

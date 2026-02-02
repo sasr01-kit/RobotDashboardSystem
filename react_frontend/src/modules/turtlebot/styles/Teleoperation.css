@@ -1,0 +1,72 @@
+/* Teleoperation Components Styling */
+
+.teleoperation-block {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-radius: 16px;
+    width: 30%;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); 
+}
+
+.top-left-logo {
+    display: flex;
+    align-items: flex-start;
+}
+
+.control-zone {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2.5rem;
+    margin-top: 2rem;
+}
+
+.teleoperation-block.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.teleop-button { 
+    background: none; 
+    border: none; 
+    padding: 0; 
+    margin: 0; 
+    box-shadow: none; 
+    outline: none; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.teleop-button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.teleop-icon, .teleop-logo { 
+    width: 50px; 
+    height: 50px; 
+}
+
+.direction-pad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.horizontal-row {
+    display: flex;
+    flex-direction: row;
+    gap: 4.5rem;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
