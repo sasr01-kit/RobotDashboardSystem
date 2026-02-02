@@ -1,7 +1,7 @@
 
 from typing import Dict, Any
-from Subject import Subject
-from Path import Path
+from turtlebot4_backend.turtlebot4_model.Subject import Subject
+from turtlebot4_backend.turtlebot4_model.Path import Path
 
 class RobotState(Subject):
     def __init__(
@@ -36,31 +36,46 @@ class RobotState(Subject):
         return self._is_raspberry_pi_connected
 
     # Setters (each notifies observers on change)
-    def set_is_on(self, value: bool) -> None:
+    async def set_is_on(self, value: bool) -> None:
         if self._is_on != value:
             self._is_on = value
-            self.notify()
+            await self.notify_observers({ 
+                "type": "STATUS_UPDATE", 
+                **self.toJSON() 
+            })
 
-    def set_battery_percentage(self, value: float) -> None:
+    async def set_battery_percentage(self, value: float) -> None:
         value = max(0.0, min(100.0, value))  # clamp to [0, 100]
         if self._battery_percentage != value:
             self._battery_percentage = value
-            self.notify()
+            await self.notify_observers({ 
+                "type": "STATUS_UPDATE", 
+                **self.toJSON() 
+            })
 
-    def set_is_wifi_connected(self, value: bool) -> None:
+    async def set_is_wifi_connected(self, value: bool) -> None:
         if self._is_wifi_connected != value:
             self._is_wifi_connected = value
-            self.notify()
+            await self.notify_observers({ 
+                "type": "STATUS_UPDATE", 
+                **self.toJSON() 
+            })
 
-    def set_is_comms_connected(self, value: bool) -> None:
+    async def set_is_comms_connected(self, value: bool) -> None:
         if self._is_comms_connected != value:
             self._is_comms_connected = value
-            self.notify()
+            await self.notify_observers({ 
+                "type": "STATUS_UPDATE", 
+                **self.toJSON() 
+            })
 
-    def set_is_raspberry_pi_connected(self, value: bool) -> None:
+    async def set_is_raspberry_pi_connected(self, value: bool) -> None:
         if self._is_raspberry_pi_connected != value:
             self._is_raspberry_pi_connected = value
-            self.notify()
+            await self.notify_observers({ 
+                "type": "STATUS_UPDATE", 
+                **self.toJSON() 
+            })
 
     def toJSON(self) -> Dict[str, Any]:
         """
@@ -75,5 +90,5 @@ class RobotState(Subject):
             "isWifiConnected": self._is_wifi_connected,
             "isCommsConnected": self._is_comms_connected,
             "isRaspberryPiConnected": self._is_raspberry_pi_connected,
-            "mode" : Path.get_is_path_module_active(),
+            #"mode" : Path.get_is_path_module_active(),
         }

@@ -1,14 +1,12 @@
-from backend.pixelbot_backend.pixelbot_model.DrawingData import DrawingData
-from backend.pixelbot_backend.pixelbot_model.Session import Session
-from backend.pixelbot_backend.pixelbot_model.Child import Child
-from backend.pixelbot_backend.pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
-from backend.pixelbot_backend.pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
-from backend.pixelbot_backend.pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
+from pixelbot_backend.pixelbot_model.DrawingData import DrawingData
+from pixelbot_backend.pixelbot_model.Session import Session
+from pixelbot_backend.pixelbot_model.Child import Child
+from pixelbot_backend.pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
+from pixelbot_backend.pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
+from pixelbot_backend.pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
 import os
 import csv
 import json
-import hashlib
-import re
 
 class DataLoader:
     DRAWING_FILE_NAME = "drawing.png"

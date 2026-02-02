@@ -3,5 +3,5 @@ from abc import ABC, abstractmethod
 
 class Observer(ABC):
     @abstractmethod
-    def update(self, source, data):
+    async def update(self, source, data: dict) -> None:
         pass

@@ -1,7 +1,7 @@
-from backend.pixelbot_backend.pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
-from backend.pixelbot_backend.pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
-from backend.pixelbot_backend.pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
-from backend.pixelbot_backend.pixelbot_model.DrawingData import DrawingData
+from pixelbot_backend.pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
+from pixelbot_backend.pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
+from pixelbot_backend.pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
+from pixelbot_backend.pixelbot_model.DrawingData import DrawingData
 
 class Session:
     def __init__(self, session_id: str, session_date: str, drawing: DrawingData, story_summary: list, transcript: str,

@@ -90,24 +90,44 @@ export default function ChildSessionView() {
                     </div>
 
                     {/* Right Column */}
-                    <div className="session-column">
-                        <DashboardCard id="session-speech-data" title="Speech Data" onPrint={() => handlePrint('session-speech-data')} className="teal-header">
+                    <div className="session-column-specific-metrics">
+                       <DashboardCard id="session-speech-data" title="Speech Data" onPrint={() => handlePrint('session-speech-data')} className="teal-header">
                             <div className="data-list">
                                 <div className="data-row">
-                                    <span className="label">Total word count</span>
-                                    <span className="value">{session.benchmarks?.globalAvgWordCount}</span>
+                                    <span className="label">Number of intervention </span>
+                                    <span className="value">{session.speechWidth?.interventionCount}</span>
                                 </div>
                                 <div className="data-row">
-                                    <span className="label">Number of child </span>
-                                    <span className="value">{session.benchmarks?.globalAvgScoreLength}</span>
+                                    <span className="label">Total word count </span>
+                                    <span className="value">{session.speechWidth?.totalWordCount}</span>
                                 </div>
                                 <div className="data-row">
-                                    <span className="label">Average speech time</span>
-                                    <span className="value">{session.benchmarks?.globalAvgSpeechTime}</span>
+                                    <span className="label">Average word count per intervention </span>
+                                    <span className="value">{session.speechWidth?.avgWordCountPerIntervention}</span>
+                                </div>
+                                <div className="data-row">
+                                    <span className="label">Standard word count per intervention </span>
+                                    <span className="value">{session.speechWidth?.stdWordCountPerIntervention}</span>
+                                </div>
+                                  <div className="data-row">
+                                    <span className="label">Total speech time </span>
+                                    <span className="value">{session.speechWidth?.totalSpeechTime}</span>
+                                </div>
+                                <div className="data-row">
+                                    <span className="label">Average speech time per intervention </span>
+                                    <span className="value">{session.speechWidth?.avgSpeechTimePerIntervention}</span>
+                                </div>
+                                <div className="data-row">
+                                    <span className="label">Standard word count per intervention </span>
+                                    <span className="value">{session.speechWidth?.stdSpeechTimePerIntervention}</span>
                                 </div>
                                 <div className="data-row">
                                     <span className="label">Average intimacy sore</span>
-                                    <span className="value">{session.benchmarks?.globalAvgIntimacyScore}</span>
+                                    <span className="value">{session.speechDepth?.avgIntimacyScore}</span>
+                                </div>
+                                <div className="data-row">
+                                    <span className="label">Standard intimacy sore</span>
+                                    <span className="value">{session.speechDepth?.stdIntimacyScore}</span>
                                 </div>
                             </div>
                         </DashboardCard>
@@ -115,24 +135,28 @@ export default function ChildSessionView() {
                         <DashboardCard id="session-drawing-data" title="Drawing Data" onPrint={() => handlePrint('session-drawing-data')} className="teal-header">
                             <div className="data-list">
                                 <div className="data-row" >
-                                    <span className="label">Amount of surface filled</span>
-                                    <span className="value">{session.drawingWidth?.surfacePercentage}</span>
+                                    <span className="label">Number of strokes</span>
+                                    <span className="value">{session.drawingWidth?.strokeCount}</span>
                                 </div>
                                 <div className="data-row" >
-                                    <span className="label">Number of strokes</span>
-                                    <span className="value">{session.drawingWidth?.numStrokes}</span>
+                                    <span className="label">Total stroke length </span>
+                                    <span className="value">{session.drawingWidth?.totalStrokeLength}</span>
                                 </div>
                                 <div className="data-row" >
                                     <span className="label">Average stroke length</span>
                                     <span className="value">{session.drawingWidth?.avgStrokeLength}</span>
                                 </div>
                                 <div className="data-row" >
-                                    <span className="label">Amount of different colors used</span>
-                                    <span className="value">{session.drawingWidth?.numberColorsUsed}</span>
+                                    <span className="label">Standard deviation of stroke length</span>
+                                    <span className="value">{session.drawingWidth?.stdStrokeLength}</span>
                                 </div>
                                 <div className="data-row" >
-                                    <span className="label">Amount of different pen sizes used</span>
-                                    <span className="value">{session.drawingWidth?.numberPenSizedUsed}</span>
+                                    <span className="label">Number of colors used</span>
+                                    <span className="value">{session.drawingWidth?.colorUsedCount}</span>
+                                </div>
+                                <div className="data-row" >
+                                    <span className="label">Amount of area filled</span>
+                                    <span className="value">{session.drawingWidth?.amountFilledArea}</span>
                                 </div>
                             </div>
                         </DashboardCard>

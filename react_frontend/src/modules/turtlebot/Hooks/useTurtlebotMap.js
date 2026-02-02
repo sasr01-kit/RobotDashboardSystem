@@ -1,5 +1,8 @@
+import { useState, useEffect } from "react";
+import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext";
+
 export function useTurtlebotMap() {
-  const { socket } = useWebSocketContext();
+  const { subscribe } = useWebSocketContext();
 
   const [map, setMap] = useState(null);
   const [poseStamped, setPoseStamped] = useState(null);
@@ -7,26 +10,31 @@ export function useTurtlebotMap() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!subscribe) return;
 
-    const handleMessage = (event) => {
+    return subscribe((data) => {
       try {
-        const data = JSON.parse(event.data);
-
         if (data.type === "MAP_UPDATE") {
           setMap({
             mapUrl: data.mapUrl,
             resolution: data.resolution,
             width: data.width,
             height: data.height,
-            origin: { x: data.origin.x, y: data.origin.y },
+            origin: {
+              x: data.origin.x,
+              y: data.origin.y,
+            },
           });
         }
 
         if (data.type === "POSE_UPDATE") {
           setPoseStamped({
             id: data.id,
-            coordinate: { x: data.coordinate.x, y: data.coordinate.y, z: data.coordinate.z },
+            coordinate: {
+              x: data.coordinate.x,
+              y: data.coordinate.y,
+              z: data.coordinate.z,
+            },
             timestamp: data.timestamp,
             frame_id: data.frame_id,
           });
@@ -34,15 +42,12 @@ export function useTurtlebotMap() {
 
         setIsLoading(false);
         setError(null);
-      } catch (err) {
-        setError("Failed to parse Turtlebot data");
+      } catch {
+        setError("Failed to parse Turtlebot map data");
         setIsLoading(false);
       }
-    };
+    });
+  }, [subscribe]);
 
-    socket.addEventListener("message", handleMessage);
-    return () => socket.removeEventListener("message", handleMessage);
-  }, [socket]);
-
-  return { map, poseStamped, goalLogs, isLoading, error };
+  return { map, poseStamped, isLoading, error };
 }
