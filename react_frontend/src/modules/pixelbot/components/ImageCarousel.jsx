@@ -40,7 +40,7 @@ export default function ImageCarousel({ images }) {
                 </button>
                 <div className="carousel-image-wrapper">
                     <img
-                        src={images[currentIndex]}
+                        src={images[currentIndex].imagePath}
                         alt={`Drawing ${currentIndex + 1}`}
                         className="carousel-image"
                     />

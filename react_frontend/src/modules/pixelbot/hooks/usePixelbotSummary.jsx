@@ -5,7 +5,7 @@ export function usePixelbotSummary() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // MOCK DATA
+    // MOCK DATA -- DELETE FOR REAL IMPLEMENTATION
     const generateMockBackendData = () => {
         const mockData = {};
         const startDate = new Date('2026-01-01');
@@ -34,15 +34,19 @@ export function usePixelbotSummary() {
         try {
             setIsLoading(true);
             setError(null);
-            /*const response = await fetch(url);
-            const data = await response.json();
-            data.dailySessionsCount = transformBackendDataToHeatmap(data.dailySessionsCount);
-            setSummaryStats(data);  TODO: Implement actual data fetching */
-            setSummaryStats({ // MOCK DATA
-                totalSessions: 315,
-                avgSessionsPerChild: 10,
-                dailySessionsCount: transformBackendDataToHeatmap(generateMockBackendData())
-            });
+            /*const response = await fetch(url);*/ // FOR REAL IMPLEMENTATION CHANGE url TO API ENDPOINT
+            /*const data = await response.json();
+            const summary = {
+                totalSessions: data.totalSessions,
+                avgSessionsPerChild: data.avgSessionsPerChild,
+                dailySessionCounts: transformBackendDataToHeatmap(data.dailySessionCounts) 
+            };*/
+            const summary = { // MOCK DATA -- DELETE FOR REAL IMPLEMENTATION USE ABOVE
+                totalSessions: 120, // MOCK DATA
+                avgSessionsPerChild: 8, // MOCK DATA
+                dailySessionCounts: transformBackendDataToHeatmap(generateMockBackendData()) // MOCK DATA
+            } // DELETE THIS BLOCK FOR REAL IMPLEMENTATION
+            setSummaryStats(summary);
             setIsLoading(false);
             setError(null);
         }
