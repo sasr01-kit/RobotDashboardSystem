@@ -1,6 +1,6 @@
 .home-button {
-  width: 2rem;
-  height: 2rem;
+  width: 40px;
+  height: 40px;
   padding: 6px;
   display: inline-flex;
   align-items: center;
@@ -8,17 +8,16 @@
   border: none;
   background: transparent;
   color: var(--header-foreground, #111);
-  background-color:#00A699;
   cursor: pointer;
   border-radius: 6px;
   margin-right: 12px;
 }
 
 .home-button:hover {
-  background: #00A69977;
+  background: rgba(0,0,0,0.06);
 }
 
-.home-button img {
-  width: 32px;
-  height: 32px;
+.home-button svg {
+  width: 24px;
+  height: 24px;
 }

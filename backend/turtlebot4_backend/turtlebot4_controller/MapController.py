@@ -1,84 +1,104 @@
-import rclpy
-from rclpy.node import Node
-from nav_msgs.msg import OccupancyGrid
-from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 import numpy as np
-import json
-import matplotlib.pyplot as plt
-import os
+from typing import Optional
+import threading
+from turtlebot4_backend.turtlebot4_model.Map import Map
+from turtlebot4_backend.turtlebot4_model.MapData import MapData
+from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
 
+class MapController:
+    """
+    Receives the static OccupancyGrid map via ROSBridge,
+    converts it into a MapData object, and injects it into the Map model.
+    """
 
-class MapSubscriber(Node):
-    def __init__(self):
-        super().__init__('map_subscriber')
+    def __init__(
+        self,
+        map_model: Map,
+        rosbridge_host: str = 'localhost',
+        rosbridge_port: int = 9090
+    ) -> None:
+        self._map_model = map_model
+        self._map_received = False
 
-        # QoS for latched /map topic
-        qos_profile = QoSProfile(
-            reliability=QoSReliabilityPolicy.RELIABLE,
-            history=QoSHistoryPolicy.KEEP_LAST,
-            depth=1,
-            durability=rclpy.qos.QoSDurabilityPolicy.TRANSIENT_LOCAL
+        # ROSBridge connection
+        self._ros = RosbridgeConnection(host=rosbridge_host, port=rosbridge_port)
+
+    # loadMap(source: String) : void 
+    # is now a manual action as we discovered that you have to run the map server (ros2 run ...) in terminal
+    # for the intended functionality.
+    # 
+    # updateHumanPositions(msg: Dictionary) : void
+    # computeProxemicDistance(humanId: String) : void 
+    # are both depending on the human model from the fuzzy_social_controller package, which was not communicated.
+    # Thus, the implementation of these will be the client's responsibility. 
+    #
+    # These changes are documented in our implementation document.
+
+    def subscribeToMap(self) -> None:
+        """Connect to rosbridge and subscribe to the /map topic."""
+        def _connect_and_subscribe():
+            try:
+                self._ros.connect()
+            except Exception as e:
+                print(f"Failed to connect to rosbridge: {e}")
+                return
+
+            print("MapController connected to rosbridge.")
+
+            try:
+                self._ros.subscribe('/map', 'nav_msgs/OccupancyGrid', self._map_callback)
+                print("Subscribed to /map topic.")
+            except Exception as e:
+                print(f"Failed to subscribe to /map topic: {e}")
+
+        threading.Thread(target=_connect_and_subscribe, daemon=True).start()
+
+    def _map_callback(self, message: dict) -> None:
+        """
+        Handles the OccupancyGrid message received from rosbridge.
+        This should only run once for the static map.
+        """
+        if self._map_received:
+            return  # Ignore further updates
+
+        print("Static map received from ROSBridge")
+
+        info = message['info']
+
+        resolution = info['resolution']
+        width_cells = info['width']
+        height_cells = info['height']
+
+        # Convert to meters (consistent with your Map logic)
+        width_m = width_cells * resolution
+        height_m = height_cells * resolution
+
+        occupancy_grid = list(message['data'])  # flat list[int]
+
+        # Create MapData instance
+        map_data = MapData(
+            resolution=resolution,
+            width=width_m,
+            height=height_m,
+            occupancyGrid=occupancy_grid
         )
 
-        self.subscription = self.create_subscription(
-            OccupancyGrid,
-            '/map',
-            self.callback,
-            qos_profile
-        )
+        # Inject into Map model (this triggers PNG + base64 conversion)
+        self._map_model.set_mapData(map_data)
 
-        # Directory to save files
-        self.save_dir = '/home/saadhvi/ros2_ws/src/map_only_launch'
-        os.makedirs(self.save_dir, exist_ok=True)
+        self._map_received = True
 
-    def callback(self, msg: OccupancyGrid):
-        # Log that the map was received
-        self.get_logger().info('Map received!')
+        print("MapData injected into Map model")
 
-        # Convert flat OccupancyGrid to 2D NumPy array
-        width = msg.info.width
-        height = msg.info.height
-        grid = np.array(msg.data, dtype=int).reshape((height, width))
+        # Optional: unsubscribe since map is static
+        self._ros.unsubscribe('/map')
 
-        # ----- Save as JSON -----
-        json_path = os.path.join(self.save_dir, 'warehouse_map.json')
-        map_json = {
-            "width": width,
-            "height": height,
-            "resolution": msg.info.resolution,
-            "origin": {
-                "x": msg.info.origin.position.x,
-                "y": msg.info.origin.position.y,
-                "z": msg.info.origin.position.z
-            },
-            "data": grid.tolist()
-        }
-
-        with open(json_path, 'w') as f:
-            json.dump(map_json, f, indent=2)
-        self.get_logger().info(f'Occupancy grid saved as {json_path}')
-
-        # ----- Save as heatmap PNG -----
-        visual_grid = grid.copy()
-        visual_grid[visual_grid == -1] = 50  # unknowns -> middle gray
-
-        png_path = os.path.join(self.save_dir, 'warehouse_map.png')
-        plt.figure(figsize=(8, 8))
-        plt.imshow(visual_grid, cmap='gray_r', origin='lower')
-        plt.colorbar(label='Occupancy Value')
-        plt.title('Warehouse Occupancy Grid Heatmap')
-        plt.savefig(png_path)
-        plt.close()
-        self.get_logger().info(f'Occupancy grid heatmap saved as {png_path}')
-
-
-def main(args=None):
-    rclpy.init(args=args)
-    node = MapSubscriber()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
+    def shutdown(self) -> None:
+        """
+        Clean shutdown of rosbridge connection.
+        """
+        try:
+            self._ros.terminate()
+        except Exception as e:
+            print(f"Error during shutdown: {e}")
+        print("MapController shutdown complete")
