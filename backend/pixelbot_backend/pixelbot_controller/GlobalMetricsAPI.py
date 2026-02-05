@@ -43,32 +43,46 @@ class GlobalMetricsAPI:
         sessions = child.sessions
 
         now = datetime.datetime.now()
-        month = now.month
         year = now.year
 
         recap = {
             "engagement": {
+                # Can be visualised as a box
                 "totalSessions": len(sessions),
+                # Can be visualised as a line chart. It's a map for every month and the count of sessions taken each month
                 "sessionFrequencyTrend": Utils.get_session_frequency_monthly(sessions, year),
                 # "sessionStreakWeeks": Utils.get_session_streak(sessions),
-                "mostCommonObjects": self.get_most_common_objects(sessions, 5),
             },
             "expressiveness": {
+                # It can be written under or above the chart
                 "totalWordCount": Utils.get_total_word_count(sessions),
-                #"averageWordCount": Utils.avg_word_count(),
-                "wordCountGrowthRate": Utils.get_avg_word_count_growth_rate(sessions, month, year),
-                #"avgIntimacyScore": 
-                "speechTimeGrowthRate": Utils.get_speech_time_growth_rate(sessions, month, year),
+                # red line which shows the average for the bar chart
+                "averageWordCount": Utils.avg_word_count(sessions),
+                # a map of the word count for every session. Can be visualized as a bbar chart
+                "wordCountGrowthRate": Utils.get_avg_word_count_growth_rate(sessions, year),
+                # a map of the speech time for every session.
+                "speechTimeGrowthRate": Utils.get_speech_time_growth_rate(sessions, year),
             },
             "opennes": {
+                # red line which shows the average for the line chart
                 "averageIntimacyScore": Utils.get_avg_intimacy_score(sessions),
+                # a map for every session and its intimacy value. Can be visualized as a line chart.
                 "intimacyTrend": Utils.get_intimacy_trend(sessions, year),
             },
             "drawing": {
-                
+                # all these three metrics can be put under the drawing section in the same box
+                "averageStrokeCount": Utils.get_avg_stroke_count(sessions),
+                "averageNumberColors": Utils.get_avg_colors_used(sessions),
+                "averageFilledArea": Utils.get_avg_filled_area(sessions),
+            },
+            "story": {
+                "averageNumberObjects": Utils.get_avg_number_objects(sessions),
+                # top 5 objects, ranking
+                "mostCommonObjects": self.get_most_common_objects(sessions, 5),
+                "objectDiversity": Utils.get_object_diversity(sessions),
             }
         }
-        pass
+        return recap
 
 
 
