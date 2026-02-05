@@ -1,7 +1,7 @@
 # Path.py
 from typing import List, Dict, Any
-from Subject import Subject
-from PathLogEntry import PathLogEntry
+from turtlebot4_backend.turtlebot4_model.Subject import Subject
+from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
 
 
 class Path(Subject):

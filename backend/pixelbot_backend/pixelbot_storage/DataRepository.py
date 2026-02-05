@@ -1,5 +1,5 @@
-from pixelbot_model.Child import Child
-from pixelbot_model.Session import Session
+from pixelbot_backend.pixelbot_model.Child import Child
+from pixelbot_backend.pixelbot_model.Session import Session
 import json
 import os
 from datetime import datetime
@@ -7,9 +7,11 @@ from datetime import datetime
 "Repository to save and load Child and Session data as JSON files"
 
 class DataRepository:
-    DATA_FILE = "children_data.json"
-    #  stores metadata such as when the data was last updated
-    META_FILE = "children_meta.json"
+    def __init__(self):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        # Build absolute paths to JSON files 
+        self.DATA_FILE = os.path.join(base_dir, "children_data.json") 
+        self.META_FILE = os.path.join(base_dir, "children_meta.json")
 
     # save child as JSON
     def save_children(self, children_objects):
@@ -21,20 +23,20 @@ class DataRepository:
 
         # Save metadata
         meta = {
-            "last_updated": datetime.now().isoformat()
+            "last_updated": datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         }   
         with open(self.META_FILE, 'w') as f:
             json.dump(meta, f, indent=4) 
 
         # Log success message, optional, only for debugging
-        # print("[Repository] Successfully saved children data.")
+        print("[Repository] Successfully saved children data.")
     
     # load child from JSON
     def load_children(self):
         if not os.path.exists(self.DATA_FILE):
             # message, optional, only for debugging
             # print("[Repository] No data file found.")
-            return None
+            return []
 
         # Read JSON file
         with open(self.DATA_FILE, 'r') as f:

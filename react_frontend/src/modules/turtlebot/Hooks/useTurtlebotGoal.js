@@ -2,35 +2,34 @@ import { useState, useEffect } from 'react';
 import { useWebSocketContext } from '../WebsocketUtil/WebsocketContext.js';
 
 export function useTurtlebotGoal() {
-  const { socket } = useWebSocketContext();
+  const { subscribe } = useWebSocketContext();
   const [logs, setLogs] = useState([]);
   const [error, setError] = useState(null);
 
+  
   useEffect(() => {
-    if (!socket) return;
+    if (!subscribe) return;
 
-    const handleMessage = (event) => {
+    return subscribe((data) => {
+      if (data.type !== "GOAL_LOG_UPDATE") return;
+
       try {
-        const data = JSON.parse(event.data);
-        if (data.type === "GOAL_LOG_UPDATE") {
-          const log = {
+        setLogs((prev) => [
+          {
             id: data.id,
             label: data.label,
             fuzzy_output_goal: data.fuzzy_output_goal,
             fuzzy_output_human: data.fuzzy_output_human,
             timestamp: data.timestamp,
             feedback: data.feedback,
-          };
-          setLogs((prev) => [log, ...prev]);
-        }
+          },
+          ...prev,
+        ]);
       } catch {
-        setError("Failed to parse goal log");
+        setError("Failed to handle goal log");
       }
-    };
-
-    socket.addEventListener("message", handleMessage);
-    return () => socket.removeEventListener("message", handleMessage);
-  }, [socket]);
+    });
+  }, [subscribe]);
 
   return { logs, error };
 }

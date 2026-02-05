@@ -1,12 +1,20 @@
+import sys
 import os
 import json
+# add the project root to module search path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from pixelbot_storage.DataLoader import DataLoader
-from pixelbot_storage.DataRepository import DataRepository
+from pixelbot_backend.pixelbot_storage.DataLoader import DataLoader
+from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository
 
 # ---- CONFIG ----
-DATA_ROOT = "C:/Users/aneca/Downloads/pse_data_example/saved_drawing"
-OUTPUT_JSON = "children_data.json"
+DATA_ROOT = "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing"
+OUTPUT_JSON = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "pixelbot_storage",
+    "children_data.json"
+)
+
 
 # ---- TEST START ----
 print("=== STARTING FULL PIPELINE TEST ===")
