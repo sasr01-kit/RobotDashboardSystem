@@ -28,7 +28,6 @@ export default function TeleoperationBlock() {
     /* END MOCK PLEASE DELETE !!!!! */
 
     useEffect(() => {
-        //TODO: Establish WebSocket connection later
         ws.current = new WebSocket("ws://localhost:8080/ws")
 
         ws.current.onopen = () => console.log("[Teleop] WebSocket connected"); 

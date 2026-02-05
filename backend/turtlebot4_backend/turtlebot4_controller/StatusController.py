@@ -7,8 +7,8 @@ from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
 
 
 class StatusController:
-    def __init__(self, ros_host: str = 'localhost', ros_port: int = 9090, loop: asyncio.AbstractEventLoop | None = None):
-        self.robot_state = RobotState()
+    def __init__(self, robot_state: RobotState, ros_host: str = 'localhost', ros_port: int = 9090, loop: asyncio.AbstractEventLoop | None = None):
+        self.robot_state = robot_state
         self._ros = RosbridgeConnection(host=ros_host, port=ros_port)
         # This loop is used to schedule async notifications to websocket listeners:
         self._loop = loop or asyncio.get_event_loop()

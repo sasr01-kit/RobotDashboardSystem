@@ -34,7 +34,10 @@ async def websocket_endpoint(websocket: WebSocket):
 import asyncio
 import random
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.middleware.cors import CORSMiddleware # avoid fetch errors
+from fastapi.middleware.cors import CORSMiddleware # avoid fetch errors in REST API
+
+from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
+from turtlebot4_backend.turtlebot4_controller.StatusController import StatusController
 
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository 
 from pixelbot_backend.pixelbot_controller.ChildAPI import ChildAPI 
@@ -47,7 +50,10 @@ app = FastAPI()
 # Store all connected WebSocket clients
 connected_clients = set()
 
-async def mock_robot_loop():
+robot_state = RobotState() 
+status_controller = StatusController(robot_state)
+
+""" async def mock_robot_loop():
     battery = 100.0
 
     while True:
@@ -83,17 +89,16 @@ async def mock_robot_loop():
         for ws in dead_clients:
             connected_clients.remove(ws)
 
-        await asyncio.sleep(2)
+        await asyncio.sleep(2) """
 
 
-@app.on_event("startup")
-async def start_mock():
-    asyncio.create_task(mock_robot_loop())
+@app.on_event("startup") 
+async def startup_event(): 
+    status_controller.subscribeToStatus()
 
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    print("WS ROUTE HIT")
     await websocket.accept()
 
     connected_clients.add(websocket)
@@ -109,7 +114,7 @@ async def websocket_endpoint(websocket: WebSocket):
 repository = DataRepository() 
 # Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
 # Pixelbot path: "http://192.168.2.70:8000"
-child_api = ChildAPI("C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing", repository) 
+child_api = ChildAPI("C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing", repository) 
 global_metrics_api = GlobalMetricsAPI(child_api)
 session_api = SessionAPI(child_api) 
 

@@ -8,7 +8,7 @@ from pixelbot_backend.pixelbot_storage.DataLoader import DataLoader
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository
 
 # ---- CONFIG ----
-DATA_ROOT = "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing"
+DATA_ROOT = "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing"
 OUTPUT_JSON = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "pixelbot_storage",

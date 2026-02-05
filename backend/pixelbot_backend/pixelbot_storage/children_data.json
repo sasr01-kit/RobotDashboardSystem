@@ -1,13 +1,13 @@
 [
     {
-        "child_id": "07d046d5fac12b3f82daf5035b9aae86db5adc8275ebfbf05ec83005a4a8ba3e",
-        "name": "david",
+        "child_id": "18bf91d23949790a9872371d01d575cecfabe40a2041290a1768e775208f3619",
+        "name": "ane",
         "sessions": [
             {
                 "sessionId": "session_0",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\david\\session_0\\session0_09-01-2026.png"
+                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\ane\\session_0\\session0_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -156,7 +156,7 @@
                 "sessionId": "session_1",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\david\\session_1\\session1_09-01-2026.png"
+                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\ane\\session_1\\session1_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -269,7 +269,7 @@
                 "sessionId": "session_2",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\david\\session_2\\session2_09-01-2026.png"
+                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\ane\\session_2\\session2_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -401,33 +401,184 @@
                     "penSizeUsedCount": "2",
                     "amountFilledArea": "1.62"
                 }
-            },
+            }
+        ]
+    },
+    {
+        "child_id": "07d046d5fac12b3f82daf5035b9aae86db5adc8275ebfbf05ec83005a4a8ba3e",
+        "name": "david",
+        "sessions": [
             {
-                "sessionId": "session_3",
-                "sessionDate": "02-02-2026",
+                "sessionId": "session_0",
+                "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\david\\session_3\\session3_02-02-2026.png"
+                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\david\\session_0\\session0_09-01-2026.png"
                 },
                 "storySummary": [
                     {
+                        "name": "sun",
+                        "description": "A yellow sun in the top left corner, still shining brightly."
+                    },
+                    {
+                        "name": "cloud",
+                        "description": "Three blue clouds remain in the sky, unchanged."
+                    },
+                    {
+                        "name": "grass",
+                        "description": "Green scribbled grass at the bottom, unchanged."
+                    },
+                    {
+                        "name": "house",
+                        "description": "A simple black-outlined house with a triangular roof, two windows, and a door, drawn on the right side of the grass. The child has confirmed it is their house and mentioned living there with their brother and parents."
+                    },
+                    {
                         "name": "person",
-                        "description": "A small stick figure standing near the river, possibly fishing or observing the water."
+                        "description": "Two stick figures drawn on the grass: one with a smiling face (the brother) throwing rocks, and one with a sad face (the child) being targeted, indicating a moment of conflict or bullying between siblings. The child has not told anyone, including their parents, about the incident but is now feeling supported and ready to talk to them."
+                    }
+                ],
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "This story happened to me a few days ago."
                     },
                     {
-                        "name": "river",
-                        "description": "A wavy line filled with blue color, representing a river or a path, with small fish drawn inside."
+                        "name": "VLM",
+                        "description": "What happened in your story? Can you tell me more about it?"
                     },
                     {
-                        "name": "tree",
-                        "description": "Simple drawings of trees with green tops and brown trunks, placed on both sides of the river."
+                        "name": "User",
+                        "description": "Drawing sent"
                     },
                     {
-                        "name": "fish",
-                        "description": "Small drawings of fish inside the river, indicating life or activity in the water."
+                        "name": "VLM",
+                        "description": "What do you want to draw next in your story? Is there someone or something you\u2019d like to add?"
                     },
                     {
-                        "name": "home",
-                        "description": "Implied by the child\u2019s story of going home to cook and eat the fish, though not drawn yet."
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What\u2019s happening on the grass? Do you want to draw a person or something else there?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Who lives in the house? Is it your house or someone else\u2019s?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "This is my house."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do you like most about your house? Is there someone you live with there?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "special about my house. It's just a normal house. I'm living there with my brother and my parents."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do you like to do with your brother and parents at home? Do you have a favorite activity together?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Why is one person smiling and the other sad? Can you tell me what\u2019s happening with them?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Why is the sad person upset? Did something happen between you and your brother?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yeah, so the person on the right is me, and the person on the left which looks happy  is my brother.  And last time when we were playing together, he started to throw rocks at me on my face.  And it made me very sad."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That sounds really upsetting. Did you tell your parents about what happened? How did they react?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "No, I didn't tell anything to anyone. I don't know how I should tell that to my parents."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "It\u2019s okay to feel unsure, but your parents care about you. Would you like me to help you think of a way to tell them? You\u2019re not alone in this."
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yes please, could you give me a recommendation on how I should tell that to my parents?"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "You could say something like, \u201cMom and Dad, I need to tell you something that made me really sad.\u201d Then you can show them your drawing and explain what happened. Would you like to practice saying it together?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "That's okay. I think you already helped me a lot. Thank you. I'm correct to stop to draw  and I will try to talk to my parents. Thanks a lot. Goodbye."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "You\u2019re so brave for sharing this, and I\u2019m proud of you for wanting to talk to your parents. Remember, I\u2019m always here if you need to talk again. Take care, and I\u2019m rooting for you! \ud83d\udc9b"
+                    }
+                ],
+                "speechWidth": {
+                    "interventionCount": "7",
+                    "totalWordCount": "148",
+                    "avgWordCountPerIntervention": "21.14",
+                    "stdWordCountPerIntervention": "13.97",
+                    "totalSpeechTime": "62.71",
+                    "avgSpeechTimePerIntervention": "8.96",
+                    "stdSpeechTimePerIntervention": "6.32"
+                },
+                "speechDepth": {
+                    "avgIntimacyScore": "1.5",
+                    "stdIntimacyScore": "0.8"
+                },
+                "drawingWidth": {
+                    "strokeCount": "70",
+                    "totalStrokeLength": "15.46",
+                    "avgStrokeLength": "0.22",
+                    "stdStrokeLength": "1.17",
+                    "colorUsedCount": "6",
+                    "penSizeUsedCount": "2",
+                    "amountFilledArea": "16.13"
+                }
+            },
+            {
+                "sessionId": "session_1",
+                "sessionDate": "09-01-2026",
+                "drawing": {
+                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\david\\session_1\\session1_09-01-2026.png"
+                },
+                "storySummary": [
+                    {
+                        "name": "text",
+                        "description": "The drawing contains two words written in different colors: 'DANEMARK' in red and 'SWEDEN' in blue."
+                    },
+                    {
+                        "name": "boat",
+                        "description": "A simple brown boat with a yellow sail is drawn, representing Viking boats the child learned about in museums. The child mentioned real Viking boats were seen but were not in good condition."
+                    },
+                    {
+                        "name": "fireworks",
+                        "description": "The child described seeing colorful fireworks in Stockholm, Sweden, during New Year\u2019s Eve, including purple, orange, red, and blue. The drawing now includes yellow fireworks with purple text '2026 NEW YEAR' nearby."
+                    },
+                    {
+                        "name": "person",
+                        "description": "The child is sharing a personal story about their holiday travels, including Viking museums and New Year\u2019s celebrations."
                     }
                 ],
                 "transcript": [
@@ -437,7 +588,15 @@
                     },
                     {
                         "name": "VLM",
-                        "description": "Can you tell me more about this person? What are they doing?"
+                        "description": "What do these words mean to you? Are you drawing a map or telling a story about these places?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I'm going to tell you about my holidays, it's more specifically my Christmas break and  I went to Denmark and Sweden."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That sounds like a fun trip! What was your favorite thing you did in Denmark or Sweden?"
                     },
                     {
                         "name": "User",
@@ -445,7 +604,39 @@
                     },
                     {
                         "name": "VLM",
-                        "description": "What is the river for in your drawing? Is someone going to cross it?"
+                        "description": "Did you take a boat ride during your trip? What was it like?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I didn't take the boats, but in Denmark and Sweden there used to be a lot of  Vikings and so I could visit some museums about Vikings and apparently they  had very good boats at the time. They used to be the best boats."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That\u2019s so cool! Did you see any real Viking boats in the museums? Which part of the museum did you like the most?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I did see real Viking boats in the museum, but most of them were quite that they were not  in a very good shape anymore."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "It\u2019s sad the boats weren\u2019t in great shape\u2014did you like seeing the old parts of them anyway? What else did you see in the museum?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "When I was in Sweden in Stockholm, I was there during the New Year's Eve  and I could also see the fireworks. That was quite cool."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Wow, fireworks on New Year\u2019s Eve must\u2019ve been amazing! What colors did you see in the sky? Did you watch them with your family?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "There are works of many different colors, purple, orange, red, blue, that was super cool."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Those colors sound so magical! Did you take a picture of the fireworks? What was your favorite color?"
                     },
                     {
                         "name": "User",
@@ -453,70 +644,167 @@
                     },
                     {
                         "name": "VLM",
-                        "description": "Do the trees have any special meaning in your story? Are they your favorite trees?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Why did you color the river blue? Does it remind you of a real river you\u2019ve seen?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Do you like spending time near rivers? What do you like to do there?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Are you the person fishing in the river? What kind of fish do you like to catch?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Yes, I went fishing in the river last weekend."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "That sounds fun! Did you catch any fish last weekend? What did you do after fishing?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "a few fishes and then I went home to cook them and eat them."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Yummy! Did you cook the fish with anyone else? Was it your favorite meal?"
+                        "description": "You drew \u20182026 NEW YEAR\u2019\u2014are you already excited for the next New Year? What do you hope to do then?"
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "2",
-                    "totalWordCount": "23",
-                    "avgWordCountPerIntervention": "11.5",
-                    "stdWordCountPerIntervention": "3.54",
-                    "totalSpeechTime": "0.61",
-                    "avgSpeechTimePerIntervention": "0.3",
-                    "stdSpeechTimePerIntervention": "0.21"
+                    "interventionCount": "5",
+                    "totalWordCount": "135",
+                    "avgWordCountPerIntervention": "27",
+                    "stdWordCountPerIntervention": "11.05",
+                    "totalSpeechTime": "60.32",
+                    "avgSpeechTimePerIntervention": "12.06",
+                    "stdSpeechTimePerIntervention": "5.34"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1",
-                    "stdIntimacyScore": "0.0"
+                    "avgIntimacyScore": "1.14",
+                    "stdIntimacyScore": "0.38"
                 },
                 "drawingWidth": {
-                    "strokeCount": "38",
-                    "totalStrokeLength": "14.04",
-                    "avgStrokeLength": "0.37",
-                    "stdStrokeLength": "1.16",
-                    "colorUsedCount": "4",
-                    "penSizeUsedCount": "3",
-                    "amountFilledArea": "13.5"
+                    "strokeCount": "92",
+                    "totalStrokeLength": "4.66",
+                    "avgStrokeLength": "0.05",
+                    "stdStrokeLength": "0.08",
+                    "colorUsedCount": "6",
+                    "penSizeUsedCount": "1",
+                    "amountFilledArea": "4.57"
+                }
+            },
+            {
+                "sessionId": "session_2",
+                "sessionDate": "09-01-2026",
+                "drawing": {
+                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\david\\session_2\\session2_09-01-2026.png"
+                },
+                "storySummary": [
+                    {
+                        "name": "person",
+                        "description": "A green outline with a black patterned section on top and three green lines across the body, possibly representing a spectator or an abstract depiction of the court."
+                    },
+                    {
+                        "name": "stick figure",
+                        "description": "Two small black stick figures, representing the professional badminton players \u2014 one from Thailand (the winner) and one from France (the player you were rooting for, who looked frustrated after making mistakes)."
+                    },
+                    {
+                        "name": "badminton racket",
+                        "description": "The black patterned section on top might represent a badminton racket being held by one of the players."
+                    },
+                    {
+                        "name": "badminton court",
+                        "description": "The green outline might represent the badminton court or playing area where the match took place."
+                    }
+                ],
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What does this green shape mean to you? Is it someone special?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Is the black part on top your hair or a hat? What\u2019s its story?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Are the green lines your arms or something you\u2019re wearing? Can you tell me more about them?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Are the three green lines part of your outfit or something else? What do they mean to you?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Who are the little stick figures? Are they your friends, family, or someone else special?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "This is a badminton course. I have just seen a professional match between two badminton."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Did you draw yourself watching the match or playing? What was your favorite part of the game?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "No, no, I told you, it wasn't me, it was too badminton professional players."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Who were the two players? Did you like how they played?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "One was from Thailand and the other player was from France."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Which player did you like more \u2014 the one from Thailand or the one from France? Why?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I was rooting for the French player, but he lost against the the player from  Thailand."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That must have been disappointing! Did you feel sad when the French player lost?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "A little bit sad, but I think that was okay.  But the French player looked very frustrated.  Do you know why?"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Sometimes players get frustrated when they try their best but still lose. Do you think the French player tried really hard?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I think he did yes, but he also made a lot of mistakes, and I think that frustrated him a lot."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "It\u2019s okay to make mistakes \u2014 even pros do! Did you ever feel frustrated like that when you tried something hard?"
+                    }
+                ],
+                "speechWidth": {
+                    "interventionCount": "6",
+                    "totalWordCount": "99",
+                    "avgWordCountPerIntervention": "16.5",
+                    "stdWordCountPerIntervention": "3.89",
+                    "totalSpeechTime": "30.36",
+                    "avgSpeechTimePerIntervention": "5.06",
+                    "stdSpeechTimePerIntervention": "3.07"
+                },
+                "speechDepth": {
+                    "avgIntimacyScore": "1.29",
+                    "stdIntimacyScore": "0.49"
+                },
+                "drawingWidth": {
+                    "strokeCount": "62",
+                    "totalStrokeLength": "3.72",
+                    "avgStrokeLength": "0.06",
+                    "stdStrokeLength": "0.1",
+                    "colorUsedCount": "3",
+                    "penSizeUsedCount": "2",
+                    "amountFilledArea": "1.62"
                 }
             }
         ]
@@ -529,7 +817,7 @@
                 "sessionId": "session_0",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\harry\\session_0\\session0_09-01-2026.png"
+                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\harry\\session_0\\session0_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -646,7 +934,7 @@
                 "sessionId": "session_1",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\harry\\session_1\\session1_09-01-2026.png"
+                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\harry\\session_1\\session1_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -754,411 +1042,6 @@
         ]
     },
     {
-        "child_id": "c6d17a3613b9914e68707fcfac8410f097643bc5840681bb533030d73cbb18f8",
-        "name": "marie",
-        "sessions": [
-            {
-                "sessionId": "session_0",
-                "sessionDate": "01-02-2026",
-                "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\marie\\session_0\\session0_01-02-2026.png"
-                },
-                "storySummary": [
-                    {
-                        "name": "sun",
-                        "description": "A yellow sun in the top left corner, still shining brightly."
-                    },
-                    {
-                        "name": "cloud",
-                        "description": "Three blue clouds remain in the sky, unchanged."
-                    },
-                    {
-                        "name": "grass",
-                        "description": "Green scribbled grass at the bottom, unchanged."
-                    },
-                    {
-                        "name": "house",
-                        "description": "A simple black-outlined house with a triangular roof, two windows, and a door, drawn on the right side of the grass. The child has confirmed it is their house and mentioned living there with their brother and parents."
-                    },
-                    {
-                        "name": "person",
-                        "description": "Two stick figures drawn on the grass: one with a smiling face (the brother) throwing rocks, and one with a sad face (the child) being targeted, indicating a moment of conflict or bullying between siblings. The child has not told anyone, including their parents, about the incident but is now feeling supported and ready to talk to them."
-                    }
-                ],
-                "transcript": [
-                    {
-                        "name": "User",
-                        "description": "This story happened to me a few days ago."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "What happened in your story? Can you tell me more about it?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "What do you want to draw next in your story? Is there someone or something you\u2019d like to add?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "What\u2019s happening on the grass? Do you want to draw a person or something else there?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Who lives in the house? Is it your house or someone else\u2019s?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "This is my house."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "What do you like most about your house? Is there someone you live with there?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "special about my house. It's just a normal house. I'm living there with my brother and my parents."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "What do you like to do with your brother and parents at home? Do you have a favorite activity together?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Why is one person smiling and the other sad? Can you tell me what\u2019s happening with them?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Why is the sad person upset? Did something happen between you and your brother?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Yeah, so the person on the right is me, and the person on the left which looks happy  is my brother.  And last time when we were playing together, he started to throw rocks at me on my face.  And it made me very sad."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "That sounds really upsetting. Did you tell your parents about what happened? How did they react?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "No, I didn't tell anything to anyone. I don't know how I should tell that to my parents."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "It\u2019s okay to feel unsure, but your parents care about you. Would you like me to help you think of a way to tell them? You\u2019re not alone in this."
-                    },
-                    {
-                        "name": "User",
-                        "description": "Yes please, could you give me a recommendation on how I should tell that to my parents?"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "You could say something like, \u201cMom and Dad, I need to tell you something that made me really sad.\u201d Then you can show them your drawing and explain what happened. Would you like to practice saying it together?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "That's okay. I think you already helped me a lot. Thank you. I'm correct to stop to draw  and I will try to talk to my parents. Thanks a lot. Goodbye."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "You\u2019re so brave for sharing this, and I\u2019m proud of you for wanting to talk to your parents. Remember, I\u2019m always here if you need to talk again. Take care, and I\u2019m rooting for you! \ud83d\udc9b"
-                    }
-                ],
-                "speechWidth": {
-                    "interventionCount": "7",
-                    "totalWordCount": "148",
-                    "avgWordCountPerIntervention": "21.14",
-                    "stdWordCountPerIntervention": "13.97",
-                    "totalSpeechTime": "62.71",
-                    "avgSpeechTimePerIntervention": "8.96",
-                    "stdSpeechTimePerIntervention": "6.32"
-                },
-                "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.8"
-                },
-                "drawingWidth": {
-                    "strokeCount": "70",
-                    "totalStrokeLength": "15.46",
-                    "avgStrokeLength": "0.22",
-                    "stdStrokeLength": "1.17",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "16.13"
-                }
-            },
-            {
-                "sessionId": "session_1",
-                "sessionDate": "02-02-2026",
-                "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\marie\\session_1\\session1_02-02-2026.png"
-                },
-                "storySummary": [
-                    {
-                        "name": "text",
-                        "description": "The drawing contains two words written in different colors: 'DANEMARK' in red and 'SWEDEN' in blue."
-                    },
-                    {
-                        "name": "boat",
-                        "description": "A simple brown boat with a yellow sail is drawn, representing Viking boats the child learned about in museums. The child mentioned real Viking boats were seen but were not in good condition."
-                    },
-                    {
-                        "name": "fireworks",
-                        "description": "The child described seeing colorful fireworks in Stockholm, Sweden, during New Year\u2019s Eve, including purple, orange, red, and blue. The drawing now includes yellow fireworks with purple text '2026 NEW YEAR' nearby."
-                    },
-                    {
-                        "name": "person",
-                        "description": "The child is sharing a personal story about their holiday travels, including Viking museums and New Year\u2019s celebrations."
-                    }
-                ],
-                "transcript": [
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "What do these words mean to you? Are you drawing a map or telling a story about these places?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "I'm going to tell you about my holidays, it's more specifically my Christmas break and  I went to Denmark and Sweden."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "That sounds like a fun trip! What was your favorite thing you did in Denmark or Sweden?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Did you take a boat ride during your trip? What was it like?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "I didn't take the boats, but in Denmark and Sweden there used to be a lot of  Vikings and so I could visit some museums about Vikings and apparently they  had very good boats at the time. They used to be the best boats."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "That\u2019s so cool! Did you see any real Viking boats in the museums? Which part of the museum did you like the most?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "I did see real Viking boats in the museum, but most of them were quite that they were not  in a very good shape anymore."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "It\u2019s sad the boats weren\u2019t in great shape\u2014did you like seeing the old parts of them anyway? What else did you see in the museum?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "When I was in Sweden in Stockholm, I was there during the New Year's Eve  and I could also see the fireworks. That was quite cool."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Wow, fireworks on New Year\u2019s Eve must\u2019ve been amazing! What colors did you see in the sky? Did you watch them with your family?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "There are works of many different colors, purple, orange, red, blue, that was super cool."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Those colors sound so magical! Did you take a picture of the fireworks? What was your favorite color?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "You drew \u20182026 NEW YEAR\u2019\u2014are you already excited for the next New Year? What do you hope to do then?"
-                    }
-                ],
-                "speechWidth": {
-                    "interventionCount": "5",
-                    "totalWordCount": "135",
-                    "avgWordCountPerIntervention": "27",
-                    "stdWordCountPerIntervention": "11.05",
-                    "totalSpeechTime": "60.32",
-                    "avgSpeechTimePerIntervention": "12.06",
-                    "stdSpeechTimePerIntervention": "5.34"
-                },
-                "speechDepth": {
-                    "avgIntimacyScore": "1.14",
-                    "stdIntimacyScore": "0.38"
-                },
-                "drawingWidth": {
-                    "strokeCount": "92",
-                    "totalStrokeLength": "4.66",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.08",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "1",
-                    "amountFilledArea": "4.57"
-                }
-            },
-            {
-                "sessionId": "session_2",
-                "sessionDate": "03-02-2026",
-                "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\marie\\session_2\\session2_03-02-2026.png"
-                },
-                "storySummary": [
-                    {
-                        "name": "person",
-                        "description": "A green outline with a black patterned section on top and three green lines across the body, possibly representing a spectator or an abstract depiction of the court."
-                    },
-                    {
-                        "name": "stick figure",
-                        "description": "Two small black stick figures, representing the professional badminton players \u2014 one from Thailand (the winner) and one from France (the player you were rooting for, who looked frustrated after making mistakes)."
-                    },
-                    {
-                        "name": "badminton racket",
-                        "description": "The black patterned section on top might represent a badminton racket being held by one of the players."
-                    },
-                    {
-                        "name": "badminton court",
-                        "description": "The green outline might represent the badminton court or playing area where the match took place."
-                    }
-                ],
-                "transcript": [
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "What does this green shape mean to you? Is it someone special?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Is the black part on top your hair or a hat? What\u2019s its story?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Are the green lines your arms or something you\u2019re wearing? Can you tell me more about them?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Are the three green lines part of your outfit or something else? What do they mean to you?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "Drawing sent"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Who are the little stick figures? Are they your friends, family, or someone else special?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "This is a badminton course. I have just seen a professional match between two badminton."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Did you draw yourself watching the match or playing? What was your favorite part of the game?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "No, no, I told you, it wasn't me, it was too badminton professional players."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Who were the two players? Did you like how they played?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "One was from Thailand and the other player was from France."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Which player did you like more \u2014 the one from Thailand or the one from France? Why?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "I was rooting for the French player, but he lost against the the player from  Thailand."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "That must have been disappointing! Did you feel sad when the French player lost?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "A little bit sad, but I think that was okay.  But the French player looked very frustrated.  Do you know why?"
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "Sometimes players get frustrated when they try their best but still lose. Do you think the French player tried really hard?"
-                    },
-                    {
-                        "name": "User",
-                        "description": "I think he did yes, but he also made a lot of mistakes, and I think that frustrated him a lot."
-                    },
-                    {
-                        "name": "VLM",
-                        "description": "It\u2019s okay to make mistakes \u2014 even pros do! Did you ever feel frustrated like that when you tried something hard?"
-                    }
-                ],
-                "speechWidth": {
-                    "interventionCount": "6",
-                    "totalWordCount": "99",
-                    "avgWordCountPerIntervention": "16.5",
-                    "stdWordCountPerIntervention": "3.89",
-                    "totalSpeechTime": "30.36",
-                    "avgSpeechTimePerIntervention": "5.06",
-                    "stdSpeechTimePerIntervention": "3.07"
-                },
-                "speechDepth": {
-                    "avgIntimacyScore": "1.29",
-                    "stdIntimacyScore": "0.49"
-                },
-                "drawingWidth": {
-                    "strokeCount": "62",
-                    "totalStrokeLength": "3.72",
-                    "avgStrokeLength": "0.06",
-                    "stdStrokeLength": "0.1",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "1.62"
-                }
-            }
-        ]
-    },
-    {
         "child_id": "65c3f75641b22925c737ca657b126cd68c39e423349d43031cf9a3b9a18cee1f",
         "name": "vincent",
         "sessions": [
@@ -1166,7 +1049,7 @@
                 "sessionId": "session_0",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\vincent\\session_0\\session0_09-01-2026.png"
+                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\vincent\\session_0\\session0_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -1311,7 +1194,7 @@
                 "sessionId": "session_1",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\vincent\\session_1\\session1_09-01-2026.png"
+                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\vincent\\session_1\\session1_09-01-2026.png"
                 },
                 "storySummary": [
                     {

@@ -66,7 +66,7 @@ export default function TurtlebotStatusPage() {
                                     className="comms-icon"
                                 />}
                     label="Comms"
-                    status={statusDTO?.isCommsConnected ? 'Connected' : 'Failed'}
+                    status={statusDTO?.isCommsConnected ? 'Connected' : 'Disconnected'}
                     statusColor={commsColor}
                 />
             </div>
