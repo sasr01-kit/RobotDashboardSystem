@@ -4,6 +4,7 @@ from pixelbot_backend.pixelbot_model.Child import Child
 from pixelbot_backend.pixelbot_model.SpeechSelfDisclosureWidth import SpeechSelfDisclosureWidth
 from pixelbot_backend.pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelfDisclosureDepth
 from pixelbot_backend.pixelbot_model.DrawingSelfDisclosureWidth import DrawingSelfDisclosureWidth
+import datetime
 import os
 import csv
 import json
@@ -17,6 +18,8 @@ class DataLoader:
   
     def __init__(self, data_root):
         self.data_root = data_root
+        # self.imageData: Optional[str] = None
+
 
     def load_all_children(self):
         children = []
@@ -38,19 +41,21 @@ class DataLoader:
             if os.path.isdir(session_path):
                 session = self.load_session(session_id, session_path)
                 sessions.append(session)
-                child_id = self.short_hash(child_name, length=8)
+                child_id = self.short_hash(child_name, length=64)
         return Child(child_id=child_id, name=child_name, sessions=sessions)
 
     def load_session(self, session_id, session_path):
         drawing_path = self.find_drawing_file(session_path)
         if os.path.exists(drawing_path):
             drawing = DrawingData(drawing_path)
-            session_date = self.extract_day_from_filename(drawing_path)
+            session_date_string = self.extract_day_from_filename(drawing_path)
+            session_date_obj = datetime.datetime.strptime(session_date_string, "%d-%m-%Y")
         else: 
             drawing = DrawingData("")
         
         transcript_path = os.path.join(session_path, self.TRANSCRIPT_FILE_NAME)
-        transcript = self.loadTxt(transcript_path)
+        transcript_text = self.loadTxt(transcript_path)
+        transcript = self.parse_transcript(transcript_text)
 
         story_summary_path = os.path.join(session_path, self.STORY_SUMMARY_FILE_NAME)
         story_summary_text = self.loadTxt(story_summary_path)
@@ -66,11 +71,11 @@ class DataLoader:
         
         return Session(
             session_id,
-            session_date,
+            session_date_obj,
             drawing,
             story_summary,
             transcript,
-            speech_width,
+            speech_width, 
             speech_depth,
             drawing_width
         )
@@ -99,6 +104,19 @@ class DataLoader:
                 content = f.read()
         return content
     
+    def parse_transcript(self, text):
+        transcript_list = []
+
+        for line in text.splitlines():
+            if ": " in line:
+                speaker, message = line.split(": ", 1)
+                transcript_list.append({
+                    "name": speaker.strip(),
+                    "description": message.strip()
+                })
+
+        return transcript_list
+    
     def parse_story_summary(self, text):
         try:
             object_dict = json.loads(text)
@@ -122,8 +140,10 @@ class DataLoader:
                 return next(reader, {})
         return {}
     
-    def short_hash(self, name, length=8):
+    def short_hash(self, name, length=64):
         full_hash = hashlib.sha256(name.encode()).hexdigest()
         return full_hash[:length]
-
+ # Encode PNG to base64
+        # with open(png_path, "rb") as f: #turn this in to a method, make required variables in the file, 
+           #  self._mapDataPNG = base64.b64encode(f.read()).decode("utf-8")
     

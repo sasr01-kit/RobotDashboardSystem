@@ -5,27 +5,6 @@ export function usePixelbotSummary() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // MOCK DATA -- DELETE FOR REAL IMPLEMENTATION
-    const generateMockBackendData = () => {
-        const mockData = {};
-        const startDate = new Date('2026-01-01');
-        const endDate = new Date('2026-12-31');
-
-        let currentDate = new Date(startDate);
-
-        while (currentDate <= endDate) {
-            // (YYYY-MM-DD)
-            const dateStr = currentDate.toISOString().split('T')[0];
-            // Random value (0-10)
-            mockData[dateStr] = Math.floor(Math.random() * 11);
-
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        return mockData;
-    };
-    // END MOCK DATA
-
     useEffect(() => {
         fetchSummaryStats();
     }, []);
@@ -34,18 +13,16 @@ export function usePixelbotSummary() {
         try {
             setIsLoading(true);
             setError(null);
-            /*const response = await fetch(url);*/ // FOR REAL IMPLEMENTATION CHANGE url TO API ENDPOINT
-            /*const data = await response.json();
+            const response = await fetch(`http://localhost:8080/pixelbot/summary`); // FOR REAL IMPLEMENTATION CHANGE url TO API ENDPOINT
+            const data = await response.json();
             const summary = {
-                totalSessions: data.totalSessions,
-                avgSessionsPerChild: data.avgSessionsPerChild,
+                totalSessions: data.totalSessionsThisMonth,
+                avgSessionsPerChild: data.sessionsPerChild,
+                sessionsPerDay: data.sessionsPerDay,
+                sessionsGrowthRate: data.sessionsGrowthRate,
                 dailySessionCounts: transformBackendDataToHeatmap(data.dailySessionCounts) 
-            };*/
-            const summary = { // MOCK DATA -- DELETE FOR REAL IMPLEMENTATION USE ABOVE
-                totalSessions: 120, // MOCK DATA
-                avgSessionsPerChild: 8, // MOCK DATA
-                dailySessionCounts: transformBackendDataToHeatmap(generateMockBackendData()) // MOCK DATA
-            } // DELETE THIS BLOCK FOR REAL IMPLEMENTATION
+            }
+
             setSummaryStats(summary);
             setIsLoading(false);
             setError(null);
@@ -75,7 +52,11 @@ export function usePixelbotSummary() {
         firstMonday.setDate(firstMonday.getDate() + daysUntilMonday);
 
         sortedDates.forEach(dateStr => {
-            const currentDate = new Date(dateStr);
+            
+            // dd-mm-yyyy → yyyy-mm-dd
+            const [d, m, y] = dateStr.split("-");
+            const currentDate = new Date(`${y}-${m}-${d}`);
+
             const value = backendData[dateStr];
 
             const diffTime = currentDate - firstMonday;

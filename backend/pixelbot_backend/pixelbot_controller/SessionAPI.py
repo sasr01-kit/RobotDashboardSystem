@@ -4,7 +4,7 @@ class SessionAPI:
 
     def __init__(self, child_api):
         self.child_api = child_api
-        self.children = self.child_api._load_children_objects()
+        self.children = self.child_api.load_children_objects()
 
     def send_session(self, child_id, session_id):
         for child in self.children:

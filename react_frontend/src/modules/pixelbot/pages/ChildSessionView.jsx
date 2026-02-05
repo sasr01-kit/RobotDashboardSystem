@@ -58,9 +58,13 @@ export default function ChildSessionView() {
                         </DashboardCard>
 
                         <DashboardCard id="session-transcript" title="Text Transcript" onPrint={() => handlePrint('session-transcript')} className="transparent">
-                            <div className="transcript-container">
-                                <p>{session.transcript}</p>
-                            </div>
+                            <div className="transcript-container"> 
+                                {session.transcript?.map((line, index) => (
+                                    <div key={index}>
+                                        <strong>{line.name}:</strong> {line.description}
+                                    </div>
+                            ))}
+                        </div>
                         </DashboardCard>
                     </div>
 

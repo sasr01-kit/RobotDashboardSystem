@@ -1,6 +1,6 @@
 [
     {
-        "child_id": "07d046d5",
+        "child_id": "07d046d5fac12b3f82daf5035b9aae86db5adc8275ebfbf05ec83005a4a8ba3e",
         "name": "david",
         "sessions": [
             {
@@ -31,7 +31,104 @@
                         "description": "Two stick figures drawn on the grass: one with a smiling face (the brother) throwing rocks, and one with a sad face (the child) being targeted, indicating a moment of conflict or bullying between siblings. The child has not told anyone, including their parents, about the incident but is now feeling supported and ready to talk to them."
                     }
                 ],
-                "transcript": "User:  This story happened to me a few days ago.\nVLM: What happened in your story? Can you tell me more about it?\nUser: Drawing sent\nVLM: What do you want to draw next in your story? Is there someone or something you\u2019d like to add?\nUser: Drawing sent\nVLM: What\u2019s happening on the grass? Do you want to draw a person or something else there?\nUser: Drawing sent\nVLM: Who lives in the house? Is it your house or someone else\u2019s?\nUser:  This is my house.\nVLM: What do you like most about your house? Is there someone you live with there?\nUser:  special about my house. It's just a normal house. I'm living there with my brother and my parents.\nVLM: What do you like to do with your brother and parents at home? Do you have a favorite activity together?\nUser: Drawing sent\nVLM: Why is one person smiling and the other sad? Can you tell me what\u2019s happening with them?\nUser: Drawing sent\nVLM: Why is the sad person upset? Did something happen between you and your brother?\nUser:  Yeah, so the person on the right is me, and the person on the left which looks happy  is my brother.  And last time when we were playing together, he started to throw rocks at me on my face.  And it made me very sad.\nVLM: That sounds really upsetting. Did you tell your parents about what happened? How did they react?\nUser:  No, I didn't tell anything to anyone. I don't know how I should tell that to my parents.\nVLM: It\u2019s okay to feel unsure, but your parents care about you. Would you like me to help you think of a way to tell them? You\u2019re not alone in this.\nUser:  Yes please, could you give me a recommendation on how I should tell that to my parents?\nVLM: You could say something like, \u201cMom and Dad, I need to tell you something that made me really sad.\u201d Then you can show them your drawing and explain what happened. Would you like to practice saying it together?\nUser:  That's okay. I think you already helped me a lot. Thank you. I'm correct to stop to draw  and I will try to talk to my parents. Thanks a lot. Goodbye.\nVLM: You\u2019re so brave for sharing this, and I\u2019m proud of you for wanting to talk to your parents. Remember, I\u2019m always here if you need to talk again. Take care, and I\u2019m rooting for you! \ud83d\udc9b\n",
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "This story happened to me a few days ago."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What happened in your story? Can you tell me more about it?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do you want to draw next in your story? Is there someone or something you\u2019d like to add?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What\u2019s happening on the grass? Do you want to draw a person or something else there?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Who lives in the house? Is it your house or someone else\u2019s?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "This is my house."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do you like most about your house? Is there someone you live with there?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "special about my house. It's just a normal house. I'm living there with my brother and my parents."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do you like to do with your brother and parents at home? Do you have a favorite activity together?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Why is one person smiling and the other sad? Can you tell me what\u2019s happening with them?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Why is the sad person upset? Did something happen between you and your brother?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yeah, so the person on the right is me, and the person on the left which looks happy  is my brother.  And last time when we were playing together, he started to throw rocks at me on my face.  And it made me very sad."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That sounds really upsetting. Did you tell your parents about what happened? How did they react?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "No, I didn't tell anything to anyone. I don't know how I should tell that to my parents."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "It\u2019s okay to feel unsure, but your parents care about you. Would you like me to help you think of a way to tell them? You\u2019re not alone in this."
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yes please, could you give me a recommendation on how I should tell that to my parents?"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "You could say something like, \u201cMom and Dad, I need to tell you something that made me really sad.\u201d Then you can show them your drawing and explain what happened. Would you like to practice saying it together?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "That's okay. I think you already helped me a lot. Thank you. I'm correct to stop to draw  and I will try to talk to my parents. Thanks a lot. Goodbye."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "You\u2019re so brave for sharing this, and I\u2019m proud of you for wanting to talk to your parents. Remember, I\u2019m always here if you need to talk again. Take care, and I\u2019m rooting for you! \ud83d\udc9b"
+                    }
+                ],
                 "speechWidth": {
                     "interventionCount": "7",
                     "totalWordCount": "148",
@@ -79,7 +176,72 @@
                         "description": "The child is sharing a personal story about their holiday travels, including Viking museums and New Year\u2019s celebrations."
                     }
                 ],
-                "transcript": "User: Drawing sent\nVLM: What do these words mean to you? Are you drawing a map or telling a story about these places?\nUser:  I'm going to tell you about my holidays, it's more specifically my Christmas break and  I went to Denmark and Sweden.\nVLM: That sounds like a fun trip! What was your favorite thing you did in Denmark or Sweden?\nUser: Drawing sent\nVLM: Did you take a boat ride during your trip? What was it like?\nUser:  I didn't take the boats, but in Denmark and Sweden there used to be a lot of  Vikings and so I could visit some museums about Vikings and apparently they  had very good boats at the time. They used to be the best boats.\nVLM: That\u2019s so cool! Did you see any real Viking boats in the museums? Which part of the museum did you like the most?\nUser:  I did see real Viking boats in the museum, but most of them were quite that they were not  in a very good shape anymore.\nVLM: It\u2019s sad the boats weren\u2019t in great shape\u2014did you like seeing the old parts of them anyway? What else did you see in the museum?\nUser:  When I was in Sweden in Stockholm, I was there during the New Year's Eve  and I could also see the fireworks. That was quite cool.\nVLM: Wow, fireworks on New Year\u2019s Eve must\u2019ve been amazing! What colors did you see in the sky? Did you watch them with your family?\nUser:  There are works of many different colors, purple, orange, red, blue, that was super cool.\nVLM: Those colors sound so magical! Did you take a picture of the fireworks? What was your favorite color?\nUser: Drawing sent\nVLM: You drew \u20182026 NEW YEAR\u2019\u2014are you already excited for the next New Year? What do you hope to do then?\n",
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do these words mean to you? Are you drawing a map or telling a story about these places?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I'm going to tell you about my holidays, it's more specifically my Christmas break and  I went to Denmark and Sweden."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That sounds like a fun trip! What was your favorite thing you did in Denmark or Sweden?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Did you take a boat ride during your trip? What was it like?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I didn't take the boats, but in Denmark and Sweden there used to be a lot of  Vikings and so I could visit some museums about Vikings and apparently they  had very good boats at the time. They used to be the best boats."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That\u2019s so cool! Did you see any real Viking boats in the museums? Which part of the museum did you like the most?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I did see real Viking boats in the museum, but most of them were quite that they were not  in a very good shape anymore."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "It\u2019s sad the boats weren\u2019t in great shape\u2014did you like seeing the old parts of them anyway? What else did you see in the museum?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "When I was in Sweden in Stockholm, I was there during the New Year's Eve  and I could also see the fireworks. That was quite cool."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Wow, fireworks on New Year\u2019s Eve must\u2019ve been amazing! What colors did you see in the sky? Did you watch them with your family?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "There are works of many different colors, purple, orange, red, blue, that was super cool."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Those colors sound so magical! Did you take a picture of the fireworks? What was your favorite color?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "You drew \u20182026 NEW YEAR\u2019\u2014are you already excited for the next New Year? What do you hope to do then?"
+                    }
+                ],
                 "speechWidth": {
                     "interventionCount": "5",
                     "totalWordCount": "135",
@@ -127,7 +289,96 @@
                         "description": "The green outline might represent the badminton court or playing area where the match took place."
                     }
                 ],
-                "transcript": "User: Drawing sent\nVLM: What does this green shape mean to you? Is it someone special?\nUser: Drawing sent\nVLM: Is the black part on top your hair or a hat? What\u2019s its story?\nUser: Drawing sent\nVLM: Are the green lines your arms or something you\u2019re wearing? Can you tell me more about them?\nUser: Drawing sent\nVLM: Are the three green lines part of your outfit or something else? What do they mean to you?\nUser: Drawing sent\nVLM: Who are the little stick figures? Are they your friends, family, or someone else special?\nUser:  This is a badminton course. I have just seen a professional match between two badminton.\nVLM: Did you draw yourself watching the match or playing? What was your favorite part of the game?\nUser:  No, no, I told you, it wasn't me, it was too badminton professional players.\nVLM: Who were the two players? Did you like how they played?\nUser:  One was from Thailand and the other player was from France.\nVLM: Which player did you like more \u2014 the one from Thailand or the one from France? Why?\nUser:  I was rooting for the French player, but he lost against the the player from  Thailand.\nVLM: That must have been disappointing! Did you feel sad when the French player lost?\nUser:  A little bit sad, but I think that was okay.  But the French player looked very frustrated.  Do you know why?\nVLM: Sometimes players get frustrated when they try their best but still lose. Do you think the French player tried really hard?\nUser:  I think he did yes, but he also made a lot of mistakes, and I think that frustrated him a lot.\nVLM: It\u2019s okay to make mistakes \u2014 even pros do! Did you ever feel frustrated like that when you tried something hard?\n",
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What does this green shape mean to you? Is it someone special?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Is the black part on top your hair or a hat? What\u2019s its story?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Are the green lines your arms or something you\u2019re wearing? Can you tell me more about them?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Are the three green lines part of your outfit or something else? What do they mean to you?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Who are the little stick figures? Are they your friends, family, or someone else special?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "This is a badminton course. I have just seen a professional match between two badminton."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Did you draw yourself watching the match or playing? What was your favorite part of the game?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "No, no, I told you, it wasn't me, it was too badminton professional players."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Who were the two players? Did you like how they played?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "One was from Thailand and the other player was from France."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Which player did you like more \u2014 the one from Thailand or the one from France? Why?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I was rooting for the French player, but he lost against the the player from  Thailand."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That must have been disappointing! Did you feel sad when the French player lost?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "A little bit sad, but I think that was okay.  But the French player looked very frustrated.  Do you know why?"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Sometimes players get frustrated when they try their best but still lose. Do you think the French player tried really hard?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I think he did yes, but he also made a lot of mistakes, and I think that frustrated him a lot."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "It\u2019s okay to make mistakes \u2014 even pros do! Did you ever feel frustrated like that when you tried something hard?"
+                    }
+                ],
                 "speechWidth": {
                     "interventionCount": "6",
                     "totalWordCount": "99",
@@ -150,11 +401,128 @@
                     "penSizeUsedCount": "2",
                     "amountFilledArea": "1.62"
                 }
+            },
+            {
+                "sessionId": "session_3",
+                "sessionDate": "02-02-2026",
+                "drawing": {
+                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\david\\session_3\\session3_02-02-2026.png"
+                },
+                "storySummary": [
+                    {
+                        "name": "person",
+                        "description": "A small stick figure standing near the river, possibly fishing or observing the water."
+                    },
+                    {
+                        "name": "river",
+                        "description": "A wavy line filled with blue color, representing a river or a path, with small fish drawn inside."
+                    },
+                    {
+                        "name": "tree",
+                        "description": "Simple drawings of trees with green tops and brown trunks, placed on both sides of the river."
+                    },
+                    {
+                        "name": "fish",
+                        "description": "Small drawings of fish inside the river, indicating life or activity in the water."
+                    },
+                    {
+                        "name": "home",
+                        "description": "Implied by the child\u2019s story of going home to cook and eat the fish, though not drawn yet."
+                    }
+                ],
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Can you tell me more about this person? What are they doing?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What is the river for in your drawing? Is someone going to cross it?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Do the trees have any special meaning in your story? Are they your favorite trees?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Why did you color the river blue? Does it remind you of a real river you\u2019ve seen?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Do you like spending time near rivers? What do you like to do there?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Are you the person fishing in the river? What kind of fish do you like to catch?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yes, I went fishing in the river last weekend."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That sounds fun! Did you catch any fish last weekend? What did you do after fishing?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "a few fishes and then I went home to cook them and eat them."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Yummy! Did you cook the fish with anyone else? Was it your favorite meal?"
+                    }
+                ],
+                "speechWidth": {
+                    "interventionCount": "2",
+                    "totalWordCount": "23",
+                    "avgWordCountPerIntervention": "11.5",
+                    "stdWordCountPerIntervention": "3.54",
+                    "totalSpeechTime": "0.61",
+                    "avgSpeechTimePerIntervention": "0.3",
+                    "stdSpeechTimePerIntervention": "0.21"
+                },
+                "speechDepth": {
+                    "avgIntimacyScore": "1",
+                    "stdIntimacyScore": "0.0"
+                },
+                "drawingWidth": {
+                    "strokeCount": "38",
+                    "totalStrokeLength": "14.04",
+                    "avgStrokeLength": "0.37",
+                    "stdStrokeLength": "1.16",
+                    "colorUsedCount": "4",
+                    "penSizeUsedCount": "3",
+                    "amountFilledArea": "13.5"
+                }
             }
         ]
     },
     {
-        "child_id": "df462195",
+        "child_id": "df46219531cb5d522d0845901978dccfa286a5b0437f4f9cd4e485064f6b632c",
         "name": "harry",
         "sessions": [
             {
@@ -185,7 +553,72 @@
                         "description": "Implied by the child\u2019s story of going home to cook and eat the fish, though not drawn yet."
                     }
                 ],
-                "transcript": "User: Drawing sent\nVLM: Can you tell me more about this person? What are they doing?\nUser: Drawing sent\nVLM: What is the river for in your drawing? Is someone going to cross it?\nUser: Drawing sent\nVLM: Do the trees have any special meaning in your story? Are they your favorite trees?\nUser: Drawing sent\nVLM: Why did you color the river blue? Does it remind you of a real river you\u2019ve seen?\nUser: Drawing sent\nVLM: Do you like spending time near rivers? What do you like to do there?\nUser: Drawing sent\nVLM: Are you the person fishing in the river? What kind of fish do you like to catch?\nUser:  Yes, I went fishing in the river last weekend.\nVLM: That sounds fun! Did you catch any fish last weekend? What did you do after fishing?\nUser:  a few fishes and then I went home to cook them and eat them.\nVLM: Yummy! Did you cook the fish with anyone else? Was it your favorite meal?\n",
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Can you tell me more about this person? What are they doing?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What is the river for in your drawing? Is someone going to cross it?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Do the trees have any special meaning in your story? Are they your favorite trees?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Why did you color the river blue? Does it remind you of a real river you\u2019ve seen?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Do you like spending time near rivers? What do you like to do there?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Are you the person fishing in the river? What kind of fish do you like to catch?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yes, I went fishing in the river last weekend."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That sounds fun! Did you catch any fish last weekend? What did you do after fishing?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "a few fishes and then I went home to cook them and eat them."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Yummy! Did you cook the fish with anyone else? Was it your favorite meal?"
+                    }
+                ],
                 "speechWidth": {
                     "interventionCount": "2",
                     "totalWordCount": "23",
@@ -237,7 +670,64 @@
                         "description": "A modern, beautiful castle near the road that the child passes while biking to KIT, without imagining adventures around it."
                     }
                 ],
-                "transcript": "User: Drawing sent\nVLM: What is your favorite thing about this house?\nUser: Drawing sent\nVLM: What does the 'KIT' box do in your story?\nUser:  It's a building, KIT means Karlsruhe Institute of Technology, this is where I'm working.\nVLM: What do you like most about working at KIT?\nUser: Drawing sent\nVLM: Do you ride your bike to KIT? What\u2019s your favorite part of the ride?\nUser:  Yes, I do ride my bike to go to KIT and my favorite part is when I'm going  behind the castle of Karlsruhe.\nVLM: What\u2019s special about the castle? Do you imagine adventures there while you ride by?\nUser:  in any adventure when I ride close to it and concerning what's special about it, I don't  know. It's not a middle-aged castle, it's a more recent type of castle and it's quite beautiful.\nVLM: Do you ever pretend to be a knight or explorer when you ride past the castle? What kind of adventures do you imagine?\nUser:  No, I told you that I don't imagine any adventure.\nVLM: What do you think about when you ride past the castle if not adventures? Does it make you feel calm, happy, or something else?\n",
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What is your favorite thing about this house?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What does the 'KIT' box do in your story?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "It's a building, KIT means Karlsruhe Institute of Technology, this is where I'm working."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do you like most about working at KIT?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Do you ride your bike to KIT? What\u2019s your favorite part of the ride?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yes, I do ride my bike to go to KIT and my favorite part is when I'm going  behind the castle of Karlsruhe."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What\u2019s special about the castle? Do you imagine adventures there while you ride by?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "in any adventure when I ride close to it and concerning what's special about it, I don't  know. It's not a middle-aged castle, it's a more recent type of castle and it's quite beautiful."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Do you ever pretend to be a knight or explorer when you ride past the castle? What kind of adventures do you imagine?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "No, I told you that I don't imagine any adventure."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do you think about when you ride past the castle if not adventures? Does it make you feel calm, happy, or something else?"
+                    }
+                ],
                 "speechWidth": {
                     "interventionCount": "4",
                     "totalWordCount": "91",
@@ -264,7 +754,412 @@
         ]
     },
     {
-        "child_id": "65c3f756",
+        "child_id": "c6d17a3613b9914e68707fcfac8410f097643bc5840681bb533030d73cbb18f8",
+        "name": "marie",
+        "sessions": [
+            {
+                "sessionId": "session_0",
+                "sessionDate": "01-02-2026",
+                "drawing": {
+                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\marie\\session_0\\session0_01-02-2026.png"
+                },
+                "storySummary": [
+                    {
+                        "name": "sun",
+                        "description": "A yellow sun in the top left corner, still shining brightly."
+                    },
+                    {
+                        "name": "cloud",
+                        "description": "Three blue clouds remain in the sky, unchanged."
+                    },
+                    {
+                        "name": "grass",
+                        "description": "Green scribbled grass at the bottom, unchanged."
+                    },
+                    {
+                        "name": "house",
+                        "description": "A simple black-outlined house with a triangular roof, two windows, and a door, drawn on the right side of the grass. The child has confirmed it is their house and mentioned living there with their brother and parents."
+                    },
+                    {
+                        "name": "person",
+                        "description": "Two stick figures drawn on the grass: one with a smiling face (the brother) throwing rocks, and one with a sad face (the child) being targeted, indicating a moment of conflict or bullying between siblings. The child has not told anyone, including their parents, about the incident but is now feeling supported and ready to talk to them."
+                    }
+                ],
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "This story happened to me a few days ago."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What happened in your story? Can you tell me more about it?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do you want to draw next in your story? Is there someone or something you\u2019d like to add?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What\u2019s happening on the grass? Do you want to draw a person or something else there?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Who lives in the house? Is it your house or someone else\u2019s?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "This is my house."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do you like most about your house? Is there someone you live with there?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "special about my house. It's just a normal house. I'm living there with my brother and my parents."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do you like to do with your brother and parents at home? Do you have a favorite activity together?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Why is one person smiling and the other sad? Can you tell me what\u2019s happening with them?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Why is the sad person upset? Did something happen between you and your brother?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yeah, so the person on the right is me, and the person on the left which looks happy  is my brother.  And last time when we were playing together, he started to throw rocks at me on my face.  And it made me very sad."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That sounds really upsetting. Did you tell your parents about what happened? How did they react?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "No, I didn't tell anything to anyone. I don't know how I should tell that to my parents."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "It\u2019s okay to feel unsure, but your parents care about you. Would you like me to help you think of a way to tell them? You\u2019re not alone in this."
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yes please, could you give me a recommendation on how I should tell that to my parents?"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "You could say something like, \u201cMom and Dad, I need to tell you something that made me really sad.\u201d Then you can show them your drawing and explain what happened. Would you like to practice saying it together?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "That's okay. I think you already helped me a lot. Thank you. I'm correct to stop to draw  and I will try to talk to my parents. Thanks a lot. Goodbye."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "You\u2019re so brave for sharing this, and I\u2019m proud of you for wanting to talk to your parents. Remember, I\u2019m always here if you need to talk again. Take care, and I\u2019m rooting for you! \ud83d\udc9b"
+                    }
+                ],
+                "speechWidth": {
+                    "interventionCount": "7",
+                    "totalWordCount": "148",
+                    "avgWordCountPerIntervention": "21.14",
+                    "stdWordCountPerIntervention": "13.97",
+                    "totalSpeechTime": "62.71",
+                    "avgSpeechTimePerIntervention": "8.96",
+                    "stdSpeechTimePerIntervention": "6.32"
+                },
+                "speechDepth": {
+                    "avgIntimacyScore": "1.5",
+                    "stdIntimacyScore": "0.8"
+                },
+                "drawingWidth": {
+                    "strokeCount": "70",
+                    "totalStrokeLength": "15.46",
+                    "avgStrokeLength": "0.22",
+                    "stdStrokeLength": "1.17",
+                    "colorUsedCount": "6",
+                    "penSizeUsedCount": "2",
+                    "amountFilledArea": "16.13"
+                }
+            },
+            {
+                "sessionId": "session_1",
+                "sessionDate": "02-02-2026",
+                "drawing": {
+                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\marie\\session_1\\session1_02-02-2026.png"
+                },
+                "storySummary": [
+                    {
+                        "name": "text",
+                        "description": "The drawing contains two words written in different colors: 'DANEMARK' in red and 'SWEDEN' in blue."
+                    },
+                    {
+                        "name": "boat",
+                        "description": "A simple brown boat with a yellow sail is drawn, representing Viking boats the child learned about in museums. The child mentioned real Viking boats were seen but were not in good condition."
+                    },
+                    {
+                        "name": "fireworks",
+                        "description": "The child described seeing colorful fireworks in Stockholm, Sweden, during New Year\u2019s Eve, including purple, orange, red, and blue. The drawing now includes yellow fireworks with purple text '2026 NEW YEAR' nearby."
+                    },
+                    {
+                        "name": "person",
+                        "description": "The child is sharing a personal story about their holiday travels, including Viking museums and New Year\u2019s celebrations."
+                    }
+                ],
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What do these words mean to you? Are you drawing a map or telling a story about these places?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I'm going to tell you about my holidays, it's more specifically my Christmas break and  I went to Denmark and Sweden."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That sounds like a fun trip! What was your favorite thing you did in Denmark or Sweden?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Did you take a boat ride during your trip? What was it like?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I didn't take the boats, but in Denmark and Sweden there used to be a lot of  Vikings and so I could visit some museums about Vikings and apparently they  had very good boats at the time. They used to be the best boats."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That\u2019s so cool! Did you see any real Viking boats in the museums? Which part of the museum did you like the most?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I did see real Viking boats in the museum, but most of them were quite that they were not  in a very good shape anymore."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "It\u2019s sad the boats weren\u2019t in great shape\u2014did you like seeing the old parts of them anyway? What else did you see in the museum?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "When I was in Sweden in Stockholm, I was there during the New Year's Eve  and I could also see the fireworks. That was quite cool."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Wow, fireworks on New Year\u2019s Eve must\u2019ve been amazing! What colors did you see in the sky? Did you watch them with your family?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "There are works of many different colors, purple, orange, red, blue, that was super cool."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Those colors sound so magical! Did you take a picture of the fireworks? What was your favorite color?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "You drew \u20182026 NEW YEAR\u2019\u2014are you already excited for the next New Year? What do you hope to do then?"
+                    }
+                ],
+                "speechWidth": {
+                    "interventionCount": "5",
+                    "totalWordCount": "135",
+                    "avgWordCountPerIntervention": "27",
+                    "stdWordCountPerIntervention": "11.05",
+                    "totalSpeechTime": "60.32",
+                    "avgSpeechTimePerIntervention": "12.06",
+                    "stdSpeechTimePerIntervention": "5.34"
+                },
+                "speechDepth": {
+                    "avgIntimacyScore": "1.14",
+                    "stdIntimacyScore": "0.38"
+                },
+                "drawingWidth": {
+                    "strokeCount": "92",
+                    "totalStrokeLength": "4.66",
+                    "avgStrokeLength": "0.05",
+                    "stdStrokeLength": "0.08",
+                    "colorUsedCount": "6",
+                    "penSizeUsedCount": "1",
+                    "amountFilledArea": "4.57"
+                }
+            },
+            {
+                "sessionId": "session_2",
+                "sessionDate": "03-02-2026",
+                "drawing": {
+                    "imagePath": "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing\\marie\\session_2\\session2_03-02-2026.png"
+                },
+                "storySummary": [
+                    {
+                        "name": "person",
+                        "description": "A green outline with a black patterned section on top and three green lines across the body, possibly representing a spectator or an abstract depiction of the court."
+                    },
+                    {
+                        "name": "stick figure",
+                        "description": "Two small black stick figures, representing the professional badminton players \u2014 one from Thailand (the winner) and one from France (the player you were rooting for, who looked frustrated after making mistakes)."
+                    },
+                    {
+                        "name": "badminton racket",
+                        "description": "The black patterned section on top might represent a badminton racket being held by one of the players."
+                    },
+                    {
+                        "name": "badminton court",
+                        "description": "The green outline might represent the badminton court or playing area where the match took place."
+                    }
+                ],
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What does this green shape mean to you? Is it someone special?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Is the black part on top your hair or a hat? What\u2019s its story?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Are the green lines your arms or something you\u2019re wearing? Can you tell me more about them?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Are the three green lines part of your outfit or something else? What do they mean to you?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Who are the little stick figures? Are they your friends, family, or someone else special?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "This is a badminton course. I have just seen a professional match between two badminton."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Did you draw yourself watching the match or playing? What was your favorite part of the game?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "No, no, I told you, it wasn't me, it was too badminton professional players."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Who were the two players? Did you like how they played?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "One was from Thailand and the other player was from France."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Which player did you like more \u2014 the one from Thailand or the one from France? Why?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I was rooting for the French player, but he lost against the the player from  Thailand."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That must have been disappointing! Did you feel sad when the French player lost?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "A little bit sad, but I think that was okay.  But the French player looked very frustrated.  Do you know why?"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Sometimes players get frustrated when they try their best but still lose. Do you think the French player tried really hard?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "I think he did yes, but he also made a lot of mistakes, and I think that frustrated him a lot."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "It\u2019s okay to make mistakes \u2014 even pros do! Did you ever feel frustrated like that when you tried something hard?"
+                    }
+                ],
+                "speechWidth": {
+                    "interventionCount": "6",
+                    "totalWordCount": "99",
+                    "avgWordCountPerIntervention": "16.5",
+                    "stdWordCountPerIntervention": "3.89",
+                    "totalSpeechTime": "30.36",
+                    "avgSpeechTimePerIntervention": "5.06",
+                    "stdSpeechTimePerIntervention": "3.07"
+                },
+                "speechDepth": {
+                    "avgIntimacyScore": "1.29",
+                    "stdIntimacyScore": "0.49"
+                },
+                "drawingWidth": {
+                    "strokeCount": "62",
+                    "totalStrokeLength": "3.72",
+                    "avgStrokeLength": "0.06",
+                    "stdStrokeLength": "0.1",
+                    "colorUsedCount": "3",
+                    "penSizeUsedCount": "2",
+                    "amountFilledArea": "1.62"
+                }
+            }
+        ]
+    },
+    {
+        "child_id": "65c3f75641b22925c737ca657b126cd68c39e423349d43031cf9a3b9a18cee1f",
         "name": "vincent",
         "sessions": [
             {
@@ -315,7 +1210,80 @@
                         "description": "The child is learning how to ski from their father and has fallen while practicing \u2014 they see this as normal and part of learning."
                     }
                 ],
-                "transcript": "User: Drawing sent\nVLM: What\u2019s your favorite thing to do when you\u2019re outside on a sunny day like this?\nUser: Drawing sent\nVLM: Do you like skiing? What\u2019s the most fun part about it?\nUser:  Yes, I like skiing. I went skiing during the last holidays.\nVLM: What was your favorite part of your skiing trip? Did you go with your family or friends?\nUser:  Yes, I went with my family. We took the car to go there.\nVLM: Did you have a favorite seat in the car during the trip? Or did you play any games with your family while traveling?\nUser: Drawing sent\nVLM: Did you ski down those snowy slopes on the mountain? Was it scary or fun?\nUser: Drawing sent\nVLM: Are those two people you and your family member skiing together? What did you wear to stay warm?\nUser: Drawing sent\nVLM: You labeled one person \u201cME\u201d \u2014 was that you having fun skiing? Did you fall down or laugh a lot?\nUser: Drawing sent\nVLM: Did you and your dad ski together the whole time? Did he teach you any cool tricks?\nUser:  Yes, he is teaching me how to ski, and of course it happened to me to fall, it happened to anybody right.\nVLM: It\u2019s okay to fall when you\u2019re learning \u2014 did you laugh after falling, or did your dad help you up right away?\n",
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What\u2019s your favorite thing to do when you\u2019re outside on a sunny day like this?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Do you like skiing? What\u2019s the most fun part about it?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yes, I like skiing. I went skiing during the last holidays."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What was your favorite part of your skiing trip? Did you go with your family or friends?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yes, I went with my family. We took the car to go there."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Did you have a favorite seat in the car during the trip? Or did you play any games with your family while traveling?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Did you ski down those snowy slopes on the mountain? Was it scary or fun?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Are those two people you and your family member skiing together? What did you wear to stay warm?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "You labeled one person \u201cME\u201d \u2014 was that you having fun skiing? Did you fall down or laugh a lot?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Did you and your dad ski together the whole time? Did he teach you any cool tricks?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yes, he is teaching me how to ski, and of course it happened to me to fall, it happened to anybody right."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "It\u2019s okay to fall when you\u2019re learning \u2014 did you laugh after falling, or did your dad help you up right away?"
+                    }
+                ],
                 "speechWidth": {
                     "interventionCount": "3",
                     "totalWordCount": "46",
@@ -383,7 +1351,72 @@
                         "description": "Black outlined round object between the two people, representing a beach ball they played with by tossing it back and forth."
                     }
                 ],
-                "transcript": "User: Drawing sent\nVLM: What does the yellow part in your drawing mean? Is it grass, sand, or something else?\nUser:  It's sand, I went to the beach during the summer holidays\nVLM: That sounds fun! What did you do at the beach? Did you build sandcastles or swim?\nUser: Drawing sent\nVLM: Did you see any animals at the beach, like seagulls or crabs? Or maybe you saw a boat in the water?\nUser: Drawing sent\nVLM: What kind of boat is that? Was it a fishing boat, a sailboat, or maybe a fun ride you went on?\nUser: Drawing sent\nVLM: Who are the two people on the beach? Are they your family, friends, or maybe you and your sibling?\nUser:  The person on the left is me and the person on the right is my brother.\nVLM: What did you and your brother do together at the beach? Did you play in the sand or splash in the water?\nUser: Drawing sent\nVLM: Did you and your brother have a fun game with the ball? Was it a game of catch or maybe you kicked it around?\nUser:  Yeah, we had a lot of fun, we played with this ball just soaring it to each other, that was very nice. I liked it a lot.\nVLM: That sounds like such a happy day! Was there anything else you did together that made you smile even more?\n",
+                "transcript": [
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What does the yellow part in your drawing mean? Is it grass, sand, or something else?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "It's sand, I went to the beach during the summer holidays"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That sounds fun! What did you do at the beach? Did you build sandcastles or swim?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Did you see any animals at the beach, like seagulls or crabs? Or maybe you saw a boat in the water?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What kind of boat is that? Was it a fishing boat, a sailboat, or maybe a fun ride you went on?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Who are the two people on the beach? Are they your family, friends, or maybe you and your sibling?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "The person on the left is me and the person on the right is my brother."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "What did you and your brother do together at the beach? Did you play in the sand or splash in the water?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Drawing sent"
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "Did you and your brother have a fun game with the ball? Was it a game of catch or maybe you kicked it around?"
+                    },
+                    {
+                        "name": "User",
+                        "description": "Yeah, we had a lot of fun, we played with this ball just soaring it to each other, that was very nice. I liked it a lot."
+                    },
+                    {
+                        "name": "VLM",
+                        "description": "That sounds like such a happy day! Was there anything else you did together that made you smile even more?"
+                    }
+                ],
                 "speechWidth": {
                     "interventionCount": "3",
                     "totalWordCount": "55",

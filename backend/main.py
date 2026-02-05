@@ -39,6 +39,7 @@ from fastapi.middleware.cors import CORSMiddleware # avoid fetch errors
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository 
 from pixelbot_backend.pixelbot_controller.ChildAPI import ChildAPI 
 from pixelbot_backend.pixelbot_controller.SessionAPI import SessionAPI
+from pixelbot_backend.pixelbot_controller.GlobalMetricsAPI import GlobalMetricsAPI
 
 app = FastAPI()
 
@@ -109,6 +110,7 @@ repository = DataRepository()
 # Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
 # Pixelbot path: "http://192.168.2.70:8000"
 child_api = ChildAPI("C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing", repository) 
+global_metrics_api = GlobalMetricsAPI(child_api)
 session_api = SessionAPI(child_api) 
 
 app.add_middleware( 
@@ -118,6 +120,14 @@ app.add_middleware(
     allow_methods=["*"], 
     allow_headers=["*"], 
 )
+
+@app.get("/pixelbot/summary")
+def get_pixelbot_summary(): 
+    return global_metrics_api.send_global_metrics_summary()
+
+@app.get("/pixelbot/children/{child_id}/recap")
+def get_recap(child_id: str):
+    return global_metrics_api.send_child_recap(child_id)
 
 @app.get("/pixelbot/children") 
 def get_children(): 
