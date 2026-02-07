@@ -18,14 +18,15 @@ import DockingBlock from "../components/DockingBlock.jsx";
 export default function TurtlebotStatusPage() {
     const { statusDTO, isLoading, error } = useTurtlebotStatus();
 
-    const batteryColor = statusDTO?.batteryPercentage < 50 ? '#FF5A5F' : '#5AAE61';
+    const batteryColor = statusDTO?.batteryPercentage === "N/A" ? "#FF5A5F"
+                            : statusDTO.batteryPercentage < 50 ? "#FF5A5F" : "#5AAE61";
     const wifiColor = statusDTO?.isWifiConnected ? '#5AAE61' : '#FF5A5F';
     const piColor = statusDTO?.isRaspberryPiConnected ? '#5AAE61' : '#FF5A5F';
     const commsColor = statusDTO?.isCommsConnected ? '#5AAE61' : '#FF5A5F';
 
    
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (isLoading) return <div className='loading-page'>Loading...</div>;
+    if (error) return <div className='error-page'>Error: {error}</div>;
    
     return (
         <div className="turtlebot-status-page">
@@ -38,7 +39,7 @@ export default function TurtlebotStatusPage() {
                                     className="battery-icon"
                                 />}
                     label="Battery"
-                    status={`${statusDTO?.batteryPercentage}%`}
+                    status={statusDTO?.batteryPercentage === "N/A" ? "N/A" : `${statusDTO.batteryPercentage}%`}
                     statusColor={batteryColor}
                 />
                 <GeneralStatusBlock icon={
@@ -76,7 +77,7 @@ export default function TurtlebotStatusPage() {
                     <ModeStatus />
                     <PathExecutionBlock />
                     <DockingBlock />
-                </div>
+                    </div>
             </div>
         </div>
     );

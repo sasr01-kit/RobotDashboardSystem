@@ -7,7 +7,7 @@
                 "sessionId": "session_0",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\ane\\session_0\\session0_09-01-2026.png"
+                    "imagePath": "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing/ane/session_0/session0_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -156,7 +156,7 @@
                 "sessionId": "session_1",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\ane\\session_1\\session1_09-01-2026.png"
+                    "imagePath": "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing/ane/session_1/session1_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -269,7 +269,7 @@
                 "sessionId": "session_2",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\ane\\session_2\\session2_09-01-2026.png"
+                    "imagePath": "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing/ane/session_2/session2_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -412,7 +412,7 @@
                 "sessionId": "session_0",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\david\\session_0\\session0_09-01-2026.png"
+                    "imagePath": "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing/david/session_0/session0_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -561,7 +561,7 @@
                 "sessionId": "session_1",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\david\\session_1\\session1_09-01-2026.png"
+                    "imagePath": "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing/david/session_1/session1_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -674,7 +674,7 @@
                 "sessionId": "session_2",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\david\\session_2\\session2_09-01-2026.png"
+                    "imagePath": "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing/david/session_2/session2_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -817,7 +817,7 @@
                 "sessionId": "session_0",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\harry\\session_0\\session0_09-01-2026.png"
+                    "imagePath": "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing/harry/session_0/session0_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -934,7 +934,7 @@
                 "sessionId": "session_1",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\harry\\session_1\\session1_09-01-2026.png"
+                    "imagePath": "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing/harry/session_1/session1_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -1049,7 +1049,7 @@
                 "sessionId": "session_0",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\vincent\\session_0\\session0_09-01-2026.png"
+                    "imagePath": "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing/vincent/session_0/session0_09-01-2026.png"
                 },
                 "storySummary": [
                     {
@@ -1194,7 +1194,7 @@
                 "sessionId": "session_1",
                 "sessionDate": "09-01-2026",
                 "drawing": {
-                    "imagePath": "C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing\\vincent\\session_1\\session1_09-01-2026.png"
+                    "imagePath": "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing/vincent/session_1/session1_09-01-2026.png"
                 },
                 "storySummary": [
                     {

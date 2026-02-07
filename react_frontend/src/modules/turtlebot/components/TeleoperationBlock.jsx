@@ -1,8 +1,9 @@
-import { useModeContext } from "../ModeUtil/ModeContext.js";
 import { motion } from "framer-motion";
 import { useState } from 'react';
+import { useModeContext } from "../ModeUtil/ModeContext.js";
+import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext.js";
+
 import TeleoperationButton from "./TeleoperationButton.jsx";
-import { useRef, useEffect } from "react";
 import teleopIcon from '../assets/teleopIcon.svg';
 import upIcon from '../assets/upButton.svg';
 import leftIcon from '../assets/leftButton.svg';
@@ -16,79 +17,45 @@ export default function TeleoperationBlock() {
     const { mode } = useModeContext(); 
     const isTeleoperating = mode === 'Teleoperating';
 
-    const ws = useRef(null);
+    const { send } = useWebSocketContext();
     const [activeCommand, setActiveCommand] = useState(null);
-
-    /* MOCK PLEASE DELETE !!!!! */
-    const [messages, setMessages] = useState([]); 
-    const mockSend = (commandArray) => { 
-        const timestamp = new Date().toLocaleTimeString(); 
-        const entry = `${timestamp} → ${JSON.stringify(commandArray)}`; setMessages(prev => [entry, ...prev]); 
-    };
-    /* END MOCK PLEASE DELETE !!!!! */
-
-    useEffect(() => {
-        ws.current = new WebSocket("ws://localhost:8080/ws")
-
-        ws.current.onopen = () => console.log("[Teleop] WebSocket connected"); 
-        ws.current.onclose = () => console.log("[Teleop] WebSocket disconnected"); 
-        ws.current.onerror = (err) => console.error("[Teleop] WebSocket error:", err);
-
-        return () => ws.current?.close();
-    }, []);
-
-    const handleInput = (direction) => { 
-        const dir = direction.toUpperCase(); 
-        let commandArray = [];
-
-        switch (dir) { 
-            case 'UP': 
-                commandArray = ['FORWARD']; 
-                break; 
-            case 'DOWN': 
-                commandArray = ['BACKWARD']; 
-                break; 
-            case 'LEFT': 
-                commandArray = ['FORWARD', 'LEFT']; 
-                break; 
-            case 'RIGHT': 
-                commandArray = ['FORWARD', 'RIGHT']; 
-                break; 
-            case 'ROTATE_CW': 
-                commandArray = ['RIGHT']; 
-                break; 
-            case 'ROTATE_CCW': 
-                commandArray = ['LEFT']; 
-                break; 
-            case 'STOP': 
-                commandArray = ['STOP']; 
-                break; 
-            default: return; 
-        }
-
-        setActiveCommand(dir);
-
-        /* MOCK PLEASE DELETE !!!!! */
-        mockSend(commandArray);
-        /* END MOCK PLEASE DELETE !!!!! */
-
-        /* REAL CODE: USE THIS LATER
-        if (process.env.NODE_ENV === 'development') { 
-            console.log('[Teleop] Built command:', commandArray); 
-        }
-
-        sendCommand(commandArray); */
+    const [messages, setMessages] = useState([]);
     
-    };
+    const handleInput = (direction) => { 
+    const dir = direction.toUpperCase(); 
+    let command = null;
 
-    const sendCommand = (commandArray) => {
-        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-            const message = JSON.stringify({ commands: commandArray });
-            ws.current.send(message);  
-        } else {
-            console.error('[Teleop] WebSocket is not connected.');
-        }
-    };
+    switch (dir) { 
+        case 'UP': 
+            command = 'FORWARD'; 
+            break; 
+        case 'DOWN': 
+            command = 'BACKWARD'; 
+            break; 
+        case 'LEFT': 
+            command = 'LEFT'; 
+            break; 
+        case 'RIGHT': 
+            command = 'RIGHT'; 
+            break; 
+        case 'ROTATE_CW': 
+            command = 'ROTATE_RIGHT'; 
+            break; 
+        case 'ROTATE_CCW': 
+            command = 'ROTATE_LEFT'; 
+            break; 
+        case 'STOP': 
+            command = 'STOP'; 
+            break; 
+        default:
+            return; 
+    }
+
+    setActiveCommand(dir);
+    setMessages(prev => [...prev, `Sent: ${command}`]);
+    send({ command });
+};
+
 
     return (
         <motion.div 
@@ -144,17 +111,15 @@ export default function TeleoperationBlock() {
                         icon={<img src={stopIcon} alt="stop" className="teleop-icon" />} 
                     />
                 </div>
-            </div>
-        </motion.div>
-    );
-}
-
-/* Mock message log
-            <div className="teleop-log">
+                   <div className="teleop-log">
                 <h3>Sent Commands</h3>
                 <ul>
                     {messages.map((msg, i) => (
                         <li key={i}>{msg}</li>
                     ))}
                 </ul>
-            </div> */
+            </div> 
+            </div>
+        </motion.div>
+    );
+}

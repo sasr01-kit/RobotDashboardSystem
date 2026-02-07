@@ -5,6 +5,8 @@ from turtlebot4_backend.turtlebot4_model.Observer import Observer
 
 
 class Subject(ABC):
+    message_type: str = "GENERIC_UPDATE"
+
     def __init__(self) -> None:
         self._observers: List[Observer] = []
 
@@ -20,5 +22,9 @@ class Subject(ABC):
         """
         Notifies all registered observers of a state change.
         """
+        message = {
+            "type": self.message_type, 
+            **data
+        }
         for observer in list(self._observers):
             await observer.update(self, data)
