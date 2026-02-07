@@ -12,7 +12,7 @@ const greenShades = [
 ];
 
 // A simple BarChart component using Highcharts
-export default function BarChart({ data, color = '#20A090', xAxisLabel, yAxisLabel }) {
+export default function BarChart({ data, color = '#20A090', xAxisLabel, yAxisLabel, averageLine }) {
     if (!data || data.length === 0) {
         return <div className="chart-empty">No data available</div>;
     }
@@ -48,7 +48,22 @@ export default function BarChart({ data, color = '#20A090', xAxisLabel, yAxisLab
                     fontSize: '11px',
                     color: '#666'
                 }
-            }
+            },
+            plotLines: averageLine ? [{
+                color: '#FF4444',
+                width: 2,
+                value: averageLine,
+                dashStyle: 'Dash',
+                label: {
+                    text: `Average: ${averageLine.toFixed(1)}`,
+                    align: 'right',
+                    style: {
+                        color: '#FF4444',
+                        fontSize: '10px'
+                    }
+                },
+                zIndex: 5
+            }] : []
         },
         legend: {
             enabled: false

@@ -85,15 +85,38 @@ export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint 
             },
             gridLineWidth: 0
         },
-        colorAxis: {
-            min: 0,
-            max: 10,
-            stops: [
-                [0, '#ebedf0'],
-                [0.2, '#c6e48b'],
-                [0.4, '#7bc96f'],
-                [0.6, '#239a3b'],
-                [1, '#196127']
+        colorAxis: { // Can be changed to a more suitable value range if needed
+            dataClasses: [
+                {
+                    from: 0,
+                    to: 0,
+                    color: '#ebedf0',
+                    name: 'No usage'
+                },
+                {
+                    from: 1,
+                    to: 2,
+                    color: '#c6e48b',
+                    name: 'Low'
+                },
+                {
+                    from: 3,
+                    to: 5,
+                    color: '#7bc96f',
+                    name: 'Medium'
+                },
+                {
+                    from: 6,
+                    to: 8,
+                    color: '#239a3b',
+                    name: 'High'
+                },
+                {
+                    from: 9,
+                    to: 999,
+                    color: '#196127',
+                    name: 'Intense'
+                }
             ]
         },
         legend: {
@@ -154,6 +177,38 @@ export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint 
                 highcharts={Highcharts}
                 options={options}
             />
+            <div className="heatmap-footer">
+                <div className="heatmap-legend">
+                    <span className="legend-label">No usage</span>
+
+                    <div className="legend-item" title="No usage">
+                        <span className="box box-0"></span>
+                        <span>0</span>
+                    </div>
+
+                    <div className="legend-item" title="Low">
+                        <span className="box box-1"></span>
+                        <span>1–2</span>
+                    </div>
+
+                    <div className="legend-item" title="Medium">
+                        <span className="box box-2"></span>
+                        <span>3–5</span>
+                    </div>
+
+                    <div className="legend-item" title="High">
+                        <span className="box box-3"></span>
+                        <span>6–8</span>
+                    </div>
+
+                    <div className="legend-item" title="Intense">
+                        <span className="box box-4"></span>
+                        <span>9+</span>
+                    </div>
+
+                    <span className="legend-label">Intense</span>
+                </div>
+            </div>
         </div>
     );
 }

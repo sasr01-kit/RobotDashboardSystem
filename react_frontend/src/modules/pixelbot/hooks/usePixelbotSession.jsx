@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function usePixelbotSession(childId, sessionId = null) {
+export function usePixelbotSession(childId, sessionId) {
   const [session, setSession] = useState(null);
   const [child, setChild] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,26 +19,16 @@ export function usePixelbotSession(childId, sessionId = null) {
       setError(null);
 
       try {
-        if (!sessionId) {
-          // Fetch child recap
-          const res = await fetch(`http://localhost:8080/pixelbot/children/${childId}`);
-          if (!res.ok) throw new Error("Child not found");
+        // Fetch specific session
+        const res = await fetch(
+          `http://localhost:8080/pixelbot/children/${childId}/sessions/${sessionId}`
+        );
+        if (!res.ok) throw new Error("Session not found");
 
-          const data = await res.json();
-          setChild(data);
-          setSession(null);
-        } else {
-          // Fetch specific session
-          const res = await fetch(
-            `http://localhost:8080/pixelbot/children/${childId}/sessions/${sessionId}`
-          );
-          if (!res.ok) throw new Error("Session not found");
+        const data = await res.json();
 
-          const data = await res.json();
-
-          setSession(data);
-          setChild(null);
-        }
+        setSession(data);
+        setChild(null);
       } catch (err) {
         setError("Failed to load data.");
         console.error(err);

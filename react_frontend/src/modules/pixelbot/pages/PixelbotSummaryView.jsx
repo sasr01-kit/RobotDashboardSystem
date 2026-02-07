@@ -63,12 +63,10 @@ export default function PixelbotSummaryView() {
         </div>
     );
 
-    
     function formatGrowthRate(rate) {
         if (rate > 0) return `+${rate}`;
         return `${rate}`;
     }
-
 }
 
 

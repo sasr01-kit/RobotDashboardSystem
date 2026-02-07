@@ -70,5 +70,7 @@
 }
 
 .dashboard-card-content:has(.image-carousel) {
-    padding: 0;
+    padding: 1rem;
+    display: flex;
+    flex: 1;
 }
