@@ -40,7 +40,10 @@ class StatusController:
                 return
 
             async def _mark_on_and_notify():
-                await self.robot_state.set_is_on(True)
+                # Notify listeners immediately that the robot is on as the connection is established, 
+                # as it means the robot is powered on and rosbridge is running. 
+                # The other status fields will be updated asynchronously as their respective messages are received.
+                await self.robot_state.set_is_on(True) 
                 await self._notify_listeners()
 
             self._loop.call_soon_threadsafe(

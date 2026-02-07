@@ -4,7 +4,6 @@ from turtlebot4_backend.turtlebot4_model.Subject import Subject
 from turtlebot4_backend.turtlebot4_model.Path import Path
 
 class RobotState(Subject):
-    message_type: str = "STATUS_UPDATE"
 
     def __init__(
         self,

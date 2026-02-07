@@ -42,6 +42,8 @@ from turtlebot4_backend.turtlebot4_controller.StatusController import StatusCont
 from turtlebot4_backend.turtlebot4_model.ConcreteObserver import ConcreteObserver
 from turtlebot4_backend.turtlebot4_model.Teleoperate import Teleoperate
 from turtlebot4_backend.turtlebot4_controller.TeleopController import TeleopController
+from turtlebot4_backend.turtlebot4_model.Map import Map
+from turtlebot4_backend.turtlebot4_controller.MapController import MapController
 
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository 
 from pixelbot_backend.pixelbot_controller.ChildAPI import ChildAPI 
@@ -58,10 +60,8 @@ robot_state = RobotState()
 status_controller = StatusController(robot_state)
 teleoperate = Teleoperate()
 teleop_controller = TeleopController(teleoperate)
-
-@app.on_event("startup") 
-async def startup_event(): 
-    status_controller.subscribeToStatus()
+map_model = Map()
+map_controller = MapController(map_model)
 
 
 @app.websocket("/ws") 
@@ -70,6 +70,9 @@ async def websocket_endpoint(websocket: WebSocket):
     
     observer = ConcreteObserver(websocket) 
     robot_state.attach(observer) 
+    status_controller.subscribeToStatus()
+    map_model.attach(observer)
+    map_controller._send_initial_map_png()
 
     try: 
         while True: 
@@ -83,7 +86,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
     except WebSocketDisconnect: 
         robot_state.detach(observer)
-
+        map_model.detach(observer)
 
 # Pixelbot REST API
 repository = DataRepository() 

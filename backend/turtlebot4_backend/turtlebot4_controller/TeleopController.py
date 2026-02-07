@@ -20,34 +20,25 @@ class TeleopController:
         self.teleop = teleop
         self._ros = RosbridgeConnection(host=ros_host, port=ros_port)
         self._loop = loop or asyncio.get_event_loop()
+        self._ros.connect()
 
         # Waits for teleop updates and publishes to ROSBridge when they occur
         teleop.attach(self._on_teleop_update)
 
-        # Connect to rosbridge
-        self.client = roslibpy.Ros(host=ros_host, port=ros_port)
-        self.client.run()
         print("[TeleopController] Connecting to ROSBridge...")
 
         # Wait until connected
         for _ in range(50):  # ~5 seconds
-            if self.client.is_connected:
+            if self._ros.isConnected:
                 break
             time.sleep(0.1)
 
-        if not self.client.is_connected:
+        if not self._ros.isConnected:
             print("[TeleopController] ERROR: Could not connect to ROSBridge")
             return
 
         print("[TeleopController] Connected to ROSBridge")
-
-        # Correct ROS 1 message type for rosbridge
-        self.cmd_vel_topic = roslibpy.Topic(
-            self.client,
-            '/cmd_vel',
-            'geometry_msgs/msg/Twist'
-        )
-        self.cmd_vel_topic.advertise()
+        self._ros.publish('/cmd_vel', {}, msg_type='geometry_msgs/msg/Twist')  # Advertise the topic with an empty message to ensure it exists before we try to publish real commands
         print("[TeleopController] /cmd_vel advertised")
 
 
@@ -58,7 +49,6 @@ class TeleopController:
         )
 
     async def _publish_drive_command(self):
-        self._ros.connect()
         cmd = self.teleop.get_command()
         if not cmd:
             return
@@ -108,12 +98,12 @@ class TeleopController:
 
     def stop(self):
         try:
-            self.cmd_vel_topic.unadvertise()
+            self._ros.unadvertise('/cmd_vel')
         except Exception:
             pass
 
         try:
-            self.client.terminate()
+            self._ros.terminate()
         except Exception:
             pass
 
