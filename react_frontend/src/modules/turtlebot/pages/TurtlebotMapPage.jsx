@@ -9,7 +9,7 @@ import { MinimizedStatusBar } from '../components/MinimizedStatusBar';
 import MapView from '../components/MapView.jsx';
 
 export default function TurtlebotMapPage() {
-    const { logs, isLoading } = useTurtlebotGoalMock(); //MOCK CHANGE TO REAL
+    const { pathHistory } = useTurtlebotGoal();
     const entryRefs = useRef({});
     const [mapHeight, setMapHeight] = useState(null);
 
@@ -19,8 +19,6 @@ export default function TurtlebotMapPage() {
             element.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
     };
-
-    if (isLoading) return <div className="loading">Loading goal logs...</div>;
 
     return (
         <div className="turtlebot-map-page">
@@ -32,9 +30,9 @@ export default function TurtlebotMapPage() {
                     </div>
                 </div>
                 <div className="right-panel">
-                    <PathLogDropdownNav logs={logs} onSelect={scrollToEntry} />
+                    <PathLogDropdownNav logs={pathHistory} onSelect={scrollToEntry} />
                     <div className="path-log-container" style={{ height: mapHeight ? `${mapHeight}px` : "28rem" }} >
-                        <GoalLogPanel logs={logs} entryRefs={entryRefs} />
+                        <GoalLogPanel logs={pathHistory} entryRefs={entryRefs} />
                     </div>
                 </div>
             </div>

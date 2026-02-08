@@ -131,6 +131,7 @@
 }
 
 .goal-status {
+  text-transform: uppercase;
   font-size: 1.1rem;
   font-weight: 600;
   color: #242626;
@@ -138,6 +139,7 @@
 
 .rule,
 .timestamp {
+  text-transform: lowercase;
   font-size: 0.9rem;
   color: #333;
   line-height: 1.4;

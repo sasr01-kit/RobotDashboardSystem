@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useModeContext } from '../ModeUtil/ModeContext.js';
 import { useWebSocketContext } from '../WebsocketUtil/WebsocketContext.js';
 import { motion } from "framer-motion";
 import pathIcon from '../assets/pathExecution.svg';
 
-/* MOCK */
+/* MOCK 
 const MOCK_LATENCY = 600;
 
 const PathExecutionBlock = () => {
@@ -76,89 +76,86 @@ const PathExecutionBlock = () => {
       </div>
     </motion.div>
   );
-};
+}; */
 
-
-/* REAL VERSION
 const PathExecutionBlock = () => {
-  const { mode, setMode } = useModeContext();
+  const { mode } = useModeContext();
   const { send } = useWebSocketContext();
 
   const [isPending, setIsPending] = useState(false);
 
-  const isExecuting = mode === RUNNING;
+  // Real execution state from backend
+  const isExecuting = mode === "Running Path Module";
 
   const handleClick = useCallback(() => {
     if (isPending) return;
 
     setIsPending(true);
 
+    // Send real backend command
     send({
-      type: "PATH_EXECUTION_COMMAND",
-      command: isExecuting ? "STOP" : "START",
+      isPathModuleActive: !isExecuting
     });
   }, [isExecuting, isPending, send]);
 
   useEffect(() => {
-    if (
-      (isPending && isExecuting) ||
-      (isPending && mode === "Teleoperating")
-    ) {
+    // When backend updates mode, clear pending
+    if (isPending && mode !== undefined) {
       setIsPending(false);
     }
-  }, [mode, isExecuting, isPending]);
+  }, [mode, isPending]);
 
   return (
     <motion.div
-      className="path-execution-block"
+      className="command-execution-block"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <div className="path-row">
-        <span className="label">Execution Status</span>
-        <motion.span
-          className={`status ${isExecuting ? "on" : "off"}`}
-          animate={{ scale: isExecuting ? 1.1 : 1 }}
-        >
-          {isExecuting ? "ON" : "OFF"}
-        </motion.span>
-      </div>
+      <div className="command-execution-row">
 
-      <motion.button
+        {/* Icon */}
+        <div className="path-icon">
+          <img src={pathIcon} alt="Path Icon" className="path-icon" />
+        </div>
+
+        {/* Labels */}
+        <div className="label-column">
+          <span className="command-label">Path Module</span>
+
+          <motion.span
+            className={`command-status ${isExecuting ? "on" : "off"}`}
+          >
+            Status: {isExecuting ? "On" : "Off"}
+          </motion.span>
+        </div>
+
+        {/* Button */}
+        <motion.button
           className={`execution-button ${isExecuting ? "stop" : "start"}`}
           onClick={handleClick}
           disabled={isPending}
           whileHover={!isPending ? { scale: 1.05 } : {}}
           whileTap={!isPending ? { scale: 0.95 } : {}}
         >
-       
-          <span className="button-placeholder">
-            PROCESSING
-          </span>
-
-            <motion.span
-                key={
-                    isPending
-                    ? "spinner"
-                    : isExecuting
-                    ? "stop"
-                    : "start"
-            }
-                className="button-label"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                >
-                {isPending ? (
-                    <span className="spinner" />
-                ) : isExecuting ? (
-                    "STOP"
-                ) : (
-                    "START"
-                )}
-            </motion.span>
-      </motion.button>
+          <motion.span
+            key={isPending ? "spinner" : isExecuting ? "stop" : "start"}
+            className="button-label"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            {isPending ? (
+              <span className="spinner" />
+            ) : isExecuting ? (
+              "STOP"
+            ) : (
+              "START"
+            )}
+          </motion.span>
+        </motion.button>
+      </div>
     </motion.div>
   );
-}; */
+};
+
 
 export default PathExecutionBlock;

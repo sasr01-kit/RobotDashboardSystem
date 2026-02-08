@@ -1,11 +1,12 @@
 import '../styles/FeedbackPage.css';
 import { FeedbackLogPanel } from "../components/FeedbackLogPanel.jsx";
+import { useTurtlebotFeedback } from "../Hooks/useTurtlebotFeedback.js";
 import { useTurtlebotFeedbackMock } from "../Hooks/useTurtlebotFeedbackMock.js";
 import { FeedbackSummaryChart } from '../components/FeedbackSummaryChart';
 import { motion } from 'framer-motion';
 
 export default function TurtlebotFeedbackPage() {
-    const { feedbackEntries } = useTurtlebotFeedbackMock(); //MOCK PLEASE UPDATE WITH ISLOADING WITH REAL ONE
+    const { feedbackEntries } = useTurtlebotFeedback(); 
 
     return (
         <div className="turtlebot-feedback-page">

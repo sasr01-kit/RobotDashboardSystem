@@ -22,8 +22,6 @@ export function updateGlobalMapState(patch) {
   listeners.forEach(fn => fn(globalMapState));
 }
 
-
-
 // -------------------------------------------------------------
 // HOOK
 // -------------------------------------------------------------

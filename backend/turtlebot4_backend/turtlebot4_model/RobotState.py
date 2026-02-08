@@ -7,6 +7,7 @@ class RobotState(Subject):
 
     def __init__(
         self,
+        path_model: Path,
         is_on: bool = False,
         battery_percentage: float = None,
         is_wifi_connected: bool = None,
@@ -19,7 +20,7 @@ class RobotState(Subject):
         self._is_wifi_connected = is_wifi_connected
         self._is_comms_connected = is_comms_connected
         self._is_raspberry_pi_connected = is_raspberry_pi_connected
-
+        self._path_model = path_model
     # Getters
     def get_is_on(self) -> bool:
         return self._is_on
@@ -78,6 +79,20 @@ class RobotState(Subject):
                 "type": "STATUS_UPDATE", 
                 **self.toJSON() 
             })
+    
+    async def set_mode(self) -> None:
+        # Mode is derived from path module state, so we just notify observers to re-check the mode
+        await self.notify_observers({ 
+            "type": "STATUS_UPDATE", 
+            **self.toJSON()
+        })
+
+    async def set_docked(self) -> None:
+        # Docked status is derived from path module state, so we just notify observers to re-check the docked status
+        await self.notify_observers({ 
+            "type": "STATUS_UPDATE", 
+            **self.toJSON()    
+        })
 
     def toJSON(self) -> Dict[str, Any]:
         """
@@ -92,5 +107,9 @@ class RobotState(Subject):
             "isWifiConnected": self._is_wifi_connected,
             "isCommsConnected": self._is_comms_connected,
             "isRaspberryPiConnected": self._is_raspberry_pi_connected,
-           # "mode" : Path.get_is_path_module_active(),
+            "mode": (
+                "Running Path Module" if self._path_model and self._path_model.get_is_path_module_active()
+                else "Teleoperating"
+            ),
+            "isDocked": self._path_model.get_is_docked() if self._path_model else None
         }

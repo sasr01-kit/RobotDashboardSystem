@@ -8,6 +8,8 @@ let globalStatusState = {
   isWifiConnected: false,
   isCommsConnected: false,
   isRaspberryPiConnected: false,
+  mode: "Teleoperating",
+  isDocked: true
 };
 
 // All hook instances subscribe here
@@ -61,6 +63,8 @@ export function useTurtlebotStatus() {
           isWifiConnected: data.isWifiConnected,
           isCommsConnected: data.isCommsConnected,
           isRaspberryPiConnected: data.isRaspberryPiConnected,
+          mode: data.mode,
+          isDocked: data.isDocked
         });
 
         setError(null);

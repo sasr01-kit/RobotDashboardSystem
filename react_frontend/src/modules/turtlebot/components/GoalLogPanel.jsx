@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { useTurtlebotGoal } from '../Hooks/useTurtlebotGoal';
 import { useTurtlebotGoalMock } from '../Hooks/useTurtlebotGoalMock'; //MOCK DELETE
 import { GoalEntryBlock } from './GoalEntryBlock';
-import { PathLogDropdownNav } from './PathLogDropdownNav';
 import { motion } from 'framer-motion';
 
 export const GoalLogPanel = ({ logs, entryRefs }) => {

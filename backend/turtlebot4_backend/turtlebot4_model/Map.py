@@ -93,6 +93,24 @@ class Map(Subject):
     def _pose_to_dict(self, pose):
         if pose is None:
             return None
+
+        # --- CASE 1: pose is already a dict (mock/test data) ---
+        if isinstance(pose, dict):
+            return {
+                "position": {
+                    "x": pose.get("position", {}).get("x", 0.0),
+                    "y": pose.get("position", {}).get("y", 0.0),
+                    "z": pose.get("position", {}).get("z", 0.0),
+                },
+                "orientation": {
+                    "x": pose.get("orientation", {}).get("x", 0.0),
+                    "y": pose.get("orientation", {}).get("y", 0.0),
+                    "z": pose.get("orientation", {}).get("z", 0.0),
+                    "w": pose.get("orientation", {}).get("w", 1.0),
+                }
+            }
+
+        # --- CASE 2: pose is a PoseStamped (real robot) ---
         return {
             "position": {
                 "x": pose.pose.position.x,
@@ -106,3 +124,4 @@ class Map(Subject):
                 "w": pose.pose.orientation.w
             }
         }
+
