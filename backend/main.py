@@ -40,7 +40,6 @@ async def websocket_endpoint(websocket: WebSocket):
     
     observer = ConcreteObserver(websocket) 
     robot_state.attach(observer) 
-    status_controller.subscribeToStatus()
     map_model.attach(observer)
     map_controller._send_initial_map_png()
     path_model.attach(observer)
