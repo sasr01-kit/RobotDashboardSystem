@@ -8,6 +8,7 @@
 
 .map-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: auto;
@@ -17,4 +18,63 @@
 .map-container canvas {
   display: block;
   image-rendering: pixelated; 
+}
+
+.map-legend {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-color {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  display: inline-block;
+  border: 1px solid #333;
+}
+
+/* Match your canvas colors exactly */
+.legend-color.public {
+  background: rgba(0, 255, 0, 0.10);
+}
+
+.legend-color.social {
+  background: rgba(255, 255, 0, 0.26);
+}
+
+.legend-color.personal {
+  background: rgba(255, 166, 0, 0.53);
+}
+
+.legend-color.intimate {
+  background: rgba(255, 0, 0, 0.32);
+}
+
+.legend-color.human {
+  background: blue;
+}
+
+.legend-color.global-goal {
+  background: rgba(0, 255, 0, 0.8);
+}
+
+.legend-color.waypoint {
+  background: rgb(246, 255, 0);
+}
+
+.legend-color.robot {
+  background: red;
 }

@@ -2,7 +2,6 @@ import '../styles/MapPage.css';
 import '../styles/GoalLog.css';
 import { useRef, useState } from 'react';
 import { useTurtlebotGoal } from '../Hooks/useTurtlebotGoal';
-import { useTurtlebotGoalMock } from '../Hooks/useTurtlebotGoalMock'; //MOCK DELETE
 import { GoalLogPanel } from "../components/GoalLogPanel";
 import { PathLogDropdownNav } from '../components/PathLogDropdownNav';
 import { MinimizedStatusBar } from '../components/MinimizedStatusBar';

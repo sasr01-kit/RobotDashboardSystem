@@ -1,7 +1,6 @@
 import '../styles/FeedbackPage.css';
 import { FeedbackLogPanel } from "../components/FeedbackLogPanel.jsx";
 import { useTurtlebotFeedback } from "../Hooks/useTurtlebotFeedback.js";
-import { useTurtlebotFeedbackMock } from "../Hooks/useTurtlebotFeedbackMock.js";
 import { FeedbackSummaryChart } from '../components/FeedbackSummaryChart';
 import { motion } from 'framer-motion';
 

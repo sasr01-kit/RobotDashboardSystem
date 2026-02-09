@@ -1,3 +1,4 @@
+import '../styles/MapView.css';
 import { useEffect, useRef } from "react";
 import { useTurtlebotMap } from "../Hooks/useTurtlebotMap";
 
@@ -122,6 +123,48 @@ export default function MapView({ onMapResize }) {
   return (
     <div className="map-container">
       <canvas ref={canvasRef} />
+      <div className="map-legend">
+        <div className="legend-item">
+          <span className="legend-color public"></span>
+          <span>Public Zone (7.6m)</span>
+        </div>
+
+        <div className="legend-item">
+          <span className="legend-color social"></span>
+          <span>Social Zone (3.6m)</span>
+        </div>
+
+        <div className="legend-item">
+          <span className="legend-color personal"></span>
+          <span>Personal Zone (1.2m)</span>
+        </div>
+
+        <div className="legend-item">
+          <span className="legend-color intimate"></span>
+          <span>Intimate Zone (0.45m)</span>
+        </div>
+
+        <div className="legend-item">
+          <span className="legend-color human"></span>
+          <span>Human Position</span>
+        </div>
+
+        <div className="legend-item">
+          <span className="legend-color global-goal"></span>
+          <span>Global Goal</span>
+        </div>
+
+        <div className="legend-item">
+          <span className="legend-color waypoint"></span>
+          <span>Intermediate Waypoint</span>
+        </div>
+
+        <div className="legend-item">
+          <span className="legend-color robot"></span>
+          <span>Robot Position</span>
+        </div>
+      </div>
     </div>
   );
+
 }

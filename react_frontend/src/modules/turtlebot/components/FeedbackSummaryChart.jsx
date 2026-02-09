@@ -1,7 +1,6 @@
 import Highcharts, { width } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useTurtlebotFeedback } from "../Hooks/useTurtlebotFeedback"; 
-import { useTurtlebotFeedbackMock } from "../Hooks/useTurtlebotFeedbackMock";
 
 export const FeedbackSummaryChart = () => {
   const { feedbackSummaryDTO } = useTurtlebotFeedback();
