@@ -25,7 +25,7 @@ export const PathLogDropdownNav = ({ logs, onSelect }) => {
         <ul className="dropdown-menu">
           {logs.map((log) => (
             <li key={log.id} onClick={() => handleSelect(log.id)}>
-              {log.label}
+              {log.goalType} - {new Date(log.timestamp).toLocaleString()}
             </li>
           ))}
         </ul>

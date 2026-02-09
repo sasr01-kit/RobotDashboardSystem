@@ -5,6 +5,7 @@ from turtlebot4_backend.turtlebot4_model.Observer import Observer
 
 
 class Subject(ABC):
+
     def __init__(self) -> None:
         self._observers: List[Observer] = []
 

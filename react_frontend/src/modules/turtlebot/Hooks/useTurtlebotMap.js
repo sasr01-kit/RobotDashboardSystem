@@ -1,53 +1,85 @@
+// -------------------------------------------------------------
+// GLOBAL STORE (persists across page changes)
+// -------------------------------------------------------------
+
+let globalMapState = {
+  mapUrl: null,
+  resolution: null,
+  width: null,
+  height: null,
+  robotPose: null,
+  humans: [],
+  globalGoal: null,
+  intermediateWaypoints: []
+};
+
+// All hook instances subscribe here
+const listeners = new Set();
+
+// Called by WebSocket callback to update global state
+export function updateGlobalMapState(patch) {
+  globalMapState = { ...globalMapState, ...patch };
+  listeners.forEach(fn => fn(globalMapState));
+}
+
+// -------------------------------------------------------------
+// HOOK
+// -------------------------------------------------------------
+
 import { useState, useEffect } from "react";
 import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext";
 
 export function useTurtlebotMap() {
   const { subscribe } = useWebSocketContext();
 
-  const [map, setMap] = useState(null);
-  const [poseStamped, setPoseStamped] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Initialize from global state (not defaults)
+  const [mapDTO, setMapDTO] = useState(globalMapState);
 
+  // Subscribe this hook instance to global store updates
+  useEffect(() => {
+    listeners.add(setMapDTO);
+
+    // Immediately sync with latest global state
+    setMapDTO(globalMapState);
+
+    return () => listeners.delete(setMapDTO);
+  }, []);
+
+  // Subscribe to WebSocket messages
   useEffect(() => {
     if (!subscribe) return;
 
     return subscribe((data) => {
-      try {
-        if (data.type === "MAP_UPDATE") {
-          setMap({
-            mapUrl: data.mapUrl,
-            resolution: data.resolution,
-            width: data.width,
-            height: data.height,
-            origin: {
-              x: data.origin.x,
-              y: data.origin.y,
-            },
-          });
-        }
+      console.log("[MAP HOOK] incoming:", data);
 
-        if (data.type === "POSE_UPDATE") {
-          setPoseStamped({
-            id: data.id,
-            coordinate: {
-              x: data.coordinate.x,
-              y: data.coordinate.y,
-              z: data.coordinate.z,
-            },
-            timestamp: data.timestamp,
-            frame_id: data.frame_id,
-          });
-        }
+      if (data.type === "MAP_DATA") {
+        const mapData = data.mapData;
 
-        setIsLoading(false);
-        setError(null);
-      } catch {
-        setError("Failed to parse Turtlebot map data");
-        setIsLoading(false);
+        updateGlobalMapState({
+          mapUrl: mapData.occupancyGridPNG
+            ? `data:image/png;base64,${mapData.occupancyGridPNG}`
+            : globalMapState.mapUrl,
+          resolution: mapData.resolution ?? globalMapState.resolution,
+          width: mapData.width ?? globalMapState.width,
+          height: mapData.height ?? globalMapState.height
+        });
+
+        return;
+      }
+
+      if (data.type === "POSE_DATA") {
+        updateGlobalMapState({
+          robotPose: data.robotPose ?? globalMapState.robotPose,
+          humans: data.humans ?? globalMapState.humans,
+          globalGoal: data.globalGoal ?? globalMapState.globalGoal,
+          intermediateWaypoints:
+            data.intermediateWaypoints ?? globalMapState.intermediateWaypoints
+        });
+
+        return;
       }
     });
   }, [subscribe]);
 
-  return { map, poseStamped, isLoading, error };
+  return mapDTO;
 }

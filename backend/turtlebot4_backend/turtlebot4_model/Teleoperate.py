@@ -1,64 +1,34 @@
 # Teleoperate.py
 from typing import List, Dict, Any
-from turtlebot4_model.Subject import Subject
-from DirectionCommand import DirectionCommand
 
+class Teleoperate:
+    def __init__(self):
+        self._commands = []
+        # Teleoperate needs to notify the controller when a new command is added, so it can publish to ROSBridge.
+        # Thus it needs its own list of observers (the controller) and a notify mechanism. 
+        self._observers = [] 
 
-class Teleoperate(Subject):
-    def __init__(self) -> None:
-        super().__init__()
-        self._commands: List[DirectionCommand] = []
+    def attach(self, callback):
+        if callback not in self._observers:
+            self._observers.append(callback)
 
-    # Getter
-    def get_commands(self) -> List[DirectionCommand]:
-        return self._commands
+    def detach(self, callback):
+        if callback in self._observers:
+            self._observers.remove(callback)
 
-    # Setter
-    def set_commands(self, commands: List[DirectionCommand]) -> None:
-        self._commands = commands
-        self.notifyObservers(self.toJSON())
+    def notify(self):
+        for cb in list(self._observers):
+            cb(self, None)   # synchronous callback
 
-    # Add a single command
-    def add_command(self, command: DirectionCommand) -> None:
+    def add_command(self, command: str):
         self._commands.append(command)
-        self.notifyObservers(self.toJSON())
+        self.notify()      
 
-    # Deserialize frontend JSON into DirectionCommand(s)
-    def fromJSON(self, msg: Dict[str, Any]) -> None:
-        """
-        Parses teleoperation input from the frontend.
-        Example msg format:
-        { "commands": ["FORWARD", "LEFT"] }
-        """
-        command_strs = msg.get("commands", [])
-        for cmd_str in command_strs:
-            try:
-                # Convert string to DirectionCommand enum
-                command = DirectionCommand[cmd_str.upper()]
-                self.add_command(command)
-            except KeyError:
-                # Invalid command; ignore or log warning
-                print(f"Warning: Invalid teleop command received: {cmd_str}")
+    def get_command(self):
+        if not self._commands:
+            return None
+        return self._commands.pop(0)
 
-    # Serialize commands to JSON for frontend confirmation
-    def toJSON(self) -> Dict[str, Any]:
-        """
-        Returns JSON indicating teleoperation state and queued commands.
-        """
-        return {
-            "teleoperationActive": len(self._commands) > 0,
-            "queuedCommands": [str(cmd) for cmd in self._commands],
-        }
-
-    # Return queued commands as a list of Python dictionaries
-    def get_teleop_commands(self) -> List[Dict[str, float]]:
-        """
-        Returns a list of dictionaries representing the linear and angular
-        velocities for each queued DirectionCommand.
-        """
-        return [cmd.to_dict() for cmd in self._commands]
-
-    # Optional: clear the command queue after processing
-    def clear_commands(self) -> None:
-        self._commands.clear()
-        self.notifyObservers(self.toJSON())
+    def fromJSON(self, msg):
+        if "command" in msg:
+            self.add_command(msg["command"])

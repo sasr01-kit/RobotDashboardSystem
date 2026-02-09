@@ -1,4 +1,5 @@
 # ConcreteObserver.py
+from fastapi import WebSocket
 from turtlebot4_backend.turtlebot4_model.Observer import Observer
 
 class ConcreteObserver(Observer):
@@ -6,7 +7,4 @@ class ConcreteObserver(Observer):
         self._client = websocket_client
 
     async def update(self, source, data) -> None:
-        await self._client.send_json({
-            "source": source.__class__.__name__,
-            "payload": data
-        })
+        await self._client.send_json(data)

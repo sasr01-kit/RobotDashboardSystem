@@ -1,43 +1,18 @@
-"""
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from ConcreteObserver import ConcreteObserver
-from Subject import Subject
-from RobotState import RobotState
-from Path import Path
-
-app = FastAPI()
-
-robot_state = RobotState()
-path = Path()
-#Map to be added
-
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-
-    observer = ConcreteObserver(websocket)
-
-    # Attach observer to all subjects you want to stream
-    robot_state.attach(observer)
-    path.attach(observer)
-
-    try:
-        while True:
-            # If your frontend sends messages, read them here
-            await websocket.receive_text()
-
-    except WebSocketDisconnect:
-        # Clean up when the client disconnects
-        robot_state.detach(observer)
-        path.detach(observer)
-"""
 import asyncio
 import random
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware # avoid fetch errors in REST API
+import json
 
 from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
 from turtlebot4_backend.turtlebot4_controller.StatusController import StatusController
+from turtlebot4_backend.turtlebot4_model.ConcreteObserver import ConcreteObserver
+from turtlebot4_backend.turtlebot4_model.Teleoperate import Teleoperate
+from turtlebot4_backend.turtlebot4_controller.TeleopController import TeleopController
+from turtlebot4_backend.turtlebot4_model.Map import Map
+from turtlebot4_backend.turtlebot4_controller.MapController import MapController
+from turtlebot4_backend.turtlebot4_model.Path import Path
+from turtlebot4_backend.turtlebot4_controller.PathController import PathController
 
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository 
 from pixelbot_backend.pixelbot_controller.ChildAPI import ChildAPI 
@@ -50,71 +25,61 @@ app = FastAPI()
 # Store all connected WebSocket clients
 connected_clients = set()
 
-robot_state = RobotState() 
+teleoperate = Teleoperate()
+teleop_controller = TeleopController(teleoperate)
+map_model = Map()
+map_controller = MapController(map_model)
+path_model = Path()
+path_controller = PathController(path_model, map_model)
+robot_state = RobotState(path_model) 
 status_controller = StatusController(robot_state)
 
-""" async def mock_robot_loop():
-    battery = 100.0
-
-    while True:
-        # Simulate battery drain
-        battery = max(0, battery - random.uniform(0.5, 2.0))
-
-        # Random toggles
-        is_on = random.choice([True, False])
-        wifi = random.choice([True, False])
-        comms = random.choice([True, False])
-        rpi = random.choice([True, False])
-
-        # Build the message
-        message = {
-            "type": "STATUS_UPDATE",
-            "isOn": is_on,
-            "batteryPercentage": round(battery, 1),
-            "isWifiConnected": wifi,
-            "isCommsConnected": comms,
-            "isRaspberryPiConnected": rpi,
-            "mode": random.choice(["IDLE", "NAVIGATING", "DOCKING"])
-        }
-
-        # Broadcast to all connected clients
-        dead_clients = []
-        for ws in connected_clients:
-            try:
-                await ws.send_json(message)
-            except:
-                dead_clients.append(ws)
-
-        # Remove disconnected clients
-        for ws in dead_clients:
-            connected_clients.remove(ws)
-
-        await asyncio.sleep(2) """
-
-
-@app.on_event("startup") 
-async def startup_event(): 
+@app.websocket("/ws") 
+async def websocket_endpoint(websocket: WebSocket): 
+    await websocket.accept() 
+    
+    observer = ConcreteObserver(websocket) 
+    robot_state.attach(observer) 
     status_controller.subscribeToStatus()
+    map_model.attach(observer)
+    map_controller._send_initial_map_png()
+    path_model.attach(observer)
+    path_model.set_path_controller(path_controller)
+
+    try: 
+        while True: 
+            raw = await websocket.receive_text() 
+            msg = json.loads(raw) 
+            print(f"[WS] Parsed JSON: {msg}")
+        
+            # Route teleoperate messages 
+            if "command" in msg: 
+                teleoperate.fromJSON(msg) 
+
+            # Route path messages
+            if "isPathModuleActive" in msg:
+                await path_model.fromJSON(msg)
+                await robot_state.set_mode()
+          
+
+            if "dockStatus" in msg:
+                await path_model.fromJSON(msg)
+                await robot_state.set_docked()
+
+            if msg.get("type") == "GOAL_FEEDBACK":
+                await path_model.apply_feedback(msg)
 
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-
-    connected_clients.add(websocket)
-
-    try:
-        while True:
-            await websocket.receive_text()  # ignore client messages
-    except WebSocketDisconnect:
-        print("Client disconnected")
-        connected_clients.remove(websocket)
+    except WebSocketDisconnect: 
+        robot_state.detach(observer)
+        map_model.detach(observer)
+        path_model.detach(observer)
 
 # Pixelbot REST API
 repository = DataRepository() 
 # Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
 # Pixelbot path: "http://192.168.2.70:8000"
-child_api = ChildAPI("C:/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing", repository) 
+child_api = ChildAPI("/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing", repository) 
 global_metrics_api = GlobalMetricsAPI(child_api)
 session_api = SessionAPI(child_api) 
 
