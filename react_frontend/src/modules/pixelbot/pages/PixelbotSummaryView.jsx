@@ -37,7 +37,7 @@ export default function PixelbotSummaryView() {
                     <div className="card-info">
                         <span className="card-title">Total Sessions</span>
                         <span className="card-subtitle">Total sessions this month.      </span>
-                        <span className="card-subtitle"> A <strong>{summaryStats.sessionsGrowthRate}% </strong> variation in usage compared with the previous month! </span> 
+                        <span className="card-subtitle"> A <strong>{formatGrowthRate(summaryStats.sessionsGrowthRate)}% </strong> variation in usage compared with the previous month! </span> 
                     </div>
                     <span className="card-value">{summaryStats.totalSessions}</span>
                 </div>
@@ -62,6 +62,13 @@ export default function PixelbotSummaryView() {
             <CalendarHeatMap id="summary-heatmap" data={summaryStats.dailySessionCounts} onPrint={() => handlePrint('summary-heatmap')} />
         </div>
     );
+
+    
+    function formatGrowthRate(rate) {
+        if (rate > 0) return `+${rate}`;
+        return `${rate}`;
+    }
+
 }
 
 

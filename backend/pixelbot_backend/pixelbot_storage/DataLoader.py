@@ -18,7 +18,6 @@ class DataLoader:
   
     def __init__(self, data_root):
         self.data_root = data_root
-        # self.imageData: Optional[str] = None
 
 
     def load_all_children(self):
@@ -143,7 +142,5 @@ class DataLoader:
     def short_hash(self, name, length=64):
         full_hash = hashlib.sha256(name.encode()).hexdigest()
         return full_hash[:length]
- # Encode PNG to base64
-        # with open(png_path, "rb") as f: #turn this in to a method, make required variables in the file, 
-           #  self._mapDataPNG = base64.b64encode(f.read()).decode("utf-8")
+    
     

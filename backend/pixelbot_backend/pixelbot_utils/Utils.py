@@ -23,7 +23,7 @@ class Utils:
         return total_sessions_this_month
     
     @staticmethod
-    def get_session_frequency_monthly(self, sessions: list, year: int):
+    def get_session_frequency_monthly(sessions: list, year: int):
         monthlyCount = defaultdict(int)
 
         for session in sessions:
@@ -33,7 +33,6 @@ class Utils:
         
         sorted_months = sorted(
         monthlyCount.keys(), key=lambda month: datetime.datetime.strptime(month, "%m-%Y"))
-
 
         return [
             {"month": month, "count": monthlyCount[month]}
@@ -45,90 +44,87 @@ class Utils:
         pass
 
     @staticmethod
-    def get_total_word_count(self, sessions):
+    def get_total_word_count(sessions):
         return sum(session.getTotalWordCount() for session in sessions)
     
     @staticmethod
-    def get_avg_intervention_count_per_session(self, sessions):
+    def get_avg_intervention_count_per_session(sessions):
         return sum(session.getInterventionCount() for session in sessions) / len(sessions)
     
     @staticmethod
-    def get_avg_word_count_growth_rate(self, sessions, this_month, this_year):
-        current_word_count = Utils.word_count_for_month(sessions, this_month, this_year)
-
-        last_month = this_month - 1 if this_month > self.JANUARY else self.DECEMBER
-        last_year = this_year if this_month > self.JANUARY else this_year - 1
-
-        last_month_word_count = Utils.word_count_for_month(sessions, last_month, last_year)
-
-        return round((current_word_count - last_month_word_count) / last_month_word_count * 100)
+    def get_avg_word_count_growth_rate(sessions, this_year):
+        word_growth_rate = [
+        {
+            "sessionId": session.getSessionId(),
+            "wordCount": session.getTotalWordCount()
+        }
+        for session in sessions if session.session_date.year == this_year]
+        return word_growth_rate
+    
     
     @staticmethod
-    def word_count_for_month(self, sessions, month, year):
+    def word_count_for_month(sessions, month, year):
         return sum(session.getTotalWordCount() for session in sessions
                if session.session_date.month == month and session.session_date.year == year)
     
     @staticmethod
-    def avg_word_count():
-        pass 
+    def avg_word_count(sessions):
+        return sum(session.getTotalWordCount() for session in sessions) / len(sessions)
 
     @staticmethod
-    def get_speech_time_growth_rate(self, sessions, this_month, this_year):
-        current_speech_time = Utils.speech_time_for_month(sessions, this_month, this_year)
-
-        last_month = this_month - 1 if this_month > self.JANUARY else self.DECEMBER
-        last_year = this_year if this_month > self.JANUARY else this_year - 1
-
-        last_month_speech_time = Utils.speech_time_for_month(sessions, last_month, last_year)
-
-        return round((current_speech_time - last_month_speech_time) / last_month_speech_time * 100)
+    def get_speech_time_growth_rate(sessions, this_year):
+        speech_time_growth_rate = [
+        {
+            "sessionId": session.getSessionId(),
+            "speechTime": session.getTotalSpeechTime()
+        }
+        for session in sessions if session.session_date.year == this_year]
+        return speech_time_growth_rate
     
     @staticmethod
-    def speech_time_for_month(self, sessions, month, year):
+    def speech_time_for_month(sessions, month, year):
         return sum(session.getTotalSpeechTime() for session in sessions
                if session.session_date.month == month and session.session_date.year == year)
 
     # red line on the chart for intimacy score
     @staticmethod
-    def get_avg_intimacy_score(self, sessions):
+    def get_avg_intimacy_score(sessions):
         return sum(session.getAvgIntimacyScore() for session in sessions) / len(sessions)
 
     # bar/line chart for intimacy score
     @staticmethod
-    def get_intimacy_trend(self, sessions, year):
+    def get_intimacy_trend(sessions, year):
+
         intimacy_trend = [
         {
-            "date": session.session_date.strftime("%d-%m-%Y"),
+            "sessionId": session.getSessionId(),
             "intimacy": session.getAvgIntimacyScore()
         }
-        for session in sessions if session.session_date.year == year ]
+        for session in sessions if session.session_date.year == year]
 
-        intimacy_trend_sorted = sorted(
-        intimacy_trend, key=lambda item: datetime.datetime.strptime(item["date"], "%d-%m-%Y"))
-
-        return intimacy_trend_sorted
+        return intimacy_trend
     
     #Right below the drawing carrousel this metric can be shown
     @staticmethod
-    def get_avg_stroke_count(self, sessions):
+    def get_avg_stroke_count(sessions):
         return sum(session.getStrokeCountDrawing() for session in sessions) / len(sessions)
     
     #Right below the drawing carrousel this metric can be shown
     @staticmethod
-    def get_avg_filled_area(self, sessions):
+    def get_avg_filled_area(sessions):
         return sum(session.getFilledAreaDrawing() for session in sessions) / len(sessions)
     
     #Right below the drawing carrousel this metric can be shown
     @staticmethod 
-    def get_avg_colors_used(self, sessions):
+    def get_avg_colors_used(sessions):
         return sum(session.getColorsUsedCountDrawing() for session in sessions) / len(sessions)
     
     @staticmethod
-    def get_avg_number_objects(self, sessions):
+    def get_avg_number_objects(sessions):
         return sum(len(session.story_summary) for session in sessions) / len(sessions)
     
     @staticmethod
-    def get_object_diversity(self, sessions):
+    def get_object_diversity(sessions):
         objects = set()
         for session in sessions:
             for item in session.story_summary:
