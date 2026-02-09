@@ -10,6 +10,7 @@ export default function ChildRecapView() {
     const { childId } = useParams();
     const { child, isLoading } = usePixelbotRecap(childId); // Custom hook to fetch just child data (can be changed)
 
+
     function handlePrint(elementId) { // Print function
         if (elementId) {
             const element = document.getElementById(elementId);
@@ -43,7 +44,7 @@ export default function ChildRecapView() {
                     <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                     <rect x="6" y="14" width="12" height="8"></rect>
                 </svg>
-                <h3>{childId} - Recap</h3>
+                <h3>{child.name} - Recap</h3>
             </div>
             <div className="child-recap-view">
                 <div className="recap-grid">

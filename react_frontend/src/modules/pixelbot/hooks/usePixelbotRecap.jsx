@@ -36,6 +36,7 @@ export function usePixelbotRecap(childId) {
         }
 
         const recapData = {
+          name : data.name,
           // Session frequency data for line chart
           sessionFrequencyData: (data.engagement?.sessionFrequencyTrend || []).map(item => ({
             label: item.month,
@@ -60,8 +61,8 @@ export function usePixelbotRecap(childId) {
             value: item.intimacy
           })),
           
-          // Drawings - Does not come from the backend
-          drawings: [],
+          // Drawings 
+          drawings: (data.drawing?.drawings || []).map(d => `data:image/png;base64,${d.base64}`),
           
           // Metric values
           metricValues: {

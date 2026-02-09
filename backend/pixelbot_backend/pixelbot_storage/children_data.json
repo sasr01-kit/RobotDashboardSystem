@@ -1,6 +1,6 @@
 [
     {
-        "child_id": "608a74902fdf38039c2a43c0f10ca0d392a599a8f6b7fb6cec11466660aded51",
+        "child_id": "608a7490",
         "name": "alessia",
         "sessions": [
             {
@@ -284,7 +284,7 @@
         ]
     },
     {
-        "child_id": "4135aa9dc1b842a653dea846903ddb95bfb8c5a10c504a7fa16e10bc31d1fdf0",
+        "child_id": "4135aa9d",
         "name": "alex",
         "sessions": [
             {
@@ -568,7 +568,7 @@
         ]
     },
     {
-        "child_id": "fdb7d5c701a3b4a9981e98fd486d22b51b51f2e91605540e57081d440573c009",
+        "child_id": "fdb7d5c7",
         "name": "brandon",
         "sessions": [
             {
@@ -800,7 +800,7 @@
         ]
     },
     {
-        "child_id": "4c26d9074c27d89ede59270c0ac14b71e071b15239519f75474b2f3ba63481f5",
+        "child_id": "4c26d907",
         "name": "carol",
         "sessions": [
             {
@@ -1084,7 +1084,7 @@
         ]
     },
     {
-        "child_id": "b9dd960c1753459a78115d3cb845a57d924b6877e805b08bd01086ccdf34433c",
+        "child_id": "b9dd960c",
         "name": "charlie",
         "sessions": [
             {
@@ -1316,7 +1316,7 @@
         ]
     },
     {
-        "child_id": "07d046d5fac12b3f82daf5035b9aae86db5adc8275ebfbf05ec83005a4a8ba3e",
+        "child_id": "07d046d5",
         "name": "david",
         "sessions": [
             {
@@ -1838,7 +1838,7 @@
         ]
     },
     {
-        "child_id": "f4aa0655cdb8d4fcf6f719c7a786de10556783c70bfb8ef1d78923482fe6ebbc",
+        "child_id": "f4aa0655",
         "name": "emma",
         "sessions": [
             {
@@ -2360,7 +2360,7 @@
         ]
     },
     {
-        "child_id": "ca68c91636f5c3b099d0490405ba104d5c3857904b14f197fa35f08cfaa12a81",
+        "child_id": "ca68c916",
         "name": "frederic",
         "sessions": [
             {
@@ -2765,7 +2765,7 @@
         ]
     },
     {
-        "child_id": "df46219531cb5d522d0845901978dccfa286a5b0437f4f9cd4e485064f6b632c",
+        "child_id": "df462195",
         "name": "harry",
         "sessions": [
             {
@@ -2997,7 +2997,7 @@
         ]
     },
     {
-        "child_id": "927a3aed189d610b2e151c4208913b3ed0cb38f6be613756819b1513c8924d7f",
+        "child_id": "927a3aed",
         "name": "henry",
         "sessions": [
             {
@@ -3281,7 +3281,7 @@
         ]
     },
     {
-        "child_id": "b918c3f9116ce3a61efd71a1bada0d46c8f575283ce5d5798454a4abfb56ae79",
+        "child_id": "b918c3f9",
         "name": "lauren",
         "sessions": [
             {
@@ -3565,7 +3565,7 @@
         ]
     },
     {
-        "child_id": "7cadab457ad8d811f134612436daaa5e5914b20dc2502865f714035b0f267680",
+        "child_id": "7cadab45",
         "name": "lucas",
         "sessions": [
             {
@@ -3970,7 +3970,7 @@
         ]
     },
     {
-        "child_id": "73e4935fcd6dfbc26aa88d49b1304bff6f1dfdcfaa021e72e73d06025286eb1c",
+        "child_id": "73e4935f",
         "name": "luisa",
         "sessions": [
             {
@@ -4202,7 +4202,7 @@
         ]
     },
     {
-        "child_id": "c6d17a3613b9914e68707fcfac8410f097643bc5840681bb533030d73cbb18f8",
+        "child_id": "c6d17a36",
         "name": "marie",
         "sessions": [
             {
@@ -4607,7 +4607,7 @@
         ]
     },
     {
-        "child_id": "68be7550846ecd878947b4eb0ac13d3cca3cf6c4940c94d90163e0a15e947203",
+        "child_id": "68be7550",
         "name": "matthew",
         "sessions": [
             {
@@ -4891,7 +4891,7 @@
         ]
     },
     {
-        "child_id": "34550715062af006ac4fab288de67ecb44793c3a05c475227241535f6ef7a81b",
+        "child_id": "34550715",
         "name": "michael",
         "sessions": [
             {
@@ -5296,7 +5296,7 @@
         ]
     },
     {
-        "child_id": "4ea7ea4917057a1fcbb3bffdb673602d9b961ff14b239cc7a8d96933b8a18b51",
+        "child_id": "4ea7ea49",
         "name": "natalia",
         "sessions": [
             {
@@ -5818,7 +5818,7 @@
         ]
     },
     {
-        "child_id": "b2471d941bf888366cf43813752ea2ebfef08254773cf116187cdd6d0463a50a",
+        "child_id": "b2471d94",
         "name": "olivia",
         "sessions": [
             {
@@ -6340,7 +6340,7 @@
         ]
     },
     {
-        "child_id": "e1608f75c5d7813f3d4031cb30bfb786507d98137538ff8e128a6ff74e84e643",
+        "child_id": "e1608f75",
         "name": "tom",
         "sessions": [
             {
@@ -6745,7 +6745,7 @@
         ]
     },
     {
-        "child_id": "65c3f75641b22925c737ca657b126cd68c39e423349d43031cf9a3b9a18cee1f",
+        "child_id": "65c3f756",
         "name": "vincent",
         "sessions": [
             {

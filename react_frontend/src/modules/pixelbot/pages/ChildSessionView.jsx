@@ -11,7 +11,7 @@ export default function ChildSessionView() {
     const { session, isLoading } = usePixelbotSession(childId, sessionId); // Fetch specific session data with hook
 
     const child = children ? children.find(c => c.childId == childId) : null;
-    const name = child ? child.name : 'Unknown Child';
+    const name = child ? child.name : '';
 
     function handlePrint(elementId) { // Print function
         if (elementId) {

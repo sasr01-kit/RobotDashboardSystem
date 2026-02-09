@@ -2,6 +2,7 @@ from pixelbot_backend.pixelbot_utils.Utils import Utils
 import datetime
 from collections import defaultdict
 from collections import Counter
+from pixelbot_backend.pixelbot_model.Child import Child
 import os
 
 class GlobalMetricsAPI:
@@ -40,12 +41,17 @@ class GlobalMetricsAPI:
     
     def send_child_recap(self, child_id):
         child = self.child_api.get_child_obj(child_id)
+        
+        if child is None:
+            raise ValueError(f"Child with id {child_id} not found")
+
         sessions = child.sessions
 
         now = datetime.datetime.now()
         year = now.year
 
         recap = {
+            "name": child.name,
             "engagement": {
                 # Can be visualised as a box
                 "totalSessions": len(sessions),
@@ -70,6 +76,7 @@ class GlobalMetricsAPI:
                 "intimacyTrend": Utils.get_intimacy_trend(sessions, year),
             },
             "drawing": {
+                "drawings": child.get_drawings(),
                 # all these three metrics can be put under the drawing section in the same box
                 "averageStrokeCount": Utils.get_avg_stroke_count(sessions),
                 "averageNumberColors": Utils.get_avg_colors_used(sessions),
