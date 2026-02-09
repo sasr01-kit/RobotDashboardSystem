@@ -53,47 +53,31 @@ class TeleopController:
         if not cmd:
             return
 
-        msg = {
-            'linear': {'x': 0.0, 'y': 0.0, 'z': 0.0},
-            'angular': {'x': 0.0, 'y': 0.0, 'z': 0.0}
-        }
-
-        if cmd == "FORWARD":
-            msg['linear']['x'] = DirectionCommand.FORWARD.value
-            print("Command detected: FORWARD")
-
-        elif cmd == "BACKWARD":
-            msg['linear']['x'] = DirectionCommand.BACKWARD.value
-            print("Command detected: BACKWARD")
-
-        elif cmd == "LEFT":
-            msg['linear']['x'] = DirectionCommand.FORWARD.value
-            msg['angular']['z'] = DirectionCommand.LEFT.value
-            print("Command detected: LEFT")
-
-        elif cmd == "RIGHT":
-            msg['linear']['x'] = DirectionCommand.FORWARD.value
-            msg['angular']['z'] = DirectionCommand.RIGHT.value
-            print("Command detected: RIGHT")
-
-        elif cmd == "ROTATE_LEFT":
-            msg['angular']['z'] = DirectionCommand.LEFT.value
-            print("Command detected: ROTATE_LEFT")
-
-        elif cmd == "ROTATE_RIGHT":
-            msg['angular']['z'] = DirectionCommand.RIGHT.value
-            print("Command detected: ROTATE_RIGHT")
-
-        elif cmd == "STOP":
-            print("Command detected: STOP")
-
-        print("[TeleopController] Publishing:", msg)
-
         try:
-            self._ros.publish( '/cmd_vel', msg, msg_type='geometry_msgs/msg/Twist' )
+            # Convert string → enum (e.g. "FORWARD" → DirectionCommand.FORWARD)
+            direction_cmd = DirectionCommand[cmd]
+
+            # Get the Twist dict from the enum
+            msg = direction_cmd.get_message()
+
+            print(f"[TeleopController] Command detected: {cmd}")
+            print("[TeleopController] Publishing:", msg)
+
+            # Publish via rosbridge
+            self._ros.publish(
+                "/cmd_vel",
+                msg,
+                msg_type="geometry_msgs/msg/Twist"
+            )
+
             print("[TeleopController] Published to /cmd_vel")
+
+        except KeyError:
+            print(f"[TeleopController] Unknown command: {cmd}")
+
         except Exception as e:
-            print("[TeleopController] ERROR publishing:", e)
+            print(f"[TeleopController] ERROR publishing: {e}")# Get the next command from teleop
+    
 
 
     def stop(self):

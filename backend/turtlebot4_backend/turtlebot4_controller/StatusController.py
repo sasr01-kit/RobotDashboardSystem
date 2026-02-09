@@ -22,6 +22,7 @@ class StatusController:
         # This loop is used to schedule async notifications to websocket listeners:
         self._loop = loop or asyncio.get_event_loop()
         self._listeners: List[Callable[[Dict], Awaitable[None]]] = []
+        self.subscribeToStatus()
 
     def subscribeToStatus(self) -> None:
         """Connect to rosbridge and subscribe to status topics."""

@@ -7,6 +7,7 @@ from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import Rosbrid
 from turtlebot4_backend.turtlebot4_model.Map import Map
 from turtlebot4_backend.turtlebot4_model.Path import Path  
 from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
+from turtlebot4_backend.turtlebot4_model.DirectionCommand import DirectionCommand
 
 class PathController:
     """
@@ -299,15 +300,13 @@ class PathController:
         Publishes zero velocity to /cmd_vel to immediately stop the robot.
         This is a user-triggered command.
         """
-        if not self._connected:
-            print("[PathController] Not connected to rosbridge. Call connect() first.")
-            return
-        
-        if self._cmd_vel_publisher is None:
-            print("[PathController] Velocity publisher not initialized")
-            return
-        
-        self._cmd_vel_publisher.publish(DirectionCommand.STOP.value)
+        self._ros.publish(
+            "/cmd_vel",
+            DirectionCommand.STOP.get_message(),
+            msg_type=
+            "geometry_msgs/msg/Twist",
+           
+        )
         print("[PathController] Published STOP command to /cmd_vel")
 
     def get_records(self):
