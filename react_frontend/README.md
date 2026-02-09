@@ -16,6 +16,7 @@ React-based frontend for the Robot Dashboard System, providing an intuitive inte
 
 - Node.js (v16 or higher)
 - npm or pnpm
+- Running backend API (see `backend/README.md` for setup and startup order)
 
 ### Installation
 
@@ -26,6 +27,9 @@ npm ci  # or pnpm install
 For contributors: Use `npm ci` (or `pnpm install`) to reproduce exact dependencies from the lockfile.
 
 ### Development
+
+1. Ensure the backend FastAPI service is running (by default on port `8080`). See `backend/README.md` for details.
+2. Start the frontend dev server:
 
 ```bash
 npm run dev  # or pnpm dev

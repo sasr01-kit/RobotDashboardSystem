@@ -21,7 +21,11 @@ Currently supports:
 
 - **Frontend**: Node.js (v16 or higher) and npm/pnpm
 - **Backend**: Python 3.8+
-- **Turtlebot4**: ROS 2 environment with rosbridge server
+- **TurtleBot4**: ROS 2 environment with rosbridge server
+
+See the component-specific READMEs for detailed setup:
+- Frontend: `react_frontend/README.md`
+- Backend: `backend/README.md`
 
 ### Installation
 
@@ -43,21 +47,23 @@ Currently supports:
    pip install -r requirements.txt
    ```
 
-### Running the Application
+### Running the Application (High-Level)
 
-1. **Start the Frontend**:
+The exact sequence of commands is important for ROS-based robots. A detailed, step-by-step guide (including ROS 2, rosbridge, and testing commands) is available in `backend/README.md`. The following summarizes the typical flow:
+
+1. **Start ROS 2 and rosbridge** on the ROS-enabled machine (e.g., TurtleBot4 / Ubuntu).
+2. (Optional) **Run pre-setup tests** for TurtleBot4 navigation/teleop and map-only demos.
+3. **Start the Backend (FastAPI)**:
+   ```bash
+   cd backend
+   uvicorn main:app --reload --host 0.0.0.0 --port 8080
+   ```
+4. **Start the Frontend**:
    ```bash
    cd react_frontend
    npm run dev  # or pnpm dev
    ```
-
-2. **Start the Backend** (if applicable for your robot):
-   ```bash
-   cd backend
-   # Run appropriate backend service
-   ```
-
-3. Access the dashboard at `http://localhost:5173` (or the port shown in your terminal that started the frontend server)
+5. Access the dashboard at `http://localhost:5173` (or the port shown in your frontend terminal).
 
 ## Project Structure
 
