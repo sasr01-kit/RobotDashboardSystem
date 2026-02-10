@@ -2,7 +2,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useState, useEffect, useMemo } from 'react';
 
-export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint }) {
+export default function CalendarHeatMap({ id, data, startDate, endDate, colorScale, onPrint }) {
     const [heatmapLoaded, setHeatmapLoaded] = useState(false);
 
     useEffect(() => {
@@ -85,40 +85,7 @@ export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint 
             },
             gridLineWidth: 0
         },
-        colorAxis: { // Can be changed to a more suitable value range if needed
-            dataClasses: [
-                {
-                    from: 0,
-                    to: 0,
-                    color: '#ebedf0',
-                    name: 'No usage'
-                },
-                {
-                    from: 1,
-                    to: 2,
-                    color: '#c6e48b',
-                    name: 'Low'
-                },
-                {
-                    from: 3,
-                    to: 5,
-                    color: '#7bc96f',
-                    name: 'Medium'
-                },
-                {
-                    from: 6,
-                    to: 8,
-                    color: '#239a3b',
-                    name: 'High'
-                },
-                {
-                    from: 9,
-                    to: 999,
-                    color: '#196127',
-                    name: 'Intense'
-                }
-            ]
-        },
+        colorAxis: colorScale,
         legend: {
             enabled: false
         },
@@ -157,7 +124,7 @@ export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint 
         credits: {
             enabled: false
         }
-    }), [data]);
+    }), [data, colorScale]);
 
     if (!heatmapLoaded) {
         return <div>Loading heatmap...</div>;
@@ -179,34 +146,16 @@ export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint 
             />
             <div className="heatmap-footer">
                 <div className="heatmap-legend">
-                    <span className="legend-label">No usage</span>
+                    <span className="legend-label">{colorScale.dataClasses[0].name}</span>
 
-                    <div className="legend-item" title="No usage">
-                        <span className="box box-0"></span>
-                        <span>0</span>
-                    </div>
+                    {colorScale.dataClasses.map((dataClass, index) => (
+                        <div key={index} className="legend-item" title={dataClass.name}>
+                            <span className={`box box-${index}`} style={{ backgroundColor: dataClass.color }}></span>
+                            <span>{dataClass.label}</span>
+                        </div>
+                    ))}
 
-                    <div className="legend-item" title="Low">
-                        <span className="box box-1"></span>
-                        <span>1–2</span>
-                    </div>
-
-                    <div className="legend-item" title="Medium">
-                        <span className="box box-2"></span>
-                        <span>3–5</span>
-                    </div>
-
-                    <div className="legend-item" title="High">
-                        <span className="box box-3"></span>
-                        <span>6–8</span>
-                    </div>
-
-                    <div className="legend-item" title="Intense">
-                        <span className="box box-4"></span>
-                        <span>9+</span>
-                    </div>
-
-                    <span className="legend-label">Intense</span>
+                    <span className="legend-label">{colorScale.dataClasses[colorScale.dataClasses.length - 1].name}</span>
                 </div>
             </div>
         </div>
