@@ -1,72 +1,78 @@
-import { useState, useEffect, useRef } from 'react';
-import { useWebSocketContext } from '../WebsocketUtil/WebsocketContext.js';
+// -------------------------------------------------------------
+// GLOBAL STORE (persists across page changes)
+// -------------------------------------------------------------
 
+let globalStatusState = {
+  isOn: false,
+  batteryPercentage: null,
+  isWifiConnected: false,
+  isCommsConnected: false,
+  isRaspberryPiConnected: false,
+  mode: "Teleoperating",
+  isDocked: true
+};
 
-// TEMPORARY MOCK — replace later with real WebSocket version
-function useTurtlebotStatus() {
+// All hook instances subscribe here
+const listeners = new Set();
 
-
-     return { statusDTO: {
-        isOn: true,
-        battery: 100,
-        wifi: true,
-        raspberryPi: true,
-        comms: true,
-        mode: 'Running Path Module',
-        docking: false, },
-        isLoading: false,
-        error: null,
-        connectWebSocket: () => {},
-        disconnectWebSocket: () => {},
-    };
+// Called by WebSocket callback to update global state
+export function updateGlobalStatusState(patch) {
+  globalStatusState = { ...globalStatusState, ...patch };
+  listeners.forEach(fn => fn(globalStatusState));
 }
 
 
-export { useTurtlebotStatus };
 
+// -------------------------------------------------------------
+// HOOK
+// -------------------------------------------------------------
 
-/* REAL VERSION
+import { useState, useEffect } from "react";
+import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext";
+
 export function useTurtlebotStatus() {
-  const { socket } = useWebSocketContext();
+  const { subscribe } = useWebSocketContext();
 
-  const [statusDTO, setStatusDTO] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Initialize from global state (not defaults)
+  const [statusDTO, setStatusDTO] = useState(globalStatusState);
   const [error, setError] = useState(null);
 
+  // Subscribe this hook instance to global store updates
   useEffect(() => {
-    if (!socket) return;
+    listeners.add(setStatusDTO);
 
-    const handleMessage = (event) => {
+    // Immediately sync with latest global state
+    setStatusDTO(globalStatusState);
+
+    return () => listeners.delete(setStatusDTO);
+  }, []);
+
+  // Subscribe to WebSocket messages
+  useEffect(() => {
+    if (!subscribe) return;
+
+    return subscribe((data) => {
+      console.log("[STATUS HOOK] incoming:", data);
+
       try {
-        const data = JSON.parse(event.data);
+        if (data.type !== "STATUS_UPDATE") return;
 
-        if (data.type !== "STATUS_UPDATE") { return; }
-
-        const status = {
-          isOn: data.power,
-          batteryPercentage: data.battery,
-          isWifiConnected: data.wifi,
-          isCommsConnected: data.comms,
-          isRaspberryPiConnected: data.raspberryPi,
+        updateGlobalStatusState({
+          isOn: data.isOn,
+          batteryPercentage: data.batteryPercentage,
+          isWifiConnected: data.isWifiConnected,
+          isCommsConnected: data.isCommsConnected,
+          isRaspberryPiConnected: data.isRaspberryPiConnected,
           mode: data.mode,
-          docking: data.docking,
-        };
+          isDocked: data.isDocked
+        });
 
-        setStatusDTO(status);
-        setIsLoading(false);
         setError(null);
-      } catch (err) {
+      } catch {
         setError("Failed to parse Turtlebot status");
-        setIsLoading(false);
       }
-    };
+    });
+  }, [subscribe]);
 
-    socket.addEventListener("message", handleMessage);
-
-    return () => {
-      socket.removeEventListener("message", handleMessage);
-    };
-  }, [socket]);
-
-  return { statusDTO, isLoading, error };
-} */
+  return { statusDTO, error };
+}

@@ -1,8 +1,7 @@
-import pixelbot_model.Session as Session
-from typing import List
+import pixelbot_backend.pixelbot_model.Session as Session
 
 class Child:
-    def __init__(self, child_id: str, name: str, sessions: List[Session]):
+    def __init__(self, child_id: str, name: str, sessions: list):
         self.child_id = child_id
         self.name = name
         self.sessions = sessions  # List of Session objects
@@ -13,6 +12,13 @@ class Child:
             "name": self.name,
             "sessions": [session.to_dict() for session in self.sessions]
         }    
+    
+    def get_recap(self):
+        return {
+            "totalSessions": len(self.sessions),
+            "totalWordCount": self.get_total_word_count(),
+            "avgIntimacyScore": self.get_avg_Intimacy_score() 
+        }
     
     def get_id(self): 
         return self.child_id
@@ -34,6 +40,14 @@ class Child:
     
     def get_number_of_sessions(self):
         return len(self.sessions)
+    
+    def get_total_word_count(self):
+        return sum(int(session.getTotalWordCount()) for session in self.sessions)
+
+    
+    def get_avg_Intimacy_score(self):
+        total_score = sum(session.getAvgIntimacyScore() for session in self.sessions)
+        return total_score / len(self.sessions)
 
     @staticmethod
     def from_dict(data):

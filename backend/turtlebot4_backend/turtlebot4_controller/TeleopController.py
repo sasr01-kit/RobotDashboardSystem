@@ -1,73 +1,94 @@
 #!/usr/bin/env python3
-import rclpy     
-from turtlebot4_model.Teleoperate import Teleoperate
-from turtlebot4_model.DirectionCommand import DirectionCommand
+import time
+import threading
+import asyncio
+import roslibpy
 
-from rclpy.node import Node
-from geometry_msgs.msg import Twist
-
-class TeleopNode(Node):
-    def __init__(self):
-        super().__init__("teleoperation")
-        self.cmd_vel_pub_ = self.create_publisher(Twist, "/cmd_vel", 10)
-        self.timer_= self.create_timer(0.5, self.send_velocity_command)
-         # Create an instance of Teleoperate
-        self.teleop = Teleoperate()
-        self.get_logger().info("Teleop communiction established")
-
-    def send_drive_command(self):
-            commandQueue_ = self.teleop.get_commands()
-            if not commandQueue_:
-            # No commands in the queue; do nothing
-                 # Queue is empty → stop node
-                self.get_logger().info("Command queue empty. Shutting down node.")
-                self.timer_.cancel()       # Stop the timer
-                rclpy.shutdown()           # Shutdown ROS 2
-                return
-
-            cmd = commandQueue_.pop(0)
-            msg = Twist()
-
-            if cmd == "FORWARD":
-                msg.linear.x = DirectionCommand.FORWARD.value
-                msg.angular.z = 0.0
-
-                self.get_logger().info("Command detected: UP")
+from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
+from turtlebot4_backend.turtlebot4_model.Teleoperate import Teleoperate
+from turtlebot4_backend.turtlebot4_model.DirectionCommand import DirectionCommand
 
 
-            elif cmd == "BACKWARD":
-                msg.linear.x = DirectionCommand.BACKWARD.value
-                msg.angular.z = 0.0
-                self.get_logger().info("Command detected: DOWN")
+class TeleopController:
+    def __init__( 
+        self, 
+        teleop: Teleoperate, 
+        ros_host: str = 'localhost', 
+        ros_port: int = 9090, 
+        loop: asyncio.AbstractEventLoop | None = None 
+    ):
+        self.teleop = teleop
+        self._ros = RosbridgeConnection(host=ros_host, port=ros_port)
+        self._loop = loop or asyncio.get_event_loop()
+        self._ros.connect()
 
-            elif cmd == "LEFT":
-                msg.linear.x = DirectionCommand.FORWARD.value
-                msg.angular.z = DirectionCommand.LEFT.value
-                self.get_logger().info("Command detected: LEFT")
+        # Waits for teleop updates and publishes to ROSBridge when they occur
+        teleop.attach(self._on_teleop_update)
 
-            elif cmd == "RIGHT":
-                msg.linear.x = DirectionCommand.FORWARD.value
-                msg.angular.z = DirectionCommand.RIGHT.value            
-                self.get_logger().info("Command detected: RIGHT")
+        print("[TeleopController] Connecting to ROSBridge...")
 
-            elif cmd == "ROTATE_RIGHT":
-                msg.angular.z = DirectionCommand.RIGHT.value
-                self.get_logger().info("Command detected: ROTATE_RIGHT")
+        # Wait until connected
+        for _ in range(50):  # ~5 seconds
+            if self._ros.isConnected:
+                break
+            time.sleep(0.1)
 
-            elif cmd == "ROTATE_LEFT":
-                msg.angular.z = DirectionCommand.LEFT.value
-                self.get_logger().info("Command detected: ROTATE_RIGHT")
-                
-            self.cmd_vel_pub_.publish(msg)
+        if not self._ros.isConnected:
+            print("[TeleopController] ERROR: Could not connect to ROSBridge")
+            return
 
-    def stop_robot():
-        pass
+        print("[TeleopController] Connected to ROSBridge")
+        self._ros.publish('/cmd_vel', {}, msg_type='geometry_msgs/msg/Twist')  # Advertise the topic with an empty message to ensure it exists before we try to publish real commands
+        print("[TeleopController] /cmd_vel advertised")
 
-def main (args=None):
-    rclpy.init(args=args)
-    node = TeleopNode()
-    rclpy.spin(node)
 
-'''
+    # Teleoperate model calls this synchronously → schedule async work
+    def _on_teleop_update(self, source, data):
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._publish_drive_command())
+        )
 
-'''
+    async def _publish_drive_command(self):
+        cmd = self.teleop.get_command()
+        if not cmd:
+            return
+
+        try:
+            # Convert string → enum (e.g. "FORWARD" → DirectionCommand.FORWARD)
+            direction_cmd = DirectionCommand[cmd]
+
+            # Get the Twist dict from the enum
+            msg = direction_cmd.get_message()
+
+            print(f"[TeleopController] Command detected: {cmd}")
+            print("[TeleopController] Publishing:", msg)
+
+            # Publish via rosbridge
+            self._ros.publish(
+                "/cmd_vel",
+                msg,
+                msg_type="geometry_msgs/msg/Twist"
+            )
+
+            print("[TeleopController] Published to /cmd_vel")
+
+        except KeyError:
+            print(f"[TeleopController] Unknown command: {cmd}")
+
+        except Exception as e:
+            print(f"[TeleopController] ERROR publishing: {e}")# Get the next command from teleop
+    
+
+
+    def stop(self):
+        try:
+            self._ros.unadvertise('/cmd_vel')
+        except Exception:
+            pass
+
+        try:
+            self._ros.terminate()
+        except Exception:
+            pass
+
+        print("[TeleopController] Teleop stopped")

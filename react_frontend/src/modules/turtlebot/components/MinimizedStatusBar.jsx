@@ -18,24 +18,24 @@ export const MinimizedStatusBar = () => {
       />
 
       <img
-        src={getBatteryIcon(statusDTO?.battery)}
-        alt={`Battery ${statusDTO?.battery}%`}
+        src={getBatteryIcon(statusDTO?.batteryPercentage)}
+        alt={`Battery ${statusDTO?.batteryPercentage}%`}
         className="mini-status-icon mini-battery-icon"
       />
 
       <div
         className="mini-status-icon mini-wifi-icon"
-        style={{ backgroundColor: statusDTO?.wifi ? "var(--success-green)" : "var(--error-red)" }}
+        style={{ backgroundColor: statusDTO?.isWifiConnected ? "var(--success-green)" : "var(--error-red)" }}
       />
 
       <div
         className="mini-status-icon mini-pi-icon"
-        style={{ backgroundColor: statusDTO?.raspberryPi ? "var(--success-green)" : "var(--error-red)" }}
+        style={{ backgroundColor: statusDTO?.isRaspberryPiConnected ? "var(--success-green)" : "var(--error-red)" }}
       />
 
       <div
         className="mini-status-icon mini-comms-icon"
-        style={{ backgroundColor: statusDTO?.comms ? "var(--success-green)" : "var(--error-red)" }}
+        style={{ backgroundColor: statusDTO?.isCommsConnected ? "var(--success-green)" : "var(--error-red)" }}
       />
 
     </motion.div>

@@ -1,60 +1,71 @@
+// -------------------------------------------------------------
+// GLOBAL FEEDBACK STORE
+// -------------------------------------------------------------
+
+let globalFeedbackState = {
+  feedbackSummary: null,
+  feedbackEntries: []
+};
+
+const feedbackListeners = new Set();
+
+export function updateGlobalFeedbackState(patch) {
+  globalFeedbackState = { ...globalFeedbackState, ...patch };
+  feedbackListeners.forEach(fn => fn(globalFeedbackState));
+}
+
 import { useEffect, useState } from "react";
 import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext";
 
 export function useTurtlebotFeedback() {
-  const { socket } = useWebSocketContext();
+  const { subscribe } = useWebSocketContext();
 
-  const [feedbackSummaryDTO, setFeedbackSummaryDTO] = useState(null);
-  const [feedbackEntries, setFeedbackEntries] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [feedbackDTO, setFeedbackDTO] = useState(globalFeedbackState);
 
   useEffect(() => {
-    if (!socket) return;
+    // Register this hook instance as a listener
+    feedbackListeners.add(setFeedbackDTO);
+    setFeedbackDTO(globalFeedbackState);
 
-    const handleMessage = (event) => {
+    return () => feedbackListeners.delete(setFeedbackDTO);
+  }, []);
+
+  useEffect(() => {
+    if (!subscribe) return;
+
+    return subscribe((data) => {
+      console.log("[FEEDBACK HOOK] incoming:", data);
       try {
-        const data = JSON.parse(event.data);
-
         if (data.type === "FEEDBACK_SUMMARY") {
-          const summary = {
-            goodRatio: data.goodRatio ?? 0,
-            badRatio: data.badRatio ?? 0
-          };
-
-          setFeedbackSummaryDTO(summary);
-          setIsLoading(false);
-          setError(null);
-          return;
+          updateGlobalFeedbackState({
+            feedbackSummary: {
+              goodRatio: data.goodRatio ?? 0,
+              badRatio: data.badRatio ?? 0,
+            }
+          });
         }
 
         if (data.type === "FEEDBACK_ENTRY") {
-          const entry = {
-            startPoint: data.startPoint,
-            endPoint: data.endPoint,
-            duration: data.duration,
-            feedback: data.feedback
-          };
-
-          setFeedbackEntries((prev) => [...prev, entry]);
-
-          setIsLoading(false);
-          setError(null);
-          return;
+          updateGlobalFeedbackState({
+            feedbackEntries: [
+              ...globalFeedbackState.feedbackEntries,
+              {
+                startPoint: data.startPoint,
+                endPoint: data.endPoint,
+                duration: data.duration,
+                feedback: data.feedback,
+              }
+            ]
+          });
         }
-
-      } catch (err) {
-        setError("Failed to parse Turtlebot feedback");
-        setIsLoading(false);
+      } catch {
+        console.error("Failed to parse Turtlebot feedback");
       }
-    };
+    });
+  }, [subscribe]);
 
-    socket.addEventListener("message", handleMessage);
-
-    return () => {
-      socket.removeEventListener("message", handleMessage);
-    };
-  }, [socket]);
-
-  return { feedbackSummaryDTO, feedbackEntries, isLoading, error };
+  return {
+    feedbackSummaryDTO: feedbackDTO.feedbackSummary,
+    feedbackEntries: feedbackDTO.feedbackEntries
+  };
 }

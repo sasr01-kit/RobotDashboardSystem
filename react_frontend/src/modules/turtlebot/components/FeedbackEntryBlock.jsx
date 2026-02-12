@@ -6,7 +6,7 @@ export const FeedbackEntryBlock = ({ entry }) => {
       <span>{startPoint}</span>
       <span>{endPoint}</span>
       <span>{duration}</span>
-      <span className={`feedback-tag ${feedback === "GOOD" ? "good" : "bad"}`}>{feedback}</span>
+      <span className={`feedback-tag ${feedback === "good" ? "good" : "bad"}`}>{feedback}</span>
     </div>
   );
 };

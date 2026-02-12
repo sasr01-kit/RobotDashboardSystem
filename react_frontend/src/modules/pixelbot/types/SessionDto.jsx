@@ -1,7 +1,8 @@
 export const SessionDTO = {
     sessionId: '',
+    sessionDate: '',
     storySummary: '',
-    transcript: '',
+    transcript: [],
     drawing: [],
     speechWidth: [],
     speechDepth: [],

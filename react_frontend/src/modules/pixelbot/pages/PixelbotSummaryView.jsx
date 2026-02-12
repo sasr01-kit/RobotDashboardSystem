@@ -35,8 +35,9 @@ export default function PixelbotSummaryView() {
             <div className="summary-cards">
                 <div className="summary-card teal">
                     <div className="card-info">
-                        <span className="card-title">Total Session</span>
-                        <span className="card-subtitle">Total Sessions for the month</span>
+                        <span className="card-title">Total Sessions</span>
+                        <span className="card-subtitle">Total sessions this month.      </span>
+                        <span className="card-subtitle"> A <strong>{formatGrowthRate(summaryStats.sessionsGrowthRate)}% </strong> variation in usage compared with the previous month! </span> 
                     </div>
                     <span className="card-value">{summaryStats.totalSessions}</span>
                 </div>
@@ -44,23 +45,30 @@ export default function PixelbotSummaryView() {
                 <div className="summary-card dark">
                     <div className="card-info">
                         <span className="card-title">Sessions per day</span>
-                        <span className="card-subtitle">Average robot session per day for a month</span>
+                        <span className="card-subtitle"> Daily average of robot sessions, based on all activity recorded this year up to today.</span>
                     </div>
-                    <span className="card-value">{summaryStats.avgSessionPerChild ?? 10}</span>
+                    <span className="card-value">{summaryStats.sessionsPerDay ?? 10}</span>
                 </div>
 
                 <div className="summary-card transparent">
                     <div className="card-info">
                         <span className="card-title">Sessions per child</span>
-                        <span className="card-subtitle">Average session a child has per month</span>
+                        <span className="card-subtitle">Average sessions per child, based on all sessions recorded this year. </span>
                     </div>
                     <span className="card-value">{summaryStats.avgSessionsPerChild}</span>
                 </div>
             </div>
 
-            <CalendarHeatMap id="summary-heatmap" data={summaryStats.dailySessionsCount} onPrint={() => handlePrint('summary-heatmap')} />
+            <CalendarHeatMap id="summary-heatmap" data={summaryStats.dailySessionCounts} onPrint={() => handlePrint('summary-heatmap')} />
         </div>
     );
+
+    
+    function formatGrowthRate(rate) {
+        if (rate > 0) return `+${rate}`;
+        return `${rate}`;
+    }
+
 }
 
 

@@ -1,149 +1,322 @@
-import time
+import asyncio
 import json
-from typing import Dict
+import time
+from datetime import datetime
+from typing import Any, Dict
 from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
-from turtlebot4_backend.turtlebot4_model.Path import Path
+from turtlebot4_backend.turtlebot4_model.Map import Map
+from turtlebot4_backend.turtlebot4_model.Path import Path  
 from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
-
+from turtlebot4_backend.turtlebot4_model.DirectionCommand import DirectionCommand
 
 class PathController:
     """
-    Tracks intermediate and global goals published by a fuzzy logic system.
-    - Records each goal with timestamp and fuzzy rule used
-    - Only active when Path module is activated
-    - Automatically disables subscriptions and ignores callbacks when inactive
+    Subscribes to path-related topics via RosbridgeConnection.
+
+    Responsibilities:
+    - Listen to /odom for robot pose (dynamic)
+    - Listen to /gary/goal_pose for global goal
+    - Listen to /rule_output for rule logs
+    - Update:
+        * MapModel: robotPose, globalGoal
+        * PathModel: rule logs
     """
-    def __init__(self, path_model: Path, ros_host: str = 'localhost', ros_port: int = 9090):
-        self._ros = RosbridgeConnection(host=ros_host, port=ros_port)
+
+    def __init__(
+        self,
+        path_model: Path,
+        map_model: Map,
+        rosbridge_host: str = "localhost",
+        rosbridge_port: int = 9090
+    ) -> None:
+        self._path_model = path_model
+        self._map_model = map_model
+
+        # Event loop for scheduling async model updates
+        self._loop = asyncio.get_event_loop()
         self._connected = False
 
-        # Path module model
-        self._path_model = path_model
-
-        # Track the latest robot pose
-        self.latest_pose = {'x': None, 'y': None, 'stamp': None}
-
-        # Topic configuration
-        self._goal_topic_name = '/ruleOutput'
-        self._goal_msg_type = 'std_msgs/msg/String'
-        self._pose_topic_name = '/odom'
-        self._pose_msg_type = 'nav_msgs/msg/Odometry'
-
-        # Keep track of subscribed topics for safe cleanup
-        self._subscribed_topics = []
-
-        # Monitor Path module activation
-        self._check_activation_thread_started = False
-
-    def connect(self):
-        """Connect to rosbridge and start subscriptions if the Path module is active."""
-        if self._connected:
-            return
-
+        # Connect to rosbridge
+        self._ros = RosbridgeConnection(rosbridge_host, rosbridge_port)
         self._ros.connect()
         self._connected = True
+        print("[PathController] Connected to rosbridge")
 
-        # Start a thread to monitor Path module activation
-        if not self._check_activation_thread_started:
-            import threading
-            threading.Thread(target=self._monitor_path_module_activation, daemon=True).start()
-            self._check_activation_thread_started = True
+        # Subscriptions
+        # /odom: robot pose (Odometry)
+        self._ros.subscribe("/odom", "nav_msgs/msg/Odometry", self._pose_callback)
+        print("[PathController] Subscribed to /odom")
 
-    def _monitor_path_module_activation(self):
+        # /rule_output: rule logs (e.g. String or custom)
+        self._ros.subscribe("/rule_output", "std_msgs/msg/String", self._rule_callback)
+        print("[PathController] Subscribed to /rule_output")
+
+        # /gary/goal_pose: global goal (PoseStamped)
+        self._ros.subscribe("/gary/goal_pose", "geometry_msgs/msg/PoseStamped", self._global_goal_callback)
+        print("[PathController] Subscribed to /gary/goal_pose")
+
+        # /dock_status: docking status (DockStatus)
+        self._ros.subscribe("/dock_status", "irobot_create_msgs/msg/DockStatus", self._dock_status_callback)
+        print("[PathController] Subscribed to /dock_status")
+
+    # -------------------------------------------------------------------------
+    # ROBOT POSE CALLBACK (DYNAMIC) → MapModel.set_robotPose
+    # -------------------------------------------------------------------------
+    def _pose_callback(self, message: Dict[str, Any]) -> None:
         """
-        Continuously checks if Path module is active.
-        If active, ensures subscriptions are present.
-        If inactive, unsubscribes to avoid unsafe callbacks.
+        message is a JSON dict from rosbridge for nav_msgs/msg/Odometry:
+        {
+          "pose": {
+            "pose": {
+              "position": { "x": ..., "y": ..., "z": ... },
+              "orientation": { "x": ..., "y": ..., "z": ..., "w": ... }
+            }
+          },
+          ...
+        }
         """
-        import time
-        while self._connected:
-            is_active = self._path_model.get_is_path_module_active()
-
-            if is_active and not self._subscribed_topics:
-                # Subscribe to topics
-                self._subscribed_topics.append(
-                    self._ros.subscribe(self._goal_topic_name, self._goal_msg_type, self._rule_callback)
-                )
-                self._subscribed_topics.append(
-                    self._ros.subscribe(self._pose_topic_name, self._pose_msg_type, self._pose_callback)
-                )
-                print("[PathController] Subscriptions activated because Path module is active")
-
-            elif not is_active and self._subscribed_topics:
-                # Unsubscribe from all topics
-                for topic in self._subscribed_topics:
-                    try:
-                        topic.unsubscribe()
-                    except Exception:
-                        pass
-                self._subscribed_topics = []
-                print("[PathController] Subscriptions deactivated because Path module is inactive")
-
-            time.sleep(0.5)
-
-    def _pose_callback(self, msg: Dict):
-        """Update the latest robot pose only if Path module is active."""
         if not self._path_model.get_is_path_module_active():
+             return
+
+        pose = message.get("pose", {}).get("pose", {})
+        if not pose:
             return
 
-        pose = msg.get('pose', {}).get('pose', {})
-        position = pose.get('position', {})
-        x = position.get('x', None)
-        y = position.get('y', None)
+        pos = pose.get("position", {})
+        ori = pose.get("orientation", {})
 
-        self.latest_pose = {
-            'x': x,
-            'y': y,
-            'stamp': time.time()
+        robot_pose = {
+            "position": {
+                "x": pos.get("x", 0.0),
+                "y": pos.get("y", 0.0),
+                "z": pos.get("z", 0.0)
+            },
+            "orientation": {
+                "x": ori.get("x", 0.0),
+                "y": ori.get("y", 0.0),
+                "z": ori.get("z", 0.0),
+                "w": ori.get("w", 1.0)
+            }
         }
 
-        print(f"[POSE] x={x:.2f}, y={y:.2f}, stamp={self.latest_pose['stamp']}")
+        # Schedule async update on MapModel
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._map_model.set_robotPose(robot_pose))
+        )
 
+        print("[PathController] Robot pose updated via MapModel")
+
+    # -------------------------------------------------------------------------
+    # RULE LOG CALLBACK → PathModel.add_rule_log (or similar)
+    # -------------------------------------------------------------------------
     def _rule_callback(self, msg: Dict):
-        """Record a goal when a fuzzy rule output is received, only if active."""
         if not self._path_model.get_is_path_module_active():
             return
 
-        data_str = msg.get('data', 'UNKNOWN')
-        goal_type = None  # default None
-        rule_str = data_str
+        raw = msg.get("data")
 
-        # Attempt to parse JSON from fuzzy system
-        try:
-            data_dict = json.loads(data_str)
-            rule_str = data_dict.get('rule', 'UNKNOWN')
-            goal_type = data_dict.get('goal_type', None)  # dynamic, e.g., "global" or "intermediate"
-        except Exception:
-            pass  # keep as string, goal_type remains None
+        # if input is already a dict (e.g. from mock/test), use it directly
+        if isinstance(raw, dict):
+            data = raw
 
-        if self.latest_pose['x'] is None or self.latest_pose['y'] is None:
-            print("[PathController] No pose available yet, skipping log")
+        # if input is a JSON string, parse it
+        elif isinstance(raw, str):
+            try:
+                data = json.loads(raw)
+            except Exception:
+                print("[PathController] Invalid rule JSON:", raw)
+                return
+
+        else:
+            print("[PathController] Unexpected rule message format:", raw)
             return
 
-        # Dynamic ID for the log entry
-        entry_id = f"goal_{len(self._path_model.get_path_history()) + 1}"
 
-        # Create PathLogEntry
+        goal_type = data.get("goal_type", "")
+        position = data.get("position", {})
+        rule_str = data.get("rule", "")
+
+        # 1. Intermediate waypoint
+        if goal_type == "intermediate":
+            waypoint = {
+                "position": {
+                    "x": position.get("x", 0.0),
+                    "y": position.get("y", 0.0),
+                    "z": 0.0
+                },
+                "orientation": {"x": 0, "y": 0, "z": 0, "w": 1}
+            }
+
+            updated = self._map_model._intermediateWaypoints + [waypoint]
+
+            self._loop.call_soon_threadsafe(
+                lambda: asyncio.create_task(self._map_model.set_intermediateWaypoints(updated))
+            )
+
+        # 2. Global goal
+        if goal_type == "global":
+            goal = {
+                "position": {
+                    "x": position.get("x", 0.0),
+                    "y": position.get("y", 0.0),
+                    "z": 0.0
+                },
+                "orientation": {"x": 0, "y": 0, "z": 0, "w": 1}
+            }
+
+            self._loop.call_soon_threadsafe(
+                lambda: asyncio.create_task(self._map_model.set_globalGoal(goal))
+            )
+
+        # 3. Log rule entry
         entry = PathLogEntry(
             label="Goal Entry",
-            id=entry_id,
+            id=f"goal_{len(self._path_model.get_path_history()) + 1}",
             goal_type=goal_type,
-            timestamp=self.latest_pose['stamp'],
+            timestamp=datetime.now(),
             fuzzy_output=rule_str,
-            user_feedback=None
+            user_feedback=""
         )
 
-        # Add entry to Path model
-        self._path_model.add_log_entry(entry)
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._path_model.add_log_entry(entry))
+        )
 
-        print(f"[GOAL LOGGED] x={self.latest_pose['x']:.2f}, "
-              f"y={self.latest_pose['y']:.2f}, "
-              f"goal_type='{goal_type}', rule='{rule_str}', stamp={self.latest_pose['stamp']}")
+        print(f"[PathController] Logged rule: {rule_str}, type={goal_type}")
+
+
+    # -------------------------------------------------------------------------
+    # GLOBAL GOAL CALLBACK → MapModel.set_globalGoal
+    # -------------------------------------------------------------------------
+    def _global_goal_callback(self, message: Dict[str, Any]) -> None:
+        """
+        message is a JSON dict from rosbridge for geometry_msgs/msg/PoseStamped:
+        {
+          "pose": {
+            "position": { "x": ..., "y": ..., "z": ... },
+            "orientation": { "x": ..., "y": ..., "z": ..., "w": ... }
+          },
+          ...
+        }
+        """
+        if not self._path_model.get_is_path_module_active():
+            return
+
+        pose = message.get("pose", {})
+        pos = pose.get("position", {})
+
+        goal = {
+            "position": {
+                "x": pos.get("x", 0.0),
+                "y": pos.get("y", 0.0),
+                "z": pos.get("z", 0.0)
+            },
+            "orientation": pose.get("orientation", {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+            })
+        }
+
+        # Schedule async update on MapModel
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._map_model.set_globalGoal(goal))
+        )
+
+        print("[PathController] Global goal updated via MapModel")
+
+    def _dock_status_callback(self, msg: Dict[str, Any]) -> None:
+        """
+        msg from rosbridge for irobot_create_msgs/msg/DockStatus:
+        {
+        "is_docked": bool,
+        "dock_visible": bool,
+        ...
+        }
+        """
+        is_docked = bool(msg.get("is_docked", False))
+
+        # reflect in PathModel
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._path_model.set_is_docked(is_docked))
+        )
+
+        print(f"[PathController] Dock status updated from robot: is_docked={is_docked}")
+    
+
+    def dock(self) -> None:
+        """
+        Publishes a docking status to the /dock_status topic.
+        This is a user-triggered command.
+        """
+        if not self._connected:
+            print("[PathController] Not connected to rosbridge. Call connect() first.")
+            return
+        
+        # Create status message indicating docked
+        dock_status_msg = {
+            "is_docked": True,
+            "dock_visible": True,
+            "header": {
+                "stamp": {
+                    "sec": int(time.time()),
+                    "nanosec": int((time.time() % 1) * 1e9)
+                },
+                "frame_id": "base_link"
+            }
+        }
+        
+        self._ros.publish("/dock_status", dock_status_msg)
+        print("[PathController] Published dock status: docked=True")
+
+    def undock(self) -> None:
+        """
+        Publishes an undocking status to the /dock_status topic.
+        This is a user-triggered command.
+        """
+        if not self._connected:
+            print("[PathController] Not connected to rosbridge. Call connect() first.")
+            return
+        
+        # Create status message indicating undocked
+        dock_status_msg = {
+            "is_docked": False,
+            "dock_visible": False,
+            "header": {
+                "stamp": {
+                    "sec": int(time.time()),
+                    "nanosec": int((time.time() % 1) * 1e9)
+                },
+                "frame_id": "base_link"
+            }
+        }
+    
+        self._ros.publish("/dock_status", dock_status_msg)
+        print("[PathController] Published dock status: docked=False")
+
+    def cancelNavigation(self) -> None:
+        """
+        Publishes zero velocity to /cmd_vel to immediately stop the robot.
+        This is a user-triggered command.
+        """
+        self._ros.publish(
+            "/cmd_vel",
+            DirectionCommand.STOP.get_message(),
+            msg_type=
+            "geometry_msgs/msg/Twist",
+           
+        )
+        print("[PathController] Published STOP command to /cmd_vel")
 
     def get_records(self):
         """Return the current path history as a list of PathLogEntry."""
         return self._path_model.get_path_history()
 
+    # -------------------------------------------------------------------------
+    # SHUTDOWN
+    # -------------------------------------------------------------------------
+   
     def stop(self):
         """Clean up subscriptions and terminate connection."""
         self._connected = False

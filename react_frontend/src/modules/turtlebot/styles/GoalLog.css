@@ -2,7 +2,7 @@
 
 /* Path log navigation styling */
 .path-log-container {
-  height: 28rem;
+  max-height: 90vh;
   max-width: 600px;
   background: #fff;
   border-radius: 12px;
@@ -14,7 +14,6 @@
 
 .path-log-dropdown-nav {
   position: relative;
-  margin-bottom: 0.5rem;
   display: inline-block;
   flex-direction: column;
   width: 100%;
@@ -26,6 +25,7 @@
   background-color: var(--kit-blue); 
   color: white; 
   padding: 0.6rem 1rem; 
+  height: 3.5rem;
   border-radius: 10px; 
   font-weight: 550; 
   font-size: 1.3rem;
@@ -131,6 +131,7 @@
 }
 
 .goal-status {
+  text-transform: uppercase;
   font-size: 1.1rem;
   font-weight: 600;
   color: #242626;
@@ -138,6 +139,7 @@
 
 .rule,
 .timestamp {
+  text-transform: lowercase;
   font-size: 0.9rem;
   color: #333;
   line-height: 1.4;

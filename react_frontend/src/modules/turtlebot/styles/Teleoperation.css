@@ -6,9 +6,20 @@
     align-items: flex-start;
     padding: 1.5rem;
     border-radius: 16px;
-    width: 30%;
+    width: fit-content;
     background: #fff;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); 
+}
+
+.teleop-log { 
+    margin-left: 2rem; 
+    padding: 1rem;
+    background: #ffffff; 
+    border-radius: 12px; 
+    width: fit-content;
+    max-height: 300px; 
+    overflow-y: auto; 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
 }
 
 .top-left-logo {

@@ -1,13 +1,13 @@
 import Highcharts, { width } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useTurtlebotFeedback } from "../Hooks/useTurtlebotFeedback"; 
-import { useTurtlebotFeedbackMock } from "../Hooks/useTurtlebotFeedbackMock";
 
 export const FeedbackSummaryChart = () => {
-  const { feedbackSummaryDTO } = useTurtlebotFeedbackMock();
+  const { feedbackSummaryDTO } = useTurtlebotFeedback();
 
-  const good = feedbackSummaryDTO.goodRatio || 0;
-  const bad = feedbackSummaryDTO.badRatio || 0;
+  const good = feedbackSummaryDTO?.goodRatio ?? 0;
+  const bad = feedbackSummaryDTO?.badRatio ?? 0;
+
 
   const options = {
     chart: {

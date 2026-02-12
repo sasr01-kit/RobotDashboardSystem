@@ -1,84 +1,164 @@
-import rclpy
-from rclpy.node import Node
-from nav_msgs.msg import OccupancyGrid
-from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
-import numpy as np
-import json
-import matplotlib.pyplot as plt
-import os
+import asyncio
+from typing import Any, Dict, List
+from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
+from turtlebot4_backend.turtlebot4_model.Map import Map
+from turtlebot4_backend.turtlebot4_model.MapData import MapData
+from turtlebot4_backend.turtlebot4_model.Human import Human
 
 
-class MapSubscriber(Node):
-    def __init__(self):
-        super().__init__('map_subscriber')
+class MapController:
+    """
+    Subscribes to /map, /humans, and /odom via RosbridgeConnection.
+    Sends MAP_DATA once and POSE_DATA continuously.
+    """
 
-        # QoS for latched /map topic
-        qos_profile = QoSProfile(
-            reliability=QoSReliabilityPolicy.RELIABLE,
-            history=QoSHistoryPolicy.KEEP_LAST,
-            depth=1,
-            durability=rclpy.qos.QoSDurabilityPolicy.TRANSIENT_LOCAL
+    def __init__(
+        self,
+        map_model: Map,
+        rosbridge_host: str = "localhost",
+        rosbridge_port: int = 9090
+    ) -> None:
+
+        self._map_model = map_model
+        self._map_received = False
+        self._loop = asyncio.get_event_loop()
+
+        # Connect to rosbridge
+        self._ros = RosbridgeConnection(rosbridge_host, rosbridge_port)
+        self._ros.connect()
+        print("[MapController] Connected to rosbridge")
+
+        # Subscribe to topics
+        self._ros.subscribe("/map", "nav_msgs/msg/OccupancyGrid", self._map_callback)
+        print("[MapController] Subscribed to /map")
+
+        self._ros.subscribe("/humans", "geometry_msgs/msg/PoseArray", self._humans_callback)
+        print("[MapController] Subscribed to /humans")
+
+        self._ros.subscribe("/odom", "nav_msgs/msg/Odometry", self._robot_pose_callback)
+        print("[MapController] Subscribed to /odom")
+
+    # -------------------------------------------------------------------------
+    # SEND MAP PNG ON STARTUP
+    # -------------------------------------------------------------------------
+    def _send_initial_map_png(self):
+        """If the map PNG is already available, send MAP_DATA immediately."""
+        if self._map_model._mapDataPNG:
+            print("[MapController] Sending initial MAP_DATA on startup")
+
+            async def send_initial():
+                await self._map_model.notify_observers({
+                    "type": "MAP_DATA",
+                    "mapData": {
+                        "resolution": self._map_model._mapData.get_resolution(),
+                        "width": self._map_model._mapData.get_width(),
+                        "height": self._map_model._mapData.get_height(),
+                        "occupancyGridPNG": self._map_model._mapDataPNG
+                    }
+                })
+
+            self._loop.call_soon_threadsafe(lambda: asyncio.create_task(send_initial()))
+
+    # -------------------------------------------------------------------------
+    # MAP CALLBACK (STATIC)
+    # -------------------------------------------------------------------------
+    def _map_callback(self, message: Dict[str, Any]) -> None:
+        if self._map_received:
+            return
+
+        print("[MapController] Static map received")
+
+        info = message.get("info", {})
+        resolution = info.get("resolution", 0.05)
+        width_cells = info.get("width", 0)
+        height_cells = info.get("height", 0)
+
+        width_m = width_cells * resolution
+        height_m = height_cells * resolution
+
+        occupancy_grid = list(message.get("data", []))
+
+        map_data = MapData(
+            resolution=resolution,
+            width=width_m,
+            height=height_m,
+            occupancyGrid=occupancy_grid
         )
 
-        self.subscription = self.create_subscription(
-            OccupancyGrid,
-            '/map',
-            self.callback,
-            qos_profile
+        # Schedule async update
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._map_model.set_mapData(map_data))
         )
 
-        # Directory to save files
-        self.save_dir = '/home/saadhvi/ros2_ws/src/map_only_launch'
-        os.makedirs(self.save_dir, exist_ok=True)
+        self._map_received = True
+        print("[MapController] MAP_DATA sent")
 
-    def callback(self, msg: OccupancyGrid):
-        # Log that the map was received
-        self.get_logger().info('Map received!')
+    # -------------------------------------------------------------------------
+    # HUMANS CALLBACK (DYNAMIC)
+    # -------------------------------------------------------------------------
+    def _humans_callback(self, message: Dict[str, Any]) -> None:
+        poses = message.get("poses", [])
+        humans: List[Human] = []
 
-        # Convert flat OccupancyGrid to 2D NumPy array
-        width = msg.info.width
-        height = msg.info.height
-        grid = np.array(msg.data, dtype=int).reshape((height, width))
+        for idx, pose in enumerate(poses):
+            pos = pose.get("position", {})
+            humans.append(
+                Human(
+                    human_id=f"human_{idx+1}",
+                    position={
+                        "x": pos.get("x", 0.0),
+                        "y": pos.get("y", 0.0),
+                        "z": pos.get("z", 0.0)
+                    },
+                    proxemic_distances=None
+                )
+            )
 
-        # ----- Save as JSON -----
-        json_path = os.path.join(self.save_dir, 'warehouse_map.json')
-        map_json = {
-            "width": width,
-            "height": height,
-            "resolution": msg.info.resolution,
-            "origin": {
-                "x": msg.info.origin.position.x,
-                "y": msg.info.origin.position.y,
-                "z": msg.info.origin.position.z
+        # Schedule async update
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._map_model.set_detectedHumans(humans))
+        )
+
+        print(f"[MapController] POSE_DATA: {len(humans)} humans updated")
+
+    # -------------------------------------------------------------------------
+    # ROBOT POSE CALLBACK (DYNAMIC)
+    # -------------------------------------------------------------------------
+    def _robot_pose_callback(self, message: Dict[str, Any]) -> None:
+        pose = message.get("pose", {}).get("pose", {})
+        if not pose:
+            return
+
+        pos = pose.get("position", {})
+        ori = pose.get("orientation", {})
+
+        robot_pose = {
+            "position": {
+                "x": pos.get("x", 0.0),
+                "y": pos.get("y", 0.0),
+                "z": pos.get("z", 0.0)
             },
-            "data": grid.tolist()
+            "orientation": {
+                "x": ori.get("x", 0.0),
+                "y": ori.get("y", 0.0),
+                "z": ori.get("z", 0.0),
+                "w": ori.get("w", 1.0)
+            }
         }
 
-        with open(json_path, 'w') as f:
-            json.dump(map_json, f, indent=2)
-        self.get_logger().info(f'Occupancy grid saved as {json_path}')
+        # Schedule async update
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._map_model.set_robotPose(robot_pose))
+        )
 
-        # ----- Save as heatmap PNG -----
-        visual_grid = grid.copy()
-        visual_grid[visual_grid == -1] = 50  # unknowns -> middle gray
+        print(f"[MapController] POSE_DATA: robot pose updated")
 
-        png_path = os.path.join(self.save_dir, 'warehouse_map.png')
-        plt.figure(figsize=(8, 8))
-        plt.imshow(visual_grid, cmap='gray_r', origin='lower')
-        plt.colorbar(label='Occupancy Value')
-        plt.title('Warehouse Occupancy Grid Heatmap')
-        plt.savefig(png_path)
-        plt.close()
-        self.get_logger().info(f'Occupancy grid heatmap saved as {png_path}')
-
-
-def main(args=None):
-    rclpy.init(args=args)
-    node = MapSubscriber()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
+    # -------------------------------------------------------------------------
+    # SHUTDOWN
+    # -------------------------------------------------------------------------
+    def shutdown(self) -> None:
+        try:
+            self._ros.terminate()
+        except Exception:
+            pass
+        print("[MapController] Shutdown complete")

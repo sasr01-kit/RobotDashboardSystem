@@ -1,57 +1,40 @@
 import { useEffect, useState } from "react";
 
 export function usePixelbotChildren() {
-    const [children, setChildren] = useState();
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [children, setChildren] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    // MOCK DATA
-    const sessionsData = [
-        { sessionId: 's1' },
-        { sessionId: 's2' },
-        { sessionId: 's3' },
-        { sessionId: 's4' },
-        { sessionId: 's5' },
-        { sessionId: 's6' },
-        { sessionId: 's7' },
-        { sessionId: 's8' },
-    ];
+  useEffect(() => {
+    const fetchChildren = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
 
-    const childrenData = [
-        { childId: 'child1', name: 'Child name', sessions: sessionsData },
-        { childId: 'child2', name: 'Child name', sessions: sessionsData },
-        { childId: 'child3', name: 'Child name', sessions: sessionsData },
-        { childId: 'child4', name: 'Child name', sessions: sessionsData },
-        { childId: 'child5', name: 'Child name', sessions: sessionsData },
-        { childId: 'child6', name: 'Child name', sessions: sessionsData },
-        { childId: 'child7', name: 'Child name', sessions: sessionsData },
-        { childId: 'child8', name: 'Child name', sessions: sessionsData },
-        { childId: 'child9', name: 'Child name', sessions: sessionsData },
-    ];
-    // END MOCK DATA
+        const res = await fetch("http://localhost:8080/pixelbot/children");
+        if (!res.ok) throw new Error("Failed to fetch children");
 
-    useEffect(() => {
-        fetchChildren();
-    }, []);
+        const data = await res.json();
 
-    async function fetchChildren() {
-        try {
-            setIsLoading(true);
-            setError(null);
-            /*const response = await fetch(url);
-            const data = await response.json();
-            setChildren(data);  TODO: Implement actual data fetching */
-            setChildren(childrenData);
-            setError(null);
-        }
-        catch (err) {
-            setError("Failed to fetch children data.");
-            console.error(err);
-        }
-        finally {
-            setIsLoading(false);
-        }
-    }
+        const mappedData = data.map(child => ({ 
+            childId: child.child_id, 
+            name: child.name, 
+            sessions: child.sessions.map(s => ({ 
+                sessionId: s.sessionId  
+            })) 
+        }));
 
-    return { children, isLoading, error };
+        setChildren(mappedData);
+      } catch (err) {
+        setError("Failed to fetch children data.");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchChildren();
+  }, []);
+
+  return { children, isLoading, error };
 }

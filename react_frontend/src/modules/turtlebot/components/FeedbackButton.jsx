@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useWebSocketContext } from '../WebsocketUtil/WebsocketContext';
 
-/* MOCK VERSION : */
+/* MOCK VERSION : 
 export const FeedbackButton = ({ className, label, goalId }) => { 
 
     const handleClick = () => { 
@@ -21,19 +21,17 @@ export const FeedbackButton = ({ className, label, goalId }) => {
             {label} 
         </motion.button> 
     ); 
-};
+}; */
 
 
-
-/* REAL VERSION : 
-export const FeedbackButton = ({ label, goalId }) => {
+export const FeedbackButton = ({ className, label, goalId }) => {
   const { send } = useWebSocketContext();
 
   const handleClick = () => {
     send({
       type: "GOAL_FEEDBACK",
       goalId,
-      feedback: label === "GOOD" ? "positive" : "negative",
+      feedback: label === "GOOD" ? "good" : "bad",
     });
   };
 
@@ -48,4 +46,4 @@ export const FeedbackButton = ({ label, goalId }) => {
       {label}
     </motion.button>
   );
-}; */
+}; 
