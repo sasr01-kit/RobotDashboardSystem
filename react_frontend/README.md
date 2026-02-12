@@ -8,6 +8,7 @@ React-based frontend for the Robot Dashboard System, providing an intuitive inte
 - **Vite** - Build tool and dev server
 - **React Router** - Client-side routing
 - **Highcharts** - Data visualization
+- **Framer-motion** - Component animation
 - **WebSocket** - Real-time communication (TurtleBot4) and backend connection
 
 ## Getting Started
