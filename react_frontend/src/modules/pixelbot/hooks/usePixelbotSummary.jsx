@@ -15,7 +15,7 @@ export function usePixelbotSummary() {
             setError(null);
             const response = await fetch(`http://localhost:8080/pixelbot/summary`); // FOR REAL IMPLEMENTATION CHANGE url TO API ENDPOINT
             const data = await response.json();
-            const summary = {
+            const summaryStatsDTO = {
                 totalSessions: data.totalSessionsThisMonth,
                 avgSessionsPerChild: data.sessionsPerChild,
                 sessionsPerDay: data.sessionsPerDay,
@@ -23,7 +23,7 @@ export function usePixelbotSummary() {
                 dailySessionCounts: transformBackendDataToHeatmap(data.dailySessionCounts)
             }
 
-            setSummaryStats(summary);
+            setSummaryStats(summaryStatsDTO);
             setIsLoading(false);
             setError(null);
         }

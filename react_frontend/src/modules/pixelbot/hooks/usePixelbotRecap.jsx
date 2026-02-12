@@ -35,7 +35,7 @@ export function usePixelbotRecap(childId) {
           }
         }
 
-        const recapData = {
+        const recapDTO = {
           name : data.name,
           // Session frequency data for line chart
           sessionFrequencyData: (data.engagement?.sessionFrequencyTrend || []).map(item => ({
@@ -84,7 +84,7 @@ export function usePixelbotRecap(childId) {
           }
         };
 
-        setChild(recapData);
+        setChild(recapDTO);
         setSession(null);
       } catch (err) {
         setError("Failed to load data.");

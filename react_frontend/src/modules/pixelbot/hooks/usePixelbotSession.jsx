@@ -25,9 +25,9 @@ export function usePixelbotSession(childId, sessionId) {
         );
         if (!res.ok) throw new Error("Session not found");
 
-        const data = await res.json();
+        const sessionListEntryDTO = await res.json();
 
-        setSession(data);
+        setSession(sessionListEntryDTO);
         setChild(null);
       } catch (err) {
         setError("Failed to load data.");
