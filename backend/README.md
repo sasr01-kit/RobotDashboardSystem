@@ -41,6 +41,35 @@ For details specific to TurtleBot4, also see:
 
 > Note: ROS 2 and rosbridge commands are typically executed on the robot or a ROS-enabled machine (e.g., Ubuntu). The FastAPI backend can run on the same machine or a different one, as long as it can reach the rosbridge server over the network.
 
+## ROS 2 Workspace (ros2_ws)
+
+You should create a ROS 2 workspace on the ROS-enabled machine and place this repository inside the workspace `src` folder so ROS tools can find any packages or demo launch files included here.
+
+Typical steps (Ubuntu / ROS 2 environment):
+
+```bash
+# create workspace and src
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+
+# Clone our repository into the workspace src
+git clone https://github.com/sasr01-kit/RobotDashboardSystem.git
+
+# Return to workspace root, source ROS, install dependencies and build
+cd ~/ros2_ws
+source /opt/ros/humble/setup.bash
+rosdep update
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --symlink-install
+source install/setup.bash
+```
+
+Notes:
+- If you already have a local copy of `RobotDashboardSystem`, move or copy that folder into `~/ros2_ws/src/` instead of cloning from GitHub.
+- The `rosdep install` step attempts to install any system package dependencies required by ROS packages in the workspace.
+- These commands are intended for a Linux/Ubuntu ROS environment; Windows users should follow ROS 2 on Windows instructions and adapt workspace commands accordingly.
+- After a successful build, demo launch files under `backend/demo/` and any ROS packages in the workspace will be available to `ros2 launch` and `ros2 run`.
+
 ## Installation
 
 From the repository root:
@@ -83,14 +112,11 @@ ros2 launch turtlebot4_navigation slam.launch.py
 
 # Start TurtleBot4 node
 ros2 run turtlebot4_node turtlebot4_node
-
-# Manual teleop (generally not required in production)
-ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 
 #### Map-Only Demo
 
-From the ROS machine, using the demo launch file (packaged under `backend/demo/`):
+From the ROS machine, using the demo map launch (clone the following repo into the src folder (/src/) in the ROS workspace: https://github.com/sasr01-kit/map_only_launch.git)
 
 ```bash
 ros2 launch map_only_launch map_server_launch.py
