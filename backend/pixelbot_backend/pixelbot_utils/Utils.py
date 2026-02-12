@@ -135,11 +135,11 @@ class Utils:
 
 
     @staticmethod
-    def calculate_avg_sessions_per_day(sessions: list, month: int, year: int, now: datetime.datetime):
+    def calculate_avg_sessions_per_day(sessions: list, year: int, now: datetime.datetime):
         # Count sessions in the current year
         sessions_this_year = 0
         for session in sessions:
-            if session.session_date.year == year:
+            if session.getSessionDate().year == year:
                 sessions_this_year += 1
 
         # Days passed this year including today

@@ -107,6 +107,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 # Pixelbot REST API
 repository = DataRepository() 
+# Ane's local data path: "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing"
 # Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
 # Pixelbot path: "http://192.168.2.70:8000"
 child_api = ChildAPI("C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing", repository) 

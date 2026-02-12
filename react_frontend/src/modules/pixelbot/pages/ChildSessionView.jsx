@@ -104,39 +104,39 @@ export default function ChildSessionView() {
                             <div className="data-list">
                                 <div className="data-row">
                                     <span className="label">Number of intervention </span>
-                                    <span className="value">{session.speechWidth?.interventionCount}</span>
+                                    <span className="value">{session.speechWidth?.intervention_count}</span>
                                 </div>
                                 <div className="data-row">
                                     <span className="label">Total word count </span>
-                                    <span className="value">{session.speechWidth?.totalWordCount}</span>
+                                    <span className="value">{session.speechWidth?.total_word_count}</span>
                                 </div>
                                 <div className="data-row">
                                     <span className="label">Average word count per intervention </span>
-                                    <span className="value">{session.speechWidth?.avgWordCountPerIntervention}</span>
+                                    <span className="value">{session.speechWidth?.average_word_count_per_intervention}</span>
                                 </div>
                                 <div className="data-row">
                                     <span className="label">Standard word count per intervention </span>
-                                    <span className="value">{session.speechWidth?.stdWordCountPerIntervention}</span>
+                                    <span className="value">{session.speechWidth?.std_word_count_per_intervention}</span>
                                 </div>
                                   <div className="data-row">
                                     <span className="label">Total speech time </span>
-                                    <span className="value">{session.speechWidth?.totalSpeechTime}</span>
+                                    <span className="value">{session.speechWidth?.total_speech_time}</span>
                                 </div>
                                 <div className="data-row">
                                     <span className="label">Average speech time per intervention </span>
-                                    <span className="value">{session.speechWidth?.avgSpeechTimePerIntervention}</span>
+                                    <span className="value">{session.speechWidth?.average_speech_time_per_intervention}</span>
                                 </div>
                                 <div className="data-row">
                                     <span className="label">Standard word count per intervention </span>
-                                    <span className="value">{session.speechWidth?.stdSpeechTimePerIntervention}</span>
+                                    <span className="value">{session.speechWidth?.std_speech_time_per_intervention}</span>
                                 </div>
                                 <div className="data-row">
                                     <span className="label">Average intimacy sore</span>
-                                    <span className="value">{session.speechDepth?.avgIntimacyScore}</span>
+                                    <span className="value">{session.speechDepth?.average_intimacy_score}</span>
                                 </div>
                                 <div className="data-row">
                                     <span className="label">Standard intimacy sore</span>
-                                    <span className="value">{session.speechDepth?.stdIntimacyScore}</span>
+                                    <span className="value">{session.speechDepth?.std_intimacy_score}</span>
                                 </div>
                             </div>
                         </DashboardCard>
@@ -145,27 +145,31 @@ export default function ChildSessionView() {
                             <div className="data-list">
                                 <div className="data-row" >
                                     <span className="label">Number of strokes</span>
-                                    <span className="value">{session.drawingWidth?.strokeCount}</span>
+                                    <span className="value">{session.drawingWidth?.stroke_count}</span>
                                 </div>
                                 <div className="data-row" >
                                     <span className="label">Total stroke length </span>
-                                    <span className="value">{session.drawingWidth?.totalStrokeLength}</span>
+                                    <span className="value">{session.drawingWidth?.total_stroke_length}</span>
                                 </div>
                                 <div className="data-row" >
                                     <span className="label">Average stroke length</span>
-                                    <span className="value">{session.drawingWidth?.avgStrokeLength}</span>
+                                    <span className="value">{session.drawingWidth?.average_stroke_length}</span>
                                 </div>
                                 <div className="data-row" >
                                     <span className="label">Standard deviation of stroke length</span>
-                                    <span className="value">{session.drawingWidth?.stdStrokeLength}</span>
+                                    <span className="value">{session.drawingWidth?.std_stroke_length}</span>
                                 </div>
                                 <div className="data-row" >
                                     <span className="label">Number of colors used</span>
-                                    <span className="value">{session.drawingWidth?.colorUsedCount}</span>
+                                    <span className="value">{session.drawingWidth?.color_used_count}</span>
+                                </div>
+                                <div className="data-row" >
+                                    <span className="label">Pen size used count</span>
+                                    <span className="value">{session.drawingWidth?.pen_size_used_count}</span>
                                 </div>
                                 <div className="data-row" >
                                     <span className="label">Amount of area filled</span>
-                                    <span className="value">{session.drawingWidth?.amountFilledArea}</span>
+                                    <span className="value">{session.drawingWidth?.amount_filled_area}</span>
                                 </div>
                             </div>
                         </DashboardCard>

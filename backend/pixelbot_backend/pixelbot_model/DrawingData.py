@@ -1,8 +1,8 @@
 import base64
 
 class DrawingData:
-    def __init__(self, image_path: str):
-        self.base64 = self.load_base64(image_path)
+    def __init__(self, base64_data: str):
+        self.base64 = base64_data
 
     def load_base64(self, file_path):
         with open(file_path, "rb") as f:
@@ -15,6 +15,12 @@ class DrawingData:
     @staticmethod
     def from_dict(data):
         obj = DrawingData("")
-        obj.base64 = data.get("image")
+
+        # data is ["data:image/png;base64,...."]
+        if isinstance(data, list) and len(data) > 0:
+            prefixed = data[0]
+            # remove prefix
+            obj.base64 = prefixed.replace("data:image/png;base64,", "")
+        
         return obj
 

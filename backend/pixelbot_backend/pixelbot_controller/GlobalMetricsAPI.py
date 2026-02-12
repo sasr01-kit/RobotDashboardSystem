@@ -2,8 +2,7 @@ from pixelbot_backend.pixelbot_utils.Utils import Utils
 import datetime
 from collections import defaultdict
 from collections import Counter
-from pixelbot_backend.pixelbot_model.Child import Child
-import os
+
 
 class GlobalMetricsAPI:
 
@@ -20,7 +19,7 @@ class GlobalMetricsAPI:
         for child in self.children:
             sessions.extend(child.sessions)
 
-        sessions_per_day = Utils.calculate_avg_sessions_per_day(sessions, month, year, now)
+        sessions_per_day = Utils.calculate_avg_sessions_per_day(sessions, year, now)
         sessions_growth_rate = Utils.calculate_sessions_growth_rate(sessions, month, year)
         sessions_this_month = Utils.count_sessions_this_month(sessions, month, year)
         sessions_per_child_so_far = Utils.calculate_avg_sessions_per_child_so_far(self.children, sessions, now)
@@ -39,8 +38,13 @@ class GlobalMetricsAPI:
             "dailySessionCounts": daily_session_counts
         }
     
+    def get_child_obj(self, child_id):
+        for child in self.children:
+            if child.child_id == child_id:
+                return child
+    
     def send_child_recap(self, child_id):
-        child = self.child_api.get_child_obj(child_id)
+        child = self.get_child_obj(child_id)
         
         if child is None:
             raise ValueError(f"Child with id {child_id} not found")
@@ -129,52 +133,4 @@ class GlobalMetricsAPI:
 
         return counter.most_common(top_n)
     
-    def get_recap_data(self, child_id):
-        now = datetime.datetime.now()
-        month = now.month
-        year = now.year
-
-        child = self.child_api.get_child_obj(child_id)
-        sessions = child.sessions
-
-        recap = child.get_recap()
-
-        # current month
-        sessions_this_month = Utils.count_sessions_this_month(sessions, month, year)
-        currentWordCount = self.word_count_for_month(sessions, month, year)
-        currentIntimacy = self.avg_intimacy_for_month(sessions, month, year)
-
-        # previous month
-        prev_month = month - 1 if month > 1 else 12
-        prev_year = year if month > 1 else year - 1
-
-        prev_sessions = self.count_sessions_for_month(sessions, prev_month, prev_year)
-        prev_word_count = self.word_count_for_month(sessions, prev_month, prev_year)
-        prev_intimacy = self.avg_intimacy_for_month(sessions, prev_month, prev_year)
-        
-        recap["sessionGrowthRate"] = Utils.calculate_difference(sessions_this_month, prev_sessions)
-        recap["wordCountGrowthRate"] = Utils.calculate_difference(currentWordCount, prev_word_count)
-        recap["intimacyScoreGrowthRate"] = Utils.calculate_growth(currentIntimacy, prev_intimacy)
-        
-        return recap
-    
-    def count_sessions_for_month(self, sessions, month, year):
-        count_session = 0
-        for session in sessions:
-            if session.session_date.month == month and session.session_date.year == year:
-                count_session += 1
-
-        return count_session
-    
-    def word_count_for_month(self, sessions, month, year):
-        return sum(session.getTotalWordCount() for session in sessions
-               if session.session_date.month == month and session.session_date.year == year)
-    
-    def avg_intimacy_for_month(self, sessions, month, year):
-        scores = []
-        for session in sessions:
-            if session.session_date.month == month and session.session_date.year == year:
-                scores.append(session.getAvgIntimacyScore())
-
-        return (float)(sum(scores))
 

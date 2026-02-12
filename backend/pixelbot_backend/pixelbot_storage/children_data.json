@@ -126,26 +126,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "46",
-                    "avgWordCountPerIntervention": "15.33",
-                    "stdWordCountPerIntervention": "5.86",
-                    "totalSpeechTime": "21.9",
-                    "avgSpeechTimePerIntervention": "7.3",
-                    "stdSpeechTimePerIntervention": "2.93"
+                    "intervention_count": "3",
+                    "total_word_count": "46",
+                    "average_word_count_per_intervention": "15.33",
+                    "std_word_count_per_intervention": "5.86",
+                    "total_speech_time": "21.9",
+                    "average_speech_time_per_intervention": "7.3",
+                    "std_speech_time_per_intervention": "2.93"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.2",
-                    "stdIntimacyScore": "0.45"
+                    "average_intimacy_score": "1.2",
+                    "std_intimacy_score": "0.45"
                 },
                 "drawingWidth": {
-                    "strokeCount": "77",
-                    "totalStrokeLength": "5.72",
-                    "avgStrokeLength": "0.07",
-                    "stdStrokeLength": "0.12",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "5.44"
+                    "stroke_count": "77",
+                    "total_stroke_length": "5.72",
+                    "average_stroke_length": "0.07",
+                    "std_stroke_length": "0.12",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "5.44"
                 }
             },
             {
@@ -259,26 +259,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "55",
-                    "avgWordCountPerIntervention": "18.33",
-                    "stdWordCountPerIntervention": "7.77",
-                    "totalSpeechTime": "15.92",
-                    "avgSpeechTimePerIntervention": "5.31",
-                    "stdSpeechTimePerIntervention": "1.12"
+                    "intervention_count": "3",
+                    "total_word_count": "55",
+                    "average_word_count_per_intervention": "18.33",
+                    "std_word_count_per_intervention": "7.77",
+                    "total_speech_time": "15.92",
+                    "average_speech_time_per_intervention": "5.31",
+                    "std_speech_time_per_intervention": "1.12"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.58"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.58"
                 },
                 "drawingWidth": {
-                    "strokeCount": "65",
-                    "totalStrokeLength": "34.59",
-                    "avgStrokeLength": "0.53",
-                    "stdStrokeLength": "2.51",
-                    "colorUsedCount": "5",
-                    "penSizeUsedCount": "4",
-                    "amountFilledArea": "36.54"
+                    "stroke_count": "65",
+                    "total_stroke_length": "34.59",
+                    "average_stroke_length": "0.53",
+                    "std_stroke_length": "2.51",
+                    "color_used_count": "5",
+                    "pen_size_used_count": "4",
+                    "amount_filled_area": "36.54"
                 }
             }
         ]
@@ -410,26 +410,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "46",
-                    "avgWordCountPerIntervention": "15.33",
-                    "stdWordCountPerIntervention": "5.86",
-                    "totalSpeechTime": "21.9",
-                    "avgSpeechTimePerIntervention": "7.3",
-                    "stdSpeechTimePerIntervention": "2.93"
+                    "intervention_count": "3",
+                    "total_word_count": "46",
+                    "average_word_count_per_intervention": "15.33",
+                    "std_word_count_per_intervention": "5.86",
+                    "total_speech_time": "21.9",
+                    "average_speech_time_per_intervention": "7.3",
+                    "std_speech_time_per_intervention": "2.93"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.2",
-                    "stdIntimacyScore": "0.45"
+                    "average_intimacy_score": "1.2",
+                    "std_intimacy_score": "0.45"
                 },
                 "drawingWidth": {
-                    "strokeCount": "77",
-                    "totalStrokeLength": "5.72",
-                    "avgStrokeLength": "0.07",
-                    "stdStrokeLength": "0.12",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "5.44"
+                    "stroke_count": "77",
+                    "total_stroke_length": "5.72",
+                    "average_stroke_length": "0.07",
+                    "std_stroke_length": "0.12",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "5.44"
                 }
             },
             {
@@ -543,26 +543,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "55",
-                    "avgWordCountPerIntervention": "18.33",
-                    "stdWordCountPerIntervention": "7.77",
-                    "totalSpeechTime": "15.92",
-                    "avgSpeechTimePerIntervention": "5.31",
-                    "stdSpeechTimePerIntervention": "1.12"
+                    "intervention_count": "3",
+                    "total_word_count": "55",
+                    "average_word_count_per_intervention": "18.33",
+                    "std_word_count_per_intervention": "7.77",
+                    "total_speech_time": "15.92",
+                    "average_speech_time_per_intervention": "5.31",
+                    "std_speech_time_per_intervention": "1.12"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.58"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.58"
                 },
                 "drawingWidth": {
-                    "strokeCount": "65",
-                    "totalStrokeLength": "34.59",
-                    "avgStrokeLength": "0.53",
-                    "stdStrokeLength": "2.51",
-                    "colorUsedCount": "5",
-                    "penSizeUsedCount": "4",
-                    "amountFilledArea": "36.54"
+                    "stroke_count": "65",
+                    "total_stroke_length": "34.59",
+                    "average_stroke_length": "0.53",
+                    "std_stroke_length": "2.51",
+                    "color_used_count": "5",
+                    "pen_size_used_count": "4",
+                    "amount_filled_area": "36.54"
                 }
             }
         ]
@@ -666,26 +666,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "2",
-                    "totalWordCount": "23",
-                    "avgWordCountPerIntervention": "11.5",
-                    "stdWordCountPerIntervention": "3.54",
-                    "totalSpeechTime": "0.61",
-                    "avgSpeechTimePerIntervention": "0.3",
-                    "stdSpeechTimePerIntervention": "0.21"
+                    "intervention_count": "2",
+                    "total_word_count": "23",
+                    "average_word_count_per_intervention": "11.5",
+                    "std_word_count_per_intervention": "3.54",
+                    "total_speech_time": "0.61",
+                    "average_speech_time_per_intervention": "0.3",
+                    "std_speech_time_per_intervention": "0.21"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1",
-                    "stdIntimacyScore": "0.0"
+                    "average_intimacy_score": "1",
+                    "std_intimacy_score": "0.0"
                 },
                 "drawingWidth": {
-                    "strokeCount": "38",
-                    "totalStrokeLength": "14.04",
-                    "avgStrokeLength": "0.37",
-                    "stdStrokeLength": "1.16",
-                    "colorUsedCount": "4",
-                    "penSizeUsedCount": "3",
-                    "amountFilledArea": "13.5"
+                    "stroke_count": "38",
+                    "total_stroke_length": "14.04",
+                    "average_stroke_length": "0.37",
+                    "std_stroke_length": "1.16",
+                    "color_used_count": "4",
+                    "pen_size_used_count": "3",
+                    "amount_filled_area": "13.5"
                 }
             },
             {
@@ -775,26 +775,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "4",
-                    "totalWordCount": "91",
-                    "avgWordCountPerIntervention": "22.75",
-                    "stdWordCountPerIntervention": "12.69",
-                    "totalSpeechTime": "45.03",
-                    "avgSpeechTimePerIntervention": "11.26",
-                    "stdSpeechTimePerIntervention": "5.23"
+                    "intervention_count": "4",
+                    "total_word_count": "91",
+                    "average_word_count_per_intervention": "22.75",
+                    "std_word_count_per_intervention": "12.69",
+                    "total_speech_time": "45.03",
+                    "average_speech_time_per_intervention": "11.26",
+                    "std_speech_time_per_intervention": "5.23"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.4",
-                    "stdIntimacyScore": "0.55"
+                    "average_intimacy_score": "1.4",
+                    "std_intimacy_score": "0.55"
                 },
                 "drawingWidth": {
-                    "strokeCount": "61",
-                    "totalStrokeLength": "3.26",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.11",
-                    "colorUsedCount": "1",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "3.44"
+                    "stroke_count": "61",
+                    "total_stroke_length": "3.26",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.11",
+                    "color_used_count": "1",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "3.44"
                 }
             }
         ]
@@ -926,26 +926,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "46",
-                    "avgWordCountPerIntervention": "15.33",
-                    "stdWordCountPerIntervention": "5.86",
-                    "totalSpeechTime": "21.9",
-                    "avgSpeechTimePerIntervention": "7.3",
-                    "stdSpeechTimePerIntervention": "2.93"
+                    "intervention_count": "3",
+                    "total_word_count": "46",
+                    "average_word_count_per_intervention": "15.33",
+                    "std_word_count_per_intervention": "5.86",
+                    "total_speech_time": "21.9",
+                    "average_speech_time_per_intervention": "7.3",
+                    "std_speech_time_per_intervention": "2.93"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.2",
-                    "stdIntimacyScore": "0.45"
+                    "average_intimacy_score": "1.2",
+                    "std_intimacy_score": "0.45"
                 },
                 "drawingWidth": {
-                    "strokeCount": "77",
-                    "totalStrokeLength": "5.72",
-                    "avgStrokeLength": "0.07",
-                    "stdStrokeLength": "0.12",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "5.44"
+                    "stroke_count": "77",
+                    "total_stroke_length": "5.72",
+                    "average_stroke_length": "0.07",
+                    "std_stroke_length": "0.12",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "5.44"
                 }
             },
             {
@@ -1059,26 +1059,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "55",
-                    "avgWordCountPerIntervention": "18.33",
-                    "stdWordCountPerIntervention": "7.77",
-                    "totalSpeechTime": "15.92",
-                    "avgSpeechTimePerIntervention": "5.31",
-                    "stdSpeechTimePerIntervention": "1.12"
+                    "intervention_count": "3",
+                    "total_word_count": "55",
+                    "average_word_count_per_intervention": "18.33",
+                    "std_word_count_per_intervention": "7.77",
+                    "total_speech_time": "15.92",
+                    "average_speech_time_per_intervention": "5.31",
+                    "std_speech_time_per_intervention": "1.12"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.58"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.58"
                 },
                 "drawingWidth": {
-                    "strokeCount": "65",
-                    "totalStrokeLength": "34.59",
-                    "avgStrokeLength": "0.53",
-                    "stdStrokeLength": "2.51",
-                    "colorUsedCount": "5",
-                    "penSizeUsedCount": "4",
-                    "amountFilledArea": "36.54"
+                    "stroke_count": "65",
+                    "total_stroke_length": "34.59",
+                    "average_stroke_length": "0.53",
+                    "std_stroke_length": "2.51",
+                    "color_used_count": "5",
+                    "pen_size_used_count": "4",
+                    "amount_filled_area": "36.54"
                 }
             }
         ]
@@ -1182,26 +1182,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "2",
-                    "totalWordCount": "23",
-                    "avgWordCountPerIntervention": "11.5",
-                    "stdWordCountPerIntervention": "3.54",
-                    "totalSpeechTime": "0.61",
-                    "avgSpeechTimePerIntervention": "0.3",
-                    "stdSpeechTimePerIntervention": "0.21"
+                    "intervention_count": "2",
+                    "total_word_count": "23",
+                    "average_word_count_per_intervention": "11.5",
+                    "std_word_count_per_intervention": "3.54",
+                    "total_speech_time": "0.61",
+                    "average_speech_time_per_intervention": "0.3",
+                    "std_speech_time_per_intervention": "0.21"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1",
-                    "stdIntimacyScore": "0.0"
+                    "average_intimacy_score": "1",
+                    "std_intimacy_score": "0.0"
                 },
                 "drawingWidth": {
-                    "strokeCount": "38",
-                    "totalStrokeLength": "14.04",
-                    "avgStrokeLength": "0.37",
-                    "stdStrokeLength": "1.16",
-                    "colorUsedCount": "4",
-                    "penSizeUsedCount": "3",
-                    "amountFilledArea": "13.5"
+                    "stroke_count": "38",
+                    "total_stroke_length": "14.04",
+                    "average_stroke_length": "0.37",
+                    "std_stroke_length": "1.16",
+                    "color_used_count": "4",
+                    "pen_size_used_count": "3",
+                    "amount_filled_area": "13.5"
                 }
             },
             {
@@ -1291,26 +1291,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "4",
-                    "totalWordCount": "91",
-                    "avgWordCountPerIntervention": "22.75",
-                    "stdWordCountPerIntervention": "12.69",
-                    "totalSpeechTime": "45.03",
-                    "avgSpeechTimePerIntervention": "11.26",
-                    "stdSpeechTimePerIntervention": "5.23"
+                    "intervention_count": "4",
+                    "total_word_count": "91",
+                    "average_word_count_per_intervention": "22.75",
+                    "std_word_count_per_intervention": "12.69",
+                    "total_speech_time": "45.03",
+                    "average_speech_time_per_intervention": "11.26",
+                    "std_speech_time_per_intervention": "5.23"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.4",
-                    "stdIntimacyScore": "0.55"
+                    "average_intimacy_score": "1.4",
+                    "std_intimacy_score": "0.55"
                 },
                 "drawingWidth": {
-                    "strokeCount": "61",
-                    "totalStrokeLength": "3.26",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.11",
-                    "colorUsedCount": "1",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "3.44"
+                    "stroke_count": "61",
+                    "total_stroke_length": "3.26",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.11",
+                    "color_used_count": "1",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "3.44"
                 }
             }
         ]
@@ -1446,26 +1446,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "7",
-                    "totalWordCount": "148",
-                    "avgWordCountPerIntervention": "21.14",
-                    "stdWordCountPerIntervention": "13.97",
-                    "totalSpeechTime": "62.71",
-                    "avgSpeechTimePerIntervention": "8.96",
-                    "stdSpeechTimePerIntervention": "6.32"
+                    "intervention_count": "7",
+                    "total_word_count": "148",
+                    "average_word_count_per_intervention": "21.14",
+                    "std_word_count_per_intervention": "13.97",
+                    "total_speech_time": "62.71",
+                    "average_speech_time_per_intervention": "8.96",
+                    "std_speech_time_per_intervention": "6.32"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.8"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.8"
                 },
                 "drawingWidth": {
-                    "strokeCount": "70",
-                    "totalStrokeLength": "15.46",
-                    "avgStrokeLength": "0.22",
-                    "stdStrokeLength": "1.17",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "16.13"
+                    "stroke_count": "70",
+                    "total_stroke_length": "15.46",
+                    "average_stroke_length": "0.22",
+                    "std_stroke_length": "1.17",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "16.13"
                 }
             },
             {
@@ -1559,26 +1559,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "5",
-                    "totalWordCount": "135",
-                    "avgWordCountPerIntervention": "27",
-                    "stdWordCountPerIntervention": "11.05",
-                    "totalSpeechTime": "60.32",
-                    "avgSpeechTimePerIntervention": "12.06",
-                    "stdSpeechTimePerIntervention": "5.34"
+                    "intervention_count": "5",
+                    "total_word_count": "135",
+                    "average_word_count_per_intervention": "27",
+                    "std_word_count_per_intervention": "11.05",
+                    "total_speech_time": "60.32",
+                    "average_speech_time_per_intervention": "12.06",
+                    "std_speech_time_per_intervention": "5.34"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.14",
-                    "stdIntimacyScore": "0.38"
+                    "average_intimacy_score": "1.14",
+                    "std_intimacy_score": "0.38"
                 },
                 "drawingWidth": {
-                    "strokeCount": "92",
-                    "totalStrokeLength": "4.66",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.08",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "1",
-                    "amountFilledArea": "4.57"
+                    "stroke_count": "92",
+                    "total_stroke_length": "4.66",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.08",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "1",
+                    "amount_filled_area": "4.57"
                 }
             },
             {
@@ -1696,26 +1696,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "6",
-                    "totalWordCount": "99",
-                    "avgWordCountPerIntervention": "16.5",
-                    "stdWordCountPerIntervention": "3.89",
-                    "totalSpeechTime": "30.36",
-                    "avgSpeechTimePerIntervention": "5.06",
-                    "stdSpeechTimePerIntervention": "3.07"
+                    "intervention_count": "6",
+                    "total_word_count": "99",
+                    "average_word_count_per_intervention": "16.5",
+                    "std_word_count_per_intervention": "3.89",
+                    "total_speech_time": "30.36",
+                    "average_speech_time_per_intervention": "5.06",
+                    "std_speech_time_per_intervention": "3.07"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.29",
-                    "stdIntimacyScore": "0.49"
+                    "average_intimacy_score": "1.29",
+                    "std_intimacy_score": "0.49"
                 },
                 "drawingWidth": {
-                    "strokeCount": "62",
-                    "totalStrokeLength": "3.72",
-                    "avgStrokeLength": "0.06",
-                    "stdStrokeLength": "0.1",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "1.62"
+                    "stroke_count": "62",
+                    "total_stroke_length": "3.72",
+                    "average_stroke_length": "0.06",
+                    "std_stroke_length": "0.1",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "1.62"
                 }
             },
             {
@@ -1813,26 +1813,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "2",
-                    "totalWordCount": "23",
-                    "avgWordCountPerIntervention": "11.5",
-                    "stdWordCountPerIntervention": "3.54",
-                    "totalSpeechTime": "0.61",
-                    "avgSpeechTimePerIntervention": "0.3",
-                    "stdSpeechTimePerIntervention": "0.21"
+                    "intervention_count": "2",
+                    "total_word_count": "23",
+                    "average_word_count_per_intervention": "11.5",
+                    "std_word_count_per_intervention": "3.54",
+                    "total_speech_time": "0.61",
+                    "average_speech_time_per_intervention": "0.3",
+                    "std_speech_time_per_intervention": "0.21"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1",
-                    "stdIntimacyScore": "0.0"
+                    "average_intimacy_score": "1",
+                    "std_intimacy_score": "0.0"
                 },
                 "drawingWidth": {
-                    "strokeCount": "38",
-                    "totalStrokeLength": "14.04",
-                    "avgStrokeLength": "0.37",
-                    "stdStrokeLength": "1.16",
-                    "colorUsedCount": "4",
-                    "penSizeUsedCount": "3",
-                    "amountFilledArea": "13.5"
+                    "stroke_count": "38",
+                    "total_stroke_length": "14.04",
+                    "average_stroke_length": "0.37",
+                    "std_stroke_length": "1.16",
+                    "color_used_count": "4",
+                    "pen_size_used_count": "3",
+                    "amount_filled_area": "13.5"
                 }
             }
         ]
@@ -1968,26 +1968,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "7",
-                    "totalWordCount": "148",
-                    "avgWordCountPerIntervention": "21.14",
-                    "stdWordCountPerIntervention": "13.97",
-                    "totalSpeechTime": "62.71",
-                    "avgSpeechTimePerIntervention": "8.96",
-                    "stdSpeechTimePerIntervention": "6.32"
+                    "intervention_count": "7",
+                    "total_word_count": "148",
+                    "average_word_count_per_intervention": "21.14",
+                    "std_word_count_per_intervention": "13.97",
+                    "total_speech_time": "62.71",
+                    "average_speech_time_per_intervention": "8.96",
+                    "std_speech_time_per_intervention": "6.32"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.8"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.8"
                 },
                 "drawingWidth": {
-                    "strokeCount": "70",
-                    "totalStrokeLength": "15.46",
-                    "avgStrokeLength": "0.22",
-                    "stdStrokeLength": "1.17",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "16.13"
+                    "stroke_count": "70",
+                    "total_stroke_length": "15.46",
+                    "average_stroke_length": "0.22",
+                    "std_stroke_length": "1.17",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "16.13"
                 }
             },
             {
@@ -2081,26 +2081,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "5",
-                    "totalWordCount": "135",
-                    "avgWordCountPerIntervention": "27",
-                    "stdWordCountPerIntervention": "11.05",
-                    "totalSpeechTime": "60.32",
-                    "avgSpeechTimePerIntervention": "12.06",
-                    "stdSpeechTimePerIntervention": "5.34"
+                    "intervention_count": "5",
+                    "total_word_count": "135",
+                    "average_word_count_per_intervention": "27",
+                    "std_word_count_per_intervention": "11.05",
+                    "total_speech_time": "60.32",
+                    "average_speech_time_per_intervention": "12.06",
+                    "std_speech_time_per_intervention": "5.34"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.14",
-                    "stdIntimacyScore": "0.38"
+                    "average_intimacy_score": "1.14",
+                    "std_intimacy_score": "0.38"
                 },
                 "drawingWidth": {
-                    "strokeCount": "92",
-                    "totalStrokeLength": "4.66",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.08",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "1",
-                    "amountFilledArea": "4.57"
+                    "stroke_count": "92",
+                    "total_stroke_length": "4.66",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.08",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "1",
+                    "amount_filled_area": "4.57"
                 }
             },
             {
@@ -2218,26 +2218,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "6",
-                    "totalWordCount": "99",
-                    "avgWordCountPerIntervention": "16.5",
-                    "stdWordCountPerIntervention": "3.89",
-                    "totalSpeechTime": "30.36",
-                    "avgSpeechTimePerIntervention": "5.06",
-                    "stdSpeechTimePerIntervention": "3.07"
+                    "intervention_count": "6",
+                    "total_word_count": "99",
+                    "average_word_count_per_intervention": "16.5",
+                    "std_word_count_per_intervention": "3.89",
+                    "total_speech_time": "30.36",
+                    "average_speech_time_per_intervention": "5.06",
+                    "std_speech_time_per_intervention": "3.07"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.29",
-                    "stdIntimacyScore": "0.49"
+                    "average_intimacy_score": "1.29",
+                    "std_intimacy_score": "0.49"
                 },
                 "drawingWidth": {
-                    "strokeCount": "62",
-                    "totalStrokeLength": "3.72",
-                    "avgStrokeLength": "0.06",
-                    "stdStrokeLength": "0.1",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "1.62"
+                    "stroke_count": "62",
+                    "total_stroke_length": "3.72",
+                    "average_stroke_length": "0.06",
+                    "std_stroke_length": "0.1",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "1.62"
                 }
             },
             {
@@ -2335,26 +2335,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "2",
-                    "totalWordCount": "23",
-                    "avgWordCountPerIntervention": "11.5",
-                    "stdWordCountPerIntervention": "3.54",
-                    "totalSpeechTime": "0.61",
-                    "avgSpeechTimePerIntervention": "0.3",
-                    "stdSpeechTimePerIntervention": "0.21"
+                    "intervention_count": "2",
+                    "total_word_count": "23",
+                    "average_word_count_per_intervention": "11.5",
+                    "std_word_count_per_intervention": "3.54",
+                    "total_speech_time": "0.61",
+                    "average_speech_time_per_intervention": "0.3",
+                    "std_speech_time_per_intervention": "0.21"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1",
-                    "stdIntimacyScore": "0.0"
+                    "average_intimacy_score": "1",
+                    "std_intimacy_score": "0.0"
                 },
                 "drawingWidth": {
-                    "strokeCount": "38",
-                    "totalStrokeLength": "14.04",
-                    "avgStrokeLength": "0.37",
-                    "stdStrokeLength": "1.16",
-                    "colorUsedCount": "4",
-                    "penSizeUsedCount": "3",
-                    "amountFilledArea": "13.5"
+                    "stroke_count": "38",
+                    "total_stroke_length": "14.04",
+                    "average_stroke_length": "0.37",
+                    "std_stroke_length": "1.16",
+                    "color_used_count": "4",
+                    "pen_size_used_count": "3",
+                    "amount_filled_area": "13.5"
                 }
             }
         ]
@@ -2490,26 +2490,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "7",
-                    "totalWordCount": "148",
-                    "avgWordCountPerIntervention": "21.14",
-                    "stdWordCountPerIntervention": "13.97",
-                    "totalSpeechTime": "62.71",
-                    "avgSpeechTimePerIntervention": "8.96",
-                    "stdSpeechTimePerIntervention": "6.32"
+                    "intervention_count": "7",
+                    "total_word_count": "148",
+                    "average_word_count_per_intervention": "21.14",
+                    "std_word_count_per_intervention": "13.97",
+                    "total_speech_time": "62.71",
+                    "average_speech_time_per_intervention": "8.96",
+                    "std_speech_time_per_intervention": "6.32"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.8"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.8"
                 },
                 "drawingWidth": {
-                    "strokeCount": "70",
-                    "totalStrokeLength": "15.46",
-                    "avgStrokeLength": "0.22",
-                    "stdStrokeLength": "1.17",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "16.13"
+                    "stroke_count": "70",
+                    "total_stroke_length": "15.46",
+                    "average_stroke_length": "0.22",
+                    "std_stroke_length": "1.17",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "16.13"
                 }
             },
             {
@@ -2603,26 +2603,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "5",
-                    "totalWordCount": "135",
-                    "avgWordCountPerIntervention": "27",
-                    "stdWordCountPerIntervention": "11.05",
-                    "totalSpeechTime": "60.32",
-                    "avgSpeechTimePerIntervention": "12.06",
-                    "stdSpeechTimePerIntervention": "5.34"
+                    "intervention_count": "5",
+                    "total_word_count": "135",
+                    "average_word_count_per_intervention": "27",
+                    "std_word_count_per_intervention": "11.05",
+                    "total_speech_time": "60.32",
+                    "average_speech_time_per_intervention": "12.06",
+                    "std_speech_time_per_intervention": "5.34"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.14",
-                    "stdIntimacyScore": "0.38"
+                    "average_intimacy_score": "1.14",
+                    "std_intimacy_score": "0.38"
                 },
                 "drawingWidth": {
-                    "strokeCount": "92",
-                    "totalStrokeLength": "4.66",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.08",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "1",
-                    "amountFilledArea": "4.57"
+                    "stroke_count": "92",
+                    "total_stroke_length": "4.66",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.08",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "1",
+                    "amount_filled_area": "4.57"
                 }
             },
             {
@@ -2740,26 +2740,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "6",
-                    "totalWordCount": "99",
-                    "avgWordCountPerIntervention": "16.5",
-                    "stdWordCountPerIntervention": "3.89",
-                    "totalSpeechTime": "30.36",
-                    "avgSpeechTimePerIntervention": "5.06",
-                    "stdSpeechTimePerIntervention": "3.07"
+                    "intervention_count": "6",
+                    "total_word_count": "99",
+                    "average_word_count_per_intervention": "16.5",
+                    "std_word_count_per_intervention": "3.89",
+                    "total_speech_time": "30.36",
+                    "average_speech_time_per_intervention": "5.06",
+                    "std_speech_time_per_intervention": "3.07"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.29",
-                    "stdIntimacyScore": "0.49"
+                    "average_intimacy_score": "1.29",
+                    "std_intimacy_score": "0.49"
                 },
                 "drawingWidth": {
-                    "strokeCount": "62",
-                    "totalStrokeLength": "3.72",
-                    "avgStrokeLength": "0.06",
-                    "stdStrokeLength": "0.1",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "1.62"
+                    "stroke_count": "62",
+                    "total_stroke_length": "3.72",
+                    "average_stroke_length": "0.06",
+                    "std_stroke_length": "0.1",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "1.62"
                 }
             }
         ]
@@ -2863,26 +2863,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "2",
-                    "totalWordCount": "23",
-                    "avgWordCountPerIntervention": "11.5",
-                    "stdWordCountPerIntervention": "3.54",
-                    "totalSpeechTime": "0.61",
-                    "avgSpeechTimePerIntervention": "0.3",
-                    "stdSpeechTimePerIntervention": "0.21"
+                    "intervention_count": "2",
+                    "total_word_count": "23",
+                    "average_word_count_per_intervention": "11.5",
+                    "std_word_count_per_intervention": "3.54",
+                    "total_speech_time": "0.61",
+                    "average_speech_time_per_intervention": "0.3",
+                    "std_speech_time_per_intervention": "0.21"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1",
-                    "stdIntimacyScore": "0.0"
+                    "average_intimacy_score": "1",
+                    "std_intimacy_score": "0.0"
                 },
                 "drawingWidth": {
-                    "strokeCount": "38",
-                    "totalStrokeLength": "14.04",
-                    "avgStrokeLength": "0.37",
-                    "stdStrokeLength": "1.16",
-                    "colorUsedCount": "4",
-                    "penSizeUsedCount": "3",
-                    "amountFilledArea": "13.5"
+                    "stroke_count": "38",
+                    "total_stroke_length": "14.04",
+                    "average_stroke_length": "0.37",
+                    "std_stroke_length": "1.16",
+                    "color_used_count": "4",
+                    "pen_size_used_count": "3",
+                    "amount_filled_area": "13.5"
                 }
             },
             {
@@ -2972,26 +2972,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "4",
-                    "totalWordCount": "91",
-                    "avgWordCountPerIntervention": "22.75",
-                    "stdWordCountPerIntervention": "12.69",
-                    "totalSpeechTime": "45.03",
-                    "avgSpeechTimePerIntervention": "11.26",
-                    "stdSpeechTimePerIntervention": "5.23"
+                    "intervention_count": "4",
+                    "total_word_count": "91",
+                    "average_word_count_per_intervention": "22.75",
+                    "std_word_count_per_intervention": "12.69",
+                    "total_speech_time": "45.03",
+                    "average_speech_time_per_intervention": "11.26",
+                    "std_speech_time_per_intervention": "5.23"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.4",
-                    "stdIntimacyScore": "0.55"
+                    "average_intimacy_score": "1.4",
+                    "std_intimacy_score": "0.55"
                 },
                 "drawingWidth": {
-                    "strokeCount": "61",
-                    "totalStrokeLength": "3.26",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.11",
-                    "colorUsedCount": "1",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "3.44"
+                    "stroke_count": "61",
+                    "total_stroke_length": "3.26",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.11",
+                    "color_used_count": "1",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "3.44"
                 }
             }
         ]
@@ -3123,26 +3123,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "46",
-                    "avgWordCountPerIntervention": "15.33",
-                    "stdWordCountPerIntervention": "5.86",
-                    "totalSpeechTime": "21.9",
-                    "avgSpeechTimePerIntervention": "7.3",
-                    "stdSpeechTimePerIntervention": "2.93"
+                    "intervention_count": "3",
+                    "total_word_count": "46",
+                    "average_word_count_per_intervention": "15.33",
+                    "std_word_count_per_intervention": "5.86",
+                    "total_speech_time": "21.9",
+                    "average_speech_time_per_intervention": "7.3",
+                    "std_speech_time_per_intervention": "2.93"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.2",
-                    "stdIntimacyScore": "0.45"
+                    "average_intimacy_score": "1.2",
+                    "std_intimacy_score": "0.45"
                 },
                 "drawingWidth": {
-                    "strokeCount": "77",
-                    "totalStrokeLength": "5.72",
-                    "avgStrokeLength": "0.07",
-                    "stdStrokeLength": "0.12",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "5.44"
+                    "stroke_count": "77",
+                    "total_stroke_length": "5.72",
+                    "average_stroke_length": "0.07",
+                    "std_stroke_length": "0.12",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "5.44"
                 }
             },
             {
@@ -3256,26 +3256,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "55",
-                    "avgWordCountPerIntervention": "18.33",
-                    "stdWordCountPerIntervention": "7.77",
-                    "totalSpeechTime": "15.92",
-                    "avgSpeechTimePerIntervention": "5.31",
-                    "stdSpeechTimePerIntervention": "1.12"
+                    "intervention_count": "3",
+                    "total_word_count": "55",
+                    "average_word_count_per_intervention": "18.33",
+                    "std_word_count_per_intervention": "7.77",
+                    "total_speech_time": "15.92",
+                    "average_speech_time_per_intervention": "5.31",
+                    "std_speech_time_per_intervention": "1.12"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.58"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.58"
                 },
                 "drawingWidth": {
-                    "strokeCount": "65",
-                    "totalStrokeLength": "34.59",
-                    "avgStrokeLength": "0.53",
-                    "stdStrokeLength": "2.51",
-                    "colorUsedCount": "5",
-                    "penSizeUsedCount": "4",
-                    "amountFilledArea": "36.54"
+                    "stroke_count": "65",
+                    "total_stroke_length": "34.59",
+                    "average_stroke_length": "0.53",
+                    "std_stroke_length": "2.51",
+                    "color_used_count": "5",
+                    "pen_size_used_count": "4",
+                    "amount_filled_area": "36.54"
                 }
             }
         ]
@@ -3407,26 +3407,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "46",
-                    "avgWordCountPerIntervention": "15.33",
-                    "stdWordCountPerIntervention": "5.86",
-                    "totalSpeechTime": "21.9",
-                    "avgSpeechTimePerIntervention": "7.3",
-                    "stdSpeechTimePerIntervention": "2.93"
+                    "intervention_count": "3",
+                    "total_word_count": "46",
+                    "average_word_count_per_intervention": "15.33",
+                    "std_word_count_per_intervention": "5.86",
+                    "total_speech_time": "21.9",
+                    "average_speech_time_per_intervention": "7.3",
+                    "std_speech_time_per_intervention": "2.93"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.2",
-                    "stdIntimacyScore": "0.45"
+                    "average_intimacy_score": "1.2",
+                    "std_intimacy_score": "0.45"
                 },
                 "drawingWidth": {
-                    "strokeCount": "77",
-                    "totalStrokeLength": "5.72",
-                    "avgStrokeLength": "0.07",
-                    "stdStrokeLength": "0.12",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "5.44"
+                    "stroke_count": "77",
+                    "total_stroke_length": "5.72",
+                    "average_stroke_length": "0.07",
+                    "std_stroke_length": "0.12",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "5.44"
                 }
             },
             {
@@ -3540,26 +3540,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "55",
-                    "avgWordCountPerIntervention": "18.33",
-                    "stdWordCountPerIntervention": "7.77",
-                    "totalSpeechTime": "15.92",
-                    "avgSpeechTimePerIntervention": "5.31",
-                    "stdSpeechTimePerIntervention": "1.12"
+                    "intervention_count": "3",
+                    "total_word_count": "55",
+                    "average_word_count_per_intervention": "18.33",
+                    "std_word_count_per_intervention": "7.77",
+                    "total_speech_time": "15.92",
+                    "average_speech_time_per_intervention": "5.31",
+                    "std_speech_time_per_intervention": "1.12"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.58"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.58"
                 },
                 "drawingWidth": {
-                    "strokeCount": "65",
-                    "totalStrokeLength": "34.59",
-                    "avgStrokeLength": "0.53",
-                    "stdStrokeLength": "2.51",
-                    "colorUsedCount": "5",
-                    "penSizeUsedCount": "4",
-                    "amountFilledArea": "36.54"
+                    "stroke_count": "65",
+                    "total_stroke_length": "34.59",
+                    "average_stroke_length": "0.53",
+                    "std_stroke_length": "2.51",
+                    "color_used_count": "5",
+                    "pen_size_used_count": "4",
+                    "amount_filled_area": "36.54"
                 }
             }
         ]
@@ -3695,26 +3695,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "7",
-                    "totalWordCount": "148",
-                    "avgWordCountPerIntervention": "21.14",
-                    "stdWordCountPerIntervention": "13.97",
-                    "totalSpeechTime": "62.71",
-                    "avgSpeechTimePerIntervention": "8.96",
-                    "stdSpeechTimePerIntervention": "6.32"
+                    "intervention_count": "7",
+                    "total_word_count": "148",
+                    "average_word_count_per_intervention": "21.14",
+                    "std_word_count_per_intervention": "13.97",
+                    "total_speech_time": "62.71",
+                    "average_speech_time_per_intervention": "8.96",
+                    "std_speech_time_per_intervention": "6.32"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.8"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.8"
                 },
                 "drawingWidth": {
-                    "strokeCount": "70",
-                    "totalStrokeLength": "15.46",
-                    "avgStrokeLength": "0.22",
-                    "stdStrokeLength": "1.17",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "16.13"
+                    "stroke_count": "70",
+                    "total_stroke_length": "15.46",
+                    "average_stroke_length": "0.22",
+                    "std_stroke_length": "1.17",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "16.13"
                 }
             },
             {
@@ -3808,26 +3808,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "5",
-                    "totalWordCount": "135",
-                    "avgWordCountPerIntervention": "27",
-                    "stdWordCountPerIntervention": "11.05",
-                    "totalSpeechTime": "60.32",
-                    "avgSpeechTimePerIntervention": "12.06",
-                    "stdSpeechTimePerIntervention": "5.34"
+                    "intervention_count": "5",
+                    "total_word_count": "135",
+                    "average_word_count_per_intervention": "27",
+                    "std_word_count_per_intervention": "11.05",
+                    "total_speech_time": "60.32",
+                    "average_speech_time_per_intervention": "12.06",
+                    "std_speech_time_per_intervention": "5.34"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.14",
-                    "stdIntimacyScore": "0.38"
+                    "average_intimacy_score": "1.14",
+                    "std_intimacy_score": "0.38"
                 },
                 "drawingWidth": {
-                    "strokeCount": "92",
-                    "totalStrokeLength": "4.66",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.08",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "1",
-                    "amountFilledArea": "4.57"
+                    "stroke_count": "92",
+                    "total_stroke_length": "4.66",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.08",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "1",
+                    "amount_filled_area": "4.57"
                 }
             },
             {
@@ -3945,26 +3945,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "6",
-                    "totalWordCount": "99",
-                    "avgWordCountPerIntervention": "16.5",
-                    "stdWordCountPerIntervention": "3.89",
-                    "totalSpeechTime": "30.36",
-                    "avgSpeechTimePerIntervention": "5.06",
-                    "stdSpeechTimePerIntervention": "3.07"
+                    "intervention_count": "6",
+                    "total_word_count": "99",
+                    "average_word_count_per_intervention": "16.5",
+                    "std_word_count_per_intervention": "3.89",
+                    "total_speech_time": "30.36",
+                    "average_speech_time_per_intervention": "5.06",
+                    "std_speech_time_per_intervention": "3.07"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.29",
-                    "stdIntimacyScore": "0.49"
+                    "average_intimacy_score": "1.29",
+                    "std_intimacy_score": "0.49"
                 },
                 "drawingWidth": {
-                    "strokeCount": "62",
-                    "totalStrokeLength": "3.72",
-                    "avgStrokeLength": "0.06",
-                    "stdStrokeLength": "0.1",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "1.62"
+                    "stroke_count": "62",
+                    "total_stroke_length": "3.72",
+                    "average_stroke_length": "0.06",
+                    "std_stroke_length": "0.1",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "1.62"
                 }
             }
         ]
@@ -4068,26 +4068,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "2",
-                    "totalWordCount": "23",
-                    "avgWordCountPerIntervention": "11.5",
-                    "stdWordCountPerIntervention": "3.54",
-                    "totalSpeechTime": "0.61",
-                    "avgSpeechTimePerIntervention": "0.3",
-                    "stdSpeechTimePerIntervention": "0.21"
+                    "intervention_count": "2",
+                    "total_word_count": "23",
+                    "average_word_count_per_intervention": "11.5",
+                    "std_word_count_per_intervention": "3.54",
+                    "total_speech_time": "0.61",
+                    "average_speech_time_per_intervention": "0.3",
+                    "std_speech_time_per_intervention": "0.21"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1",
-                    "stdIntimacyScore": "0.0"
+                    "average_intimacy_score": "1",
+                    "std_intimacy_score": "0.0"
                 },
                 "drawingWidth": {
-                    "strokeCount": "38",
-                    "totalStrokeLength": "14.04",
-                    "avgStrokeLength": "0.37",
-                    "stdStrokeLength": "1.16",
-                    "colorUsedCount": "4",
-                    "penSizeUsedCount": "3",
-                    "amountFilledArea": "13.5"
+                    "stroke_count": "38",
+                    "total_stroke_length": "14.04",
+                    "average_stroke_length": "0.37",
+                    "std_stroke_length": "1.16",
+                    "color_used_count": "4",
+                    "pen_size_used_count": "3",
+                    "amount_filled_area": "13.5"
                 }
             },
             {
@@ -4177,26 +4177,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "4",
-                    "totalWordCount": "91",
-                    "avgWordCountPerIntervention": "22.75",
-                    "stdWordCountPerIntervention": "12.69",
-                    "totalSpeechTime": "45.03",
-                    "avgSpeechTimePerIntervention": "11.26",
-                    "stdSpeechTimePerIntervention": "5.23"
+                    "intervention_count": "4",
+                    "total_word_count": "91",
+                    "average_word_count_per_intervention": "22.75",
+                    "std_word_count_per_intervention": "12.69",
+                    "total_speech_time": "45.03",
+                    "average_speech_time_per_intervention": "11.26",
+                    "std_speech_time_per_intervention": "5.23"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.4",
-                    "stdIntimacyScore": "0.55"
+                    "average_intimacy_score": "1.4",
+                    "std_intimacy_score": "0.55"
                 },
                 "drawingWidth": {
-                    "strokeCount": "61",
-                    "totalStrokeLength": "3.26",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.11",
-                    "colorUsedCount": "1",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "3.44"
+                    "stroke_count": "61",
+                    "total_stroke_length": "3.26",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.11",
+                    "color_used_count": "1",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "3.44"
                 }
             }
         ]
@@ -4332,26 +4332,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "7",
-                    "totalWordCount": "148",
-                    "avgWordCountPerIntervention": "21.14",
-                    "stdWordCountPerIntervention": "13.97",
-                    "totalSpeechTime": "62.71",
-                    "avgSpeechTimePerIntervention": "8.96",
-                    "stdSpeechTimePerIntervention": "6.32"
+                    "intervention_count": "7",
+                    "total_word_count": "148",
+                    "average_word_count_per_intervention": "21.14",
+                    "std_word_count_per_intervention": "13.97",
+                    "total_speech_time": "62.71",
+                    "average_speech_time_per_intervention": "8.96",
+                    "std_speech_time_per_intervention": "6.32"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.8"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.8"
                 },
                 "drawingWidth": {
-                    "strokeCount": "70",
-                    "totalStrokeLength": "15.46",
-                    "avgStrokeLength": "0.22",
-                    "stdStrokeLength": "1.17",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "16.13"
+                    "stroke_count": "70",
+                    "total_stroke_length": "15.46",
+                    "average_stroke_length": "0.22",
+                    "std_stroke_length": "1.17",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "16.13"
                 }
             },
             {
@@ -4445,26 +4445,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "5",
-                    "totalWordCount": "135",
-                    "avgWordCountPerIntervention": "27",
-                    "stdWordCountPerIntervention": "11.05",
-                    "totalSpeechTime": "60.32",
-                    "avgSpeechTimePerIntervention": "12.06",
-                    "stdSpeechTimePerIntervention": "5.34"
+                    "intervention_count": "5",
+                    "total_word_count": "135",
+                    "average_word_count_per_intervention": "27",
+                    "std_word_count_per_intervention": "11.05",
+                    "total_speech_time": "60.32",
+                    "average_speech_time_per_intervention": "12.06",
+                    "std_speech_time_per_intervention": "5.34"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.14",
-                    "stdIntimacyScore": "0.38"
+                    "average_intimacy_score": "1.14",
+                    "std_intimacy_score": "0.38"
                 },
                 "drawingWidth": {
-                    "strokeCount": "92",
-                    "totalStrokeLength": "4.66",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.08",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "1",
-                    "amountFilledArea": "4.57"
+                    "stroke_count": "92",
+                    "total_stroke_length": "4.66",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.08",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "1",
+                    "amount_filled_area": "4.57"
                 }
             },
             {
@@ -4582,26 +4582,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "6",
-                    "totalWordCount": "99",
-                    "avgWordCountPerIntervention": "16.5",
-                    "stdWordCountPerIntervention": "3.89",
-                    "totalSpeechTime": "30.36",
-                    "avgSpeechTimePerIntervention": "5.06",
-                    "stdSpeechTimePerIntervention": "3.07"
+                    "intervention_count": "6",
+                    "total_word_count": "99",
+                    "average_word_count_per_intervention": "16.5",
+                    "std_word_count_per_intervention": "3.89",
+                    "total_speech_time": "30.36",
+                    "average_speech_time_per_intervention": "5.06",
+                    "std_speech_time_per_intervention": "3.07"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.29",
-                    "stdIntimacyScore": "0.49"
+                    "average_intimacy_score": "1.29",
+                    "std_intimacy_score": "0.49"
                 },
                 "drawingWidth": {
-                    "strokeCount": "62",
-                    "totalStrokeLength": "3.72",
-                    "avgStrokeLength": "0.06",
-                    "stdStrokeLength": "0.1",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "1.62"
+                    "stroke_count": "62",
+                    "total_stroke_length": "3.72",
+                    "average_stroke_length": "0.06",
+                    "std_stroke_length": "0.1",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "1.62"
                 }
             }
         ]
@@ -4733,26 +4733,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "46",
-                    "avgWordCountPerIntervention": "15.33",
-                    "stdWordCountPerIntervention": "5.86",
-                    "totalSpeechTime": "21.9",
-                    "avgSpeechTimePerIntervention": "7.3",
-                    "stdSpeechTimePerIntervention": "2.93"
+                    "intervention_count": "3",
+                    "total_word_count": "46",
+                    "average_word_count_per_intervention": "15.33",
+                    "std_word_count_per_intervention": "5.86",
+                    "total_speech_time": "21.9",
+                    "average_speech_time_per_intervention": "7.3",
+                    "std_speech_time_per_intervention": "2.93"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.2",
-                    "stdIntimacyScore": "0.45"
+                    "average_intimacy_score": "1.2",
+                    "std_intimacy_score": "0.45"
                 },
                 "drawingWidth": {
-                    "strokeCount": "77",
-                    "totalStrokeLength": "5.72",
-                    "avgStrokeLength": "0.07",
-                    "stdStrokeLength": "0.12",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "5.44"
+                    "stroke_count": "77",
+                    "total_stroke_length": "5.72",
+                    "average_stroke_length": "0.07",
+                    "std_stroke_length": "0.12",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "5.44"
                 }
             },
             {
@@ -4866,26 +4866,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "55",
-                    "avgWordCountPerIntervention": "18.33",
-                    "stdWordCountPerIntervention": "7.77",
-                    "totalSpeechTime": "15.92",
-                    "avgSpeechTimePerIntervention": "5.31",
-                    "stdSpeechTimePerIntervention": "1.12"
+                    "intervention_count": "3",
+                    "total_word_count": "55",
+                    "average_word_count_per_intervention": "18.33",
+                    "std_word_count_per_intervention": "7.77",
+                    "total_speech_time": "15.92",
+                    "average_speech_time_per_intervention": "5.31",
+                    "std_speech_time_per_intervention": "1.12"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.58"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.58"
                 },
                 "drawingWidth": {
-                    "strokeCount": "65",
-                    "totalStrokeLength": "34.59",
-                    "avgStrokeLength": "0.53",
-                    "stdStrokeLength": "2.51",
-                    "colorUsedCount": "5",
-                    "penSizeUsedCount": "4",
-                    "amountFilledArea": "36.54"
+                    "stroke_count": "65",
+                    "total_stroke_length": "34.59",
+                    "average_stroke_length": "0.53",
+                    "std_stroke_length": "2.51",
+                    "color_used_count": "5",
+                    "pen_size_used_count": "4",
+                    "amount_filled_area": "36.54"
                 }
             }
         ]
@@ -5021,26 +5021,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "7",
-                    "totalWordCount": "148",
-                    "avgWordCountPerIntervention": "21.14",
-                    "stdWordCountPerIntervention": "13.97",
-                    "totalSpeechTime": "62.71",
-                    "avgSpeechTimePerIntervention": "8.96",
-                    "stdSpeechTimePerIntervention": "6.32"
+                    "intervention_count": "7",
+                    "total_word_count": "148",
+                    "average_word_count_per_intervention": "21.14",
+                    "std_word_count_per_intervention": "13.97",
+                    "total_speech_time": "62.71",
+                    "average_speech_time_per_intervention": "8.96",
+                    "std_speech_time_per_intervention": "6.32"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.8"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.8"
                 },
                 "drawingWidth": {
-                    "strokeCount": "70",
-                    "totalStrokeLength": "15.46",
-                    "avgStrokeLength": "0.22",
-                    "stdStrokeLength": "1.17",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "16.13"
+                    "stroke_count": "70",
+                    "total_stroke_length": "15.46",
+                    "average_stroke_length": "0.22",
+                    "std_stroke_length": "1.17",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "16.13"
                 }
             },
             {
@@ -5134,26 +5134,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "5",
-                    "totalWordCount": "135",
-                    "avgWordCountPerIntervention": "27",
-                    "stdWordCountPerIntervention": "11.05",
-                    "totalSpeechTime": "60.32",
-                    "avgSpeechTimePerIntervention": "12.06",
-                    "stdSpeechTimePerIntervention": "5.34"
+                    "intervention_count": "5",
+                    "total_word_count": "135",
+                    "average_word_count_per_intervention": "27",
+                    "std_word_count_per_intervention": "11.05",
+                    "total_speech_time": "60.32",
+                    "average_speech_time_per_intervention": "12.06",
+                    "std_speech_time_per_intervention": "5.34"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.14",
-                    "stdIntimacyScore": "0.38"
+                    "average_intimacy_score": "1.14",
+                    "std_intimacy_score": "0.38"
                 },
                 "drawingWidth": {
-                    "strokeCount": "92",
-                    "totalStrokeLength": "4.66",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.08",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "1",
-                    "amountFilledArea": "4.57"
+                    "stroke_count": "92",
+                    "total_stroke_length": "4.66",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.08",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "1",
+                    "amount_filled_area": "4.57"
                 }
             },
             {
@@ -5271,26 +5271,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "6",
-                    "totalWordCount": "99",
-                    "avgWordCountPerIntervention": "16.5",
-                    "stdWordCountPerIntervention": "3.89",
-                    "totalSpeechTime": "30.36",
-                    "avgSpeechTimePerIntervention": "5.06",
-                    "stdSpeechTimePerIntervention": "3.07"
+                    "intervention_count": "6",
+                    "total_word_count": "99",
+                    "average_word_count_per_intervention": "16.5",
+                    "std_word_count_per_intervention": "3.89",
+                    "total_speech_time": "30.36",
+                    "average_speech_time_per_intervention": "5.06",
+                    "std_speech_time_per_intervention": "3.07"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.29",
-                    "stdIntimacyScore": "0.49"
+                    "average_intimacy_score": "1.29",
+                    "std_intimacy_score": "0.49"
                 },
                 "drawingWidth": {
-                    "strokeCount": "62",
-                    "totalStrokeLength": "3.72",
-                    "avgStrokeLength": "0.06",
-                    "stdStrokeLength": "0.1",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "1.62"
+                    "stroke_count": "62",
+                    "total_stroke_length": "3.72",
+                    "average_stroke_length": "0.06",
+                    "std_stroke_length": "0.1",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "1.62"
                 }
             }
         ]
@@ -5426,26 +5426,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "7",
-                    "totalWordCount": "148",
-                    "avgWordCountPerIntervention": "21.14",
-                    "stdWordCountPerIntervention": "13.97",
-                    "totalSpeechTime": "62.71",
-                    "avgSpeechTimePerIntervention": "8.96",
-                    "stdSpeechTimePerIntervention": "6.32"
+                    "intervention_count": "7",
+                    "total_word_count": "148",
+                    "average_word_count_per_intervention": "21.14",
+                    "std_word_count_per_intervention": "13.97",
+                    "total_speech_time": "62.71",
+                    "average_speech_time_per_intervention": "8.96",
+                    "std_speech_time_per_intervention": "6.32"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.8"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.8"
                 },
                 "drawingWidth": {
-                    "strokeCount": "70",
-                    "totalStrokeLength": "15.46",
-                    "avgStrokeLength": "0.22",
-                    "stdStrokeLength": "1.17",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "16.13"
+                    "stroke_count": "70",
+                    "total_stroke_length": "15.46",
+                    "average_stroke_length": "0.22",
+                    "std_stroke_length": "1.17",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "16.13"
                 }
             },
             {
@@ -5539,26 +5539,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "5",
-                    "totalWordCount": "135",
-                    "avgWordCountPerIntervention": "27",
-                    "stdWordCountPerIntervention": "11.05",
-                    "totalSpeechTime": "60.32",
-                    "avgSpeechTimePerIntervention": "12.06",
-                    "stdSpeechTimePerIntervention": "5.34"
+                    "intervention_count": "5",
+                    "total_word_count": "135",
+                    "average_word_count_per_intervention": "27",
+                    "std_word_count_per_intervention": "11.05",
+                    "total_speech_time": "60.32",
+                    "average_speech_time_per_intervention": "12.06",
+                    "std_speech_time_per_intervention": "5.34"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.14",
-                    "stdIntimacyScore": "0.38"
+                    "average_intimacy_score": "1.14",
+                    "std_intimacy_score": "0.38"
                 },
                 "drawingWidth": {
-                    "strokeCount": "92",
-                    "totalStrokeLength": "4.66",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.08",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "1",
-                    "amountFilledArea": "4.57"
+                    "stroke_count": "92",
+                    "total_stroke_length": "4.66",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.08",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "1",
+                    "amount_filled_area": "4.57"
                 }
             },
             {
@@ -5676,26 +5676,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "6",
-                    "totalWordCount": "99",
-                    "avgWordCountPerIntervention": "16.5",
-                    "stdWordCountPerIntervention": "3.89",
-                    "totalSpeechTime": "30.36",
-                    "avgSpeechTimePerIntervention": "5.06",
-                    "stdSpeechTimePerIntervention": "3.07"
+                    "intervention_count": "6",
+                    "total_word_count": "99",
+                    "average_word_count_per_intervention": "16.5",
+                    "std_word_count_per_intervention": "3.89",
+                    "total_speech_time": "30.36",
+                    "average_speech_time_per_intervention": "5.06",
+                    "std_speech_time_per_intervention": "3.07"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.29",
-                    "stdIntimacyScore": "0.49"
+                    "average_intimacy_score": "1.29",
+                    "std_intimacy_score": "0.49"
                 },
                 "drawingWidth": {
-                    "strokeCount": "62",
-                    "totalStrokeLength": "3.72",
-                    "avgStrokeLength": "0.06",
-                    "stdStrokeLength": "0.1",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "1.62"
+                    "stroke_count": "62",
+                    "total_stroke_length": "3.72",
+                    "average_stroke_length": "0.06",
+                    "std_stroke_length": "0.1",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "1.62"
                 }
             },
             {
@@ -5793,26 +5793,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "2",
-                    "totalWordCount": "23",
-                    "avgWordCountPerIntervention": "11.5",
-                    "stdWordCountPerIntervention": "3.54",
-                    "totalSpeechTime": "0.61",
-                    "avgSpeechTimePerIntervention": "0.3",
-                    "stdSpeechTimePerIntervention": "0.21"
+                    "intervention_count": "2",
+                    "total_word_count": "23",
+                    "average_word_count_per_intervention": "11.5",
+                    "std_word_count_per_intervention": "3.54",
+                    "total_speech_time": "0.61",
+                    "average_speech_time_per_intervention": "0.3",
+                    "std_speech_time_per_intervention": "0.21"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1",
-                    "stdIntimacyScore": "0.0"
+                    "average_intimacy_score": "1",
+                    "std_intimacy_score": "0.0"
                 },
                 "drawingWidth": {
-                    "strokeCount": "38",
-                    "totalStrokeLength": "14.04",
-                    "avgStrokeLength": "0.37",
-                    "stdStrokeLength": "1.16",
-                    "colorUsedCount": "4",
-                    "penSizeUsedCount": "3",
-                    "amountFilledArea": "13.5"
+                    "stroke_count": "38",
+                    "total_stroke_length": "14.04",
+                    "average_stroke_length": "0.37",
+                    "std_stroke_length": "1.16",
+                    "color_used_count": "4",
+                    "pen_size_used_count": "3",
+                    "amount_filled_area": "13.5"
                 }
             }
         ]
@@ -5948,26 +5948,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "7",
-                    "totalWordCount": "148",
-                    "avgWordCountPerIntervention": "21.14",
-                    "stdWordCountPerIntervention": "13.97",
-                    "totalSpeechTime": "62.71",
-                    "avgSpeechTimePerIntervention": "8.96",
-                    "stdSpeechTimePerIntervention": "6.32"
+                    "intervention_count": "7",
+                    "total_word_count": "148",
+                    "average_word_count_per_intervention": "21.14",
+                    "std_word_count_per_intervention": "13.97",
+                    "total_speech_time": "62.71",
+                    "average_speech_time_per_intervention": "8.96",
+                    "std_speech_time_per_intervention": "6.32"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.8"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.8"
                 },
                 "drawingWidth": {
-                    "strokeCount": "70",
-                    "totalStrokeLength": "15.46",
-                    "avgStrokeLength": "0.22",
-                    "stdStrokeLength": "1.17",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "16.13"
+                    "stroke_count": "70",
+                    "total_stroke_length": "15.46",
+                    "average_stroke_length": "0.22",
+                    "std_stroke_length": "1.17",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "16.13"
                 }
             },
             {
@@ -6061,26 +6061,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "5",
-                    "totalWordCount": "135",
-                    "avgWordCountPerIntervention": "27",
-                    "stdWordCountPerIntervention": "11.05",
-                    "totalSpeechTime": "60.32",
-                    "avgSpeechTimePerIntervention": "12.06",
-                    "stdSpeechTimePerIntervention": "5.34"
+                    "intervention_count": "5",
+                    "total_word_count": "135",
+                    "average_word_count_per_intervention": "27",
+                    "std_word_count_per_intervention": "11.05",
+                    "total_speech_time": "60.32",
+                    "average_speech_time_per_intervention": "12.06",
+                    "std_speech_time_per_intervention": "5.34"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.14",
-                    "stdIntimacyScore": "0.38"
+                    "average_intimacy_score": "1.14",
+                    "std_intimacy_score": "0.38"
                 },
                 "drawingWidth": {
-                    "strokeCount": "92",
-                    "totalStrokeLength": "4.66",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.08",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "1",
-                    "amountFilledArea": "4.57"
+                    "stroke_count": "92",
+                    "total_stroke_length": "4.66",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.08",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "1",
+                    "amount_filled_area": "4.57"
                 }
             },
             {
@@ -6198,26 +6198,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "6",
-                    "totalWordCount": "99",
-                    "avgWordCountPerIntervention": "16.5",
-                    "stdWordCountPerIntervention": "3.89",
-                    "totalSpeechTime": "30.36",
-                    "avgSpeechTimePerIntervention": "5.06",
-                    "stdSpeechTimePerIntervention": "3.07"
+                    "intervention_count": "6",
+                    "total_word_count": "99",
+                    "average_word_count_per_intervention": "16.5",
+                    "std_word_count_per_intervention": "3.89",
+                    "total_speech_time": "30.36",
+                    "average_speech_time_per_intervention": "5.06",
+                    "std_speech_time_per_intervention": "3.07"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.29",
-                    "stdIntimacyScore": "0.49"
+                    "average_intimacy_score": "1.29",
+                    "std_intimacy_score": "0.49"
                 },
                 "drawingWidth": {
-                    "strokeCount": "62",
-                    "totalStrokeLength": "3.72",
-                    "avgStrokeLength": "0.06",
-                    "stdStrokeLength": "0.1",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "1.62"
+                    "stroke_count": "62",
+                    "total_stroke_length": "3.72",
+                    "average_stroke_length": "0.06",
+                    "std_stroke_length": "0.1",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "1.62"
                 }
             },
             {
@@ -6315,26 +6315,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "2",
-                    "totalWordCount": "23",
-                    "avgWordCountPerIntervention": "11.5",
-                    "stdWordCountPerIntervention": "3.54",
-                    "totalSpeechTime": "0.61",
-                    "avgSpeechTimePerIntervention": "0.3",
-                    "stdSpeechTimePerIntervention": "0.21"
+                    "intervention_count": "2",
+                    "total_word_count": "23",
+                    "average_word_count_per_intervention": "11.5",
+                    "std_word_count_per_intervention": "3.54",
+                    "total_speech_time": "0.61",
+                    "average_speech_time_per_intervention": "0.3",
+                    "std_speech_time_per_intervention": "0.21"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1",
-                    "stdIntimacyScore": "0.0"
+                    "average_intimacy_score": "1",
+                    "std_intimacy_score": "0.0"
                 },
                 "drawingWidth": {
-                    "strokeCount": "38",
-                    "totalStrokeLength": "14.04",
-                    "avgStrokeLength": "0.37",
-                    "stdStrokeLength": "1.16",
-                    "colorUsedCount": "4",
-                    "penSizeUsedCount": "3",
-                    "amountFilledArea": "13.5"
+                    "stroke_count": "38",
+                    "total_stroke_length": "14.04",
+                    "average_stroke_length": "0.37",
+                    "std_stroke_length": "1.16",
+                    "color_used_count": "4",
+                    "pen_size_used_count": "3",
+                    "amount_filled_area": "13.5"
                 }
             }
         ]
@@ -6470,26 +6470,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "7",
-                    "totalWordCount": "148",
-                    "avgWordCountPerIntervention": "21.14",
-                    "stdWordCountPerIntervention": "13.97",
-                    "totalSpeechTime": "62.71",
-                    "avgSpeechTimePerIntervention": "8.96",
-                    "stdSpeechTimePerIntervention": "6.32"
+                    "intervention_count": "7",
+                    "total_word_count": "148",
+                    "average_word_count_per_intervention": "21.14",
+                    "std_word_count_per_intervention": "13.97",
+                    "total_speech_time": "62.71",
+                    "average_speech_time_per_intervention": "8.96",
+                    "std_speech_time_per_intervention": "6.32"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.8"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.8"
                 },
                 "drawingWidth": {
-                    "strokeCount": "70",
-                    "totalStrokeLength": "15.46",
-                    "avgStrokeLength": "0.22",
-                    "stdStrokeLength": "1.17",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "16.13"
+                    "stroke_count": "70",
+                    "total_stroke_length": "15.46",
+                    "average_stroke_length": "0.22",
+                    "std_stroke_length": "1.17",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "16.13"
                 }
             },
             {
@@ -6583,26 +6583,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "5",
-                    "totalWordCount": "135",
-                    "avgWordCountPerIntervention": "27",
-                    "stdWordCountPerIntervention": "11.05",
-                    "totalSpeechTime": "60.32",
-                    "avgSpeechTimePerIntervention": "12.06",
-                    "stdSpeechTimePerIntervention": "5.34"
+                    "intervention_count": "5",
+                    "total_word_count": "135",
+                    "average_word_count_per_intervention": "27",
+                    "std_word_count_per_intervention": "11.05",
+                    "total_speech_time": "60.32",
+                    "average_speech_time_per_intervention": "12.06",
+                    "std_speech_time_per_intervention": "5.34"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.14",
-                    "stdIntimacyScore": "0.38"
+                    "average_intimacy_score": "1.14",
+                    "std_intimacy_score": "0.38"
                 },
                 "drawingWidth": {
-                    "strokeCount": "92",
-                    "totalStrokeLength": "4.66",
-                    "avgStrokeLength": "0.05",
-                    "stdStrokeLength": "0.08",
-                    "colorUsedCount": "6",
-                    "penSizeUsedCount": "1",
-                    "amountFilledArea": "4.57"
+                    "stroke_count": "92",
+                    "total_stroke_length": "4.66",
+                    "average_stroke_length": "0.05",
+                    "std_stroke_length": "0.08",
+                    "color_used_count": "6",
+                    "pen_size_used_count": "1",
+                    "amount_filled_area": "4.57"
                 }
             },
             {
@@ -6720,26 +6720,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "6",
-                    "totalWordCount": "99",
-                    "avgWordCountPerIntervention": "16.5",
-                    "stdWordCountPerIntervention": "3.89",
-                    "totalSpeechTime": "30.36",
-                    "avgSpeechTimePerIntervention": "5.06",
-                    "stdSpeechTimePerIntervention": "3.07"
+                    "intervention_count": "6",
+                    "total_word_count": "99",
+                    "average_word_count_per_intervention": "16.5",
+                    "std_word_count_per_intervention": "3.89",
+                    "total_speech_time": "30.36",
+                    "average_speech_time_per_intervention": "5.06",
+                    "std_speech_time_per_intervention": "3.07"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.29",
-                    "stdIntimacyScore": "0.49"
+                    "average_intimacy_score": "1.29",
+                    "std_intimacy_score": "0.49"
                 },
                 "drawingWidth": {
-                    "strokeCount": "62",
-                    "totalStrokeLength": "3.72",
-                    "avgStrokeLength": "0.06",
-                    "stdStrokeLength": "0.1",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "1.62"
+                    "stroke_count": "62",
+                    "total_stroke_length": "3.72",
+                    "average_stroke_length": "0.06",
+                    "std_stroke_length": "0.1",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "1.62"
                 }
             }
         ]
@@ -6871,26 +6871,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "46",
-                    "avgWordCountPerIntervention": "15.33",
-                    "stdWordCountPerIntervention": "5.86",
-                    "totalSpeechTime": "21.9",
-                    "avgSpeechTimePerIntervention": "7.3",
-                    "stdSpeechTimePerIntervention": "2.93"
+                    "intervention_count": "3",
+                    "total_word_count": "46",
+                    "average_word_count_per_intervention": "15.33",
+                    "std_word_count_per_intervention": "5.86",
+                    "total_speech_time": "21.9",
+                    "average_speech_time_per_intervention": "7.3",
+                    "std_speech_time_per_intervention": "2.93"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.2",
-                    "stdIntimacyScore": "0.45"
+                    "average_intimacy_score": "1.2",
+                    "std_intimacy_score": "0.45"
                 },
                 "drawingWidth": {
-                    "strokeCount": "77",
-                    "totalStrokeLength": "5.72",
-                    "avgStrokeLength": "0.07",
-                    "stdStrokeLength": "0.12",
-                    "colorUsedCount": "3",
-                    "penSizeUsedCount": "2",
-                    "amountFilledArea": "5.44"
+                    "stroke_count": "77",
+                    "total_stroke_length": "5.72",
+                    "average_stroke_length": "0.07",
+                    "std_stroke_length": "0.12",
+                    "color_used_count": "3",
+                    "pen_size_used_count": "2",
+                    "amount_filled_area": "5.44"
                 }
             },
             {
@@ -7004,26 +7004,26 @@
                     }
                 ],
                 "speechWidth": {
-                    "interventionCount": "3",
-                    "totalWordCount": "55",
-                    "avgWordCountPerIntervention": "18.33",
-                    "stdWordCountPerIntervention": "7.77",
-                    "totalSpeechTime": "15.92",
-                    "avgSpeechTimePerIntervention": "5.31",
-                    "stdSpeechTimePerIntervention": "1.12"
+                    "intervention_count": "3",
+                    "total_word_count": "55",
+                    "average_word_count_per_intervention": "18.33",
+                    "std_word_count_per_intervention": "7.77",
+                    "total_speech_time": "15.92",
+                    "average_speech_time_per_intervention": "5.31",
+                    "std_speech_time_per_intervention": "1.12"
                 },
                 "speechDepth": {
-                    "avgIntimacyScore": "1.5",
-                    "stdIntimacyScore": "0.58"
+                    "average_intimacy_score": "1.5",
+                    "std_intimacy_score": "0.58"
                 },
                 "drawingWidth": {
-                    "strokeCount": "65",
-                    "totalStrokeLength": "34.59",
-                    "avgStrokeLength": "0.53",
-                    "stdStrokeLength": "2.51",
-                    "colorUsedCount": "5",
-                    "penSizeUsedCount": "4",
-                    "amountFilledArea": "36.54"
+                    "stroke_count": "65",
+                    "total_stroke_length": "34.59",
+                    "average_stroke_length": "0.53",
+                    "std_stroke_length": "2.51",
+                    "color_used_count": "5",
+                    "pen_size_used_count": "4",
+                    "amount_filled_area": "36.54"
                 }
             }
         ]
