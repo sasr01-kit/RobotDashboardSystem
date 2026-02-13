@@ -158,27 +158,3 @@ class RosbridgeConnection:
                 pass
             self.client = None
         self.isConnected = False
-
-
-if __name__ == '__main__':
-    def print_battery(msg):
-        # msg is a dict delivered by roslibpy for sensor_msgs/msg/BatteryState
-        voltage = msg.get('voltage')
-        percent = msg.get('percentage')
-        present = msg.get('present')
-        print(f'[example] battery: voltage={voltage}, percent={percent}, present={present}')
-
-    conn = RosbridgeConnection('localhost', 9090)
-    try:
-        conn.connect()
-        print('Connected to rosbridge.')
-        conn.subscribe('/battery_state', 'sensor_msgs/msg/BatteryState', print_battery)
-
-        # Keep process alive to receive messages
-        while True:
-            time.sleep(0.1)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        conn.disconnect()
-        print('Disconnected')

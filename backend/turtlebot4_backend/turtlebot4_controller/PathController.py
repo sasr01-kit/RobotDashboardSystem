@@ -51,22 +51,7 @@ class PathController:
         self._ros.subscribe("/dock_status", "irobot_create_msgs/msg/DockStatus", self._dock_status_callback)
         print("[PathController] Subscribed to /dock_status")
 
-    # -------------------------------------------------------------------------
-    # ROBOT POSE CALLBACK (DYNAMIC) → MapModel.set_robotPose
-    # -------------------------------------------------------------------------
     def _pose_callback(self, message: Dict[str, Any]) -> None:
-        """
-        message is a JSON dict from rosbridge for nav_msgs/msg/Odometry:
-        {
-          "pose": {
-            "pose": {
-              "position": { "x": ..., "y": ..., "z": ... },
-              "orientation": { "x": ..., "y": ..., "z": ..., "w": ... }
-            }
-          },
-          ...
-        }
-        """
         if not self._path_model.get_is_path_module_active():
              return
 
@@ -98,9 +83,6 @@ class PathController:
 
         print("[PathController] Robot pose updated via MapModel")
 
-    # -------------------------------------------------------------------------
-    # RULE LOG CALLBACK → PathModel.add_rule_log (or similar)
-    # -------------------------------------------------------------------------
     def _rule_callback(self, msg: Dict):
         if not self._path_model.get_is_path_module_active():
             return
@@ -176,21 +158,7 @@ class PathController:
 
         print(f"[PathController] Logged rule: {rule_str}, type={goal_type}")
 
-
-    # -------------------------------------------------------------------------
-    # GLOBAL GOAL CALLBACK → MapModel.set_globalGoal
-    # -------------------------------------------------------------------------
     def _global_goal_callback(self, message: Dict[str, Any]) -> None:
-        """
-        message is a JSON dict from rosbridge for geometry_msgs/msg/PoseStamped:
-        {
-          "pose": {
-            "position": { "x": ..., "y": ..., "z": ... },
-            "orientation": { "x": ..., "y": ..., "z": ..., "w": ... }
-          },
-          ...
-        }
-        """
         if not self._path_model.get_is_path_module_active():
             return
 
@@ -219,14 +187,6 @@ class PathController:
         print("[PathController] Global goal updated via MapModel")
 
     def _dock_status_callback(self, msg: Dict[str, Any]) -> None:
-        """
-        msg from rosbridge for irobot_create_msgs/msg/DockStatus:
-        {
-        "is_docked": bool,
-        "dock_visible": bool,
-        ...
-        }
-        """
         is_docked = bool(msg.get("is_docked", False))
 
         # reflect in PathModel
@@ -288,10 +248,6 @@ class PathController:
         print("[PathController] Published dock status: docked=False")
 
     def cancelNavigation(self) -> None:
-        """
-        Publishes zero velocity to /cmd_vel to immediately stop the robot.
-        This is a user-triggered command.
-        """
         self._ros.publish(
             "/cmd_vel",
             DirectionCommand.STOP.get_message(),
@@ -304,10 +260,6 @@ class PathController:
     def get_records(self):
         """Return the current path history as a list of PathLogEntry."""
         return self._path_model.get_path_history()
-
-    # -------------------------------------------------------------------------
-    # SHUTDOWN
-    # -------------------------------------------------------------------------
    
     def stop(self):
         """Clean up subscriptions and terminate connection."""
