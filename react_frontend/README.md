@@ -15,7 +15,7 @@ React-based frontend for the Robot Dashboard System, providing an intuitive inte
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (20.19+ or higher)
 - npm or pnpm
 - Running backend API (see `backend/README.md` for setup and startup order)
 

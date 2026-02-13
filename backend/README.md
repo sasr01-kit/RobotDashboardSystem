@@ -15,6 +15,7 @@ The backend provides:
 
 - **Python 3.8+**
 - **FastAPI** and **Uvicorn**
+- **roslibpy**
 - **ROS 2 Humble** (for TurtleBot4 integration)
 - **rosbridge_server** (WebSocket bridge between ROS and the backend)
 
@@ -25,8 +26,7 @@ backend/
 ├── main.py              # FastAPI application entry point
 ├── requirements.txt     # Python dependencies
 ├── pixelbot_backend/    # Pixelbot data and session handling
-├── turtlebot4_backend/  # TurtleBot4 ROS integration
-└── demo/                # ROS 2 demo / map-only launch utilities
+└── turtlebot4_backend/  # TurtleBot4 ROS integration
 ```
 
 For details specific to TurtleBot4, also see:
@@ -37,7 +37,7 @@ For details specific to TurtleBot4, also see:
 - **Python** 3.8 or newer
 - **pip** for dependency management
 - **ROS 2 Humble** with TurtleBot4 packages (on the ROS machine)
-- **rosbridge_server** installed and available in the ROS 2 environment
+- **rosbridge_server** installed and available in the ROS 2 environment (use `sudo apt install ros-humble-rosbridge-suite`)
 
 > Note: ROS 2 and rosbridge commands are typically executed on the robot or a ROS-enabled machine (e.g., Ubuntu). The FastAPI backend can run on the same machine or a different one, as long as it can reach the rosbridge server over the network.
 
@@ -68,7 +68,7 @@ Notes:
 - If you already have a local copy of `RobotDashboardSystem`, move or copy that folder into `~/ros2_ws/src/` instead of cloning from GitHub.
 - The `rosdep install` step attempts to install any system package dependencies required by ROS packages in the workspace.
 - These commands are intended for a Linux/Ubuntu ROS environment; Windows users should follow ROS 2 on Windows instructions and adapt workspace commands accordingly.
-- After a successful build, demo launch files under `backend/demo/` and any ROS packages in the workspace will be available to `ros2 launch` and `ros2 run`.
+- After a successful build, any ROS packages in the workspace will be available to `ros2 launch` and `ros2 run`.
 
 ## Installation
 
@@ -94,6 +94,7 @@ The following sequence mirrors `setup_commands.txt`. The order is important and 
 On the ROS-enabled machine (e.g., Ubuntu terminal):
 
 ```bash
+# Reminder: This step requires the ros-humble-rosbridge-suite package
 source /opt/ros/humble/setup.bash
 ros2 launch rosbridge_server rosbridge_websocket_launch.xml
 ```
@@ -116,9 +117,13 @@ ros2 run turtlebot4_node turtlebot4_node
 
 #### Map-Only Demo
 
-From the ROS machine, using the demo map launch (clone the following repo into the src folder (/src/) in the ROS workspace: https://github.com/sasr01-kit/map_only_launch.git)
+From the ROS machine, using the demo map launch (clone the following repo into the src folder (/src/) in the ROS workspace: https://github.com/sasr01-kit/map_only_launch.git). This also requires to re-build our ROS2 workspace:
 
 ```bash
+cd ~/ros2_ws
+colcon build --symlink-install
+source install/setup.bash
+# Now ros2 knows the package map_only_launch and can launch it
 ros2 launch map_only_launch map_server_launch.py
 ```
 
@@ -137,6 +142,7 @@ cd backend
 pip install -r requirements.txt
 
 # Start FastAPI (default: port 8080)
+source /opt/ros/humble/setup.bash
 uvicorn main:app --reload --host 0.0.0.0 --port 8080
 ```
 
