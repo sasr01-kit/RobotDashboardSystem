@@ -54,7 +54,7 @@ export default function StackedBarChart({ data, orientation = "horizontal", xAxi
 
     const options = {
         chart: {
-            type: 'bar',
+            type: 'bar',    // Horizontal bar chart
             height: 200,
             backgroundColor: 'transparent'
         },
@@ -62,7 +62,7 @@ export default function StackedBarChart({ data, orientation = "horizontal", xAxi
             text: null
         },
         xAxis: {
-            categories: categories,
+            categories: categories, // X-axis categories
             title: {
                 text: xAxisLabel || null
             },
@@ -94,7 +94,7 @@ export default function StackedBarChart({ data, orientation = "horizontal", xAxi
         },
         plotOptions: {
             bar: {
-                stacking: 'normal',
+                stacking: 'normal', // Stack bars on top of each other
                 borderRadius: 4
             }
         },

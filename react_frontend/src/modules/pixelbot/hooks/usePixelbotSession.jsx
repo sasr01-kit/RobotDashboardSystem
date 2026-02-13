@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export function usePixelbotSession(childId, sessionId) {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(null); // SessionDTO
   const [child, setChild] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -25,9 +25,9 @@ export function usePixelbotSession(childId, sessionId) {
         );
         if (!res.ok) throw new Error("Session not found");
 
-        const data = await res.json();
+        const sessionListEntryDTO = await res.json();
 
-        setSession(data);
+        setSession(sessionListEntryDTO);
         setChild(null);
       } catch (err) {
         setError("Failed to load data.");

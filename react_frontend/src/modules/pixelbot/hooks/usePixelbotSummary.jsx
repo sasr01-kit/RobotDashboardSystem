@@ -15,7 +15,8 @@ export function usePixelbotSummary() {
             setError(null);
             const response = await fetch(`http://localhost:8080/pixelbot/summary`); // FOR REAL IMPLEMENTATION CHANGE url TO API ENDPOINT
             const data = await response.json();
-            const summary = {
+            console.log("FULL RESPONSE FROM SERVER:", data);
+            const summaryStatsDTO = {
                 totalSessions: data.totalSessionsThisMonth,
                 avgSessionsPerChild: data.sessionsPerChild,
                 sessionsPerDay: data.sessionsPerDay,
@@ -24,7 +25,7 @@ export function usePixelbotSummary() {
                 colorScale: data.colorScale || getDefaultColorScale()
             }
 
-            setSummaryStats(summary);
+            setSummaryStats(summaryStatsDTO);
             setIsLoading(false);
             setError(null);
         }
@@ -135,47 +136,5 @@ export function usePixelbotSummary() {
             };
         });
     };
-
-    // FOR FALLBACK, CAN BE REMOVED ONCE BACKEND PROVIDES COLOR SCALE CONFIG
-    const getDefaultColorScale = () => ({
-        dataClasses: [
-            {
-                from: 0,
-                to: 0,
-                color: '#ebedf0',
-                name: 'No usage',
-                label: '0'
-            },
-            {
-                from: 1,
-                to: 2,
-                color: '#c6e48b',
-                name: 'Low',
-                label: '1–2'
-            },
-            {
-                from: 3,
-                to: 5,
-                color: '#7bc96f',
-                name: 'Medium',
-                label: '3–5'
-            },
-            {
-                from: 6,
-                to: 8,
-                color: '#239a3b',
-                name: 'High',
-                label: '6–8'
-            },
-            {
-                from: 9,
-                to: 999,
-                color: '#196127',
-                name: 'Intense',
-                label: '9+'
-            }
-        ]
-    });
-
     return { summaryStats, isLoading, error };
 }

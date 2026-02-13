@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export function usePixelbotRecap(childId) {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(null); // RecapDTO
   const [child, setChild] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +35,8 @@ export function usePixelbotRecap(childId) {
           }
         }
 
-        const recapData = {
+        const recapDTO = {
+          name : data.name,
           // Session frequency data for line chart
           sessionFrequencyData: (data.engagement?.sessionFrequencyTrend || []).map(item => ({
             label: item.month,
@@ -60,8 +61,8 @@ export function usePixelbotRecap(childId) {
             value: item.intimacy
           })),
           
-          // Drawings - Does not come from the backend
-          drawings: [],
+          // Drawings 
+          drawings: (data.drawing?.drawings || []).map(d => `data:image/png;base64,${d.base64}`),
           
           // Metric values
           metricValues: {
@@ -83,7 +84,7 @@ export function usePixelbotRecap(childId) {
           }
         };
 
-        setChild(recapData);
+        setChild(recapDTO);
         setSession(null);
       } catch (err) {
         setError("Failed to load data.");

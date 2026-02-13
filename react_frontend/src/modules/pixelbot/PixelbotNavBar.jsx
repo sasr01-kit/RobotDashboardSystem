@@ -10,7 +10,7 @@ export default function PixelbotNavBar() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const { children, isLoading } = usePixelbotChildren(); // Custom hook to fetch children and their sessions
+    const { children, isLoading } = usePixelbotChildren(); // Custom hook to fetch children and their sessions - ChildDTO
 
     const [isChildDropDownOpen, toggleChildMenu] = useState(false);
     const [selectedChildId, setSelectedChildId] = useState(null);
@@ -91,23 +91,24 @@ export default function PixelbotNavBar() {
                     <img src={chevron} alt="chevron" className={`chevron-icon ${isChildDropDownOpen ? 'open' : ''}`} />
                 </button>
 
-                {(isLoading || !children) ? (
-                    <div>Loading...</div>
-                ) : (
-                    isChildDropDownOpen && (
+                    {isChildDropDownOpen && (
                         <div className="dropdown-container">
                             <div className="dropdown-panel">
-                                <div className="dropdown-items-grid">
-                                    {children.map((child, index) => (
-                                        <div
-                                            key={index}
-                                            className={`dropdown-item ${selectedChildId === child.childId ? 'selected' : ''}`}
-                                            onClick={() => handleChildSelect(child.childId)}
-                                        >
-                                            {child.name}
-                                        </div>
-                                    ))}
-                                </div>
+                                {(isLoading || !children) ? (
+                                    <div>Loading...</div>
+                                ) : (
+                                    <div className="dropdown-items-grid">
+                                        {children.map((child, index) => (
+                                            <div
+                                                key={index}
+                                                className={`dropdown-item ${selectedChildId === child.childId ? 'selected' : ''}`}
+                                                onClick={() => handleChildSelect(child.childId)}
+                                            >
+                                                {child.name}
+                                            </div>
+                                        ))}
+                                 </div>
+                                )}
                             </div>
 
                             {selectedChildId && (
@@ -133,10 +134,10 @@ export default function PixelbotNavBar() {
                             )}
                         </div>
                     )
-                )}
+                }
             </div>
         </div>
-    );
+       ) 
 }
 
 
