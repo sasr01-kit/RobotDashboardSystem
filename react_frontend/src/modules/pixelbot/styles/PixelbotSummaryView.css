@@ -98,8 +98,33 @@
     opacity: 0.7;
 }
 
-.heatmap-footer {
-    margin-top: 1rem;
-    font-size: 0.75rem;
+.heatmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #666;
+}
+
+.legend-label {
+    font-size: 11px;
     color: #999;
 }
+
+.box {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.box-0 { background: #ebedf0; }
+.box-1 { background: #c6e48b; }
+.box-2 { background: #7bc96f; }
+.box-3 { background: #239a3b; }
+.box-4 { background: #196127; }

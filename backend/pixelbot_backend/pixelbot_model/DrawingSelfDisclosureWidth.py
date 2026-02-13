@@ -12,13 +12,13 @@ class DrawingSelfDisclosureWidth:
 
     def to_dict(self):
         return {
-            "strokeCount": self.stroke_count,
-            "totalStrokeLength": self.total_stroke_length,
-            "avgStrokeLength": self.average_stroke_length,
-            "stdStrokeLength": self.std_stroke_length,
-            "colorUsedCount": self.color_used_count,
-            "penSizeUsedCount": self.pen_size_used_count,
-            "amountFilledArea": self.amount_filled_area
+            "stroke_count": self.stroke_count,
+            "total_stroke_length": self.total_stroke_length,
+            "average_stroke_length": self.average_stroke_length,
+            "std_stroke_length": self.std_stroke_length,
+            "color_used_count": self.color_used_count,
+            "pen_size_used_count": self.pen_size_used_count,
+            "amount_filled_area": self.amount_filled_area
         }
     
     def getStrokeCount(self):
@@ -45,11 +45,11 @@ class DrawingSelfDisclosureWidth:
     @staticmethod
     def from_dict(data):
         return DrawingSelfDisclosureWidth(
-            stroke_count=data["strokeCount"],
-            total_stroke_length=data["totalStrokeLength"],
-            average_stroke_length=data["avgStrokeLength"],
-            std_stroke_length=data["stdStrokeLength"],
-            color_used_count=data["colorUsedCount"],
-            pen_size_used_count=data["penSizeUsedCount"],
-            amount_filled_area=data["amountFilledArea"]
+            stroke_count=data["stroke_count"],
+            total_stroke_length=data["total_stroke_length"],
+            average_stroke_length=data["average_stroke_length"],
+            std_stroke_length=data["std_stroke_length"],
+            color_used_count=data["color_used_count"],
+            pen_size_used_count=data["pen_size_used_count"],
+            amount_filled_area=data["amount_filled_area"]
         )

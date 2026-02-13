@@ -15,15 +15,17 @@ export function usePixelbotSummary() {
             setError(null);
             const response = await fetch(`http://localhost:8080/pixelbot/summary`); // FOR REAL IMPLEMENTATION CHANGE url TO API ENDPOINT
             const data = await response.json();
-            const summary = {
+            console.log("FULL RESPONSE FROM SERVER:", data);
+            const summaryStatsDTO = {
                 totalSessions: data.totalSessionsThisMonth,
                 avgSessionsPerChild: data.sessionsPerChild,
                 sessionsPerDay: data.sessionsPerDay,
                 sessionsGrowthRate: data.sessionsGrowthRate,
-                dailySessionCounts: transformBackendDataToHeatmap(data.dailySessionCounts) 
+                dailySessionCounts: transformBackendDataToHeatmap(data.dailySessionCounts),
+                colorScale: data.colorScale || getDefaultColorScale()
             }
 
-            setSummaryStats(summary);
+            setSummaryStats(summaryStatsDTO);
             setIsLoading(false);
             setError(null);
         }
@@ -36,46 +38,103 @@ export function usePixelbotSummary() {
         }
     };
 
-    // FOR REAL IMPLEMENTATION THIS FUNCTION WILL TRANSFORM BACKEND DATA(Map<string, integer>) TO HEATMAP DATA
+    /*
+    // Backend API Response Example
+    {
+    "totalSessionsThisMonth": 245,
+    "sessionsPerChild": 12.5,
+    "sessionsPerDay": 8.2,
+    "sessionsGrowthRate": 15.3,
+    "dailySessionCounts": {
+        "01-02-2026": 8,
+        "02-02-2026": 12,
+        "03-02-2026": 5,
+        // ... more dates
+    },
+    "colorScale": {
+        "dataClasses": [
+        {
+            "from": 0,
+            "to": 0,
+            "color": "#ebedf0",
+            "name": "No usage",
+            "label": "0"
+        },
+        {
+            "from": 1,
+            "to": 2,
+            "color": "#c6e48b",
+            "name": "Low",
+            "label": "1–2"
+        },
+        {
+            "from": 3,
+            "to": 5,
+            "color": "#7bc96f",
+            "name": "Medium",
+            "label": "3–5"
+        },
+        {
+            "from": 6,
+            "to": 8,
+            "color": "#239a3b",
+            "name": "High",
+            "label": "6–8"
+        },
+        {
+            "from": 9,
+            "to": 999,
+            "color": "#196127",
+            "name": "Intense",
+            "label": "9+"
+        }
+        ]
+    }
+    }
+
+    // NOTES:
+    // - colorScale is optional. If not provided, default colors will be used
+    // - Each dataClass needs: from, to, color, name, and label fields
+    // - The 'label' field is what appears in the legend below the heatmap
+    // - The 'name' field is used for tooltips and first/last legend labels 
+    */
+
+    // THIS CAN BE MOVED TO BACKEND BUT FOR NOW BACKEND DOES NOT PROVIDE DATA IN HEATMAP FORMAT SO TRANSFORMING HERE
+    // HIGHCHARTS HEATMAP EXPECTS DATA IN THE FORM OF {x: weekNumber, y: dayOfWeek, value: count, date: DateObject}
     const transformBackendDataToHeatmap = (backendData) => {
-        const heatmapData = [];
-
-        const sortedDates = Object.keys(backendData).sort();
-        if (sortedDates.length === 0) return [];
-
-        const firstDate = new Date(sortedDates[0]);
-        const lastDate = new Date(sortedDates[sortedDates.length - 1]);
-
-        const firstMonday = new Date(firstDate);
-        const dayOfWeek = firstMonday.getDay();
-        const daysUntilMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-        firstMonday.setDate(firstMonday.getDate() + daysUntilMonday);
-
-        sortedDates.forEach(dateStr => {
-            
-            // dd-mm-yyyy → yyyy-mm-dd
+        const parseDate = (dateStr) => {
             const [d, m, y] = dateStr.split("-");
-            const currentDate = new Date(`${y}-${m}-${d}`);
+            return new Date(Date.UTC(y, m - 1, d));
+        };
 
-            const value = backendData[dateStr];
+        const entries = Object.entries(backendData)
+            .map(([key, value]) => ({
+                date: parseDate(key),
+                value
+            }))
+            .sort((a, b) => a.date - b.date);
 
-            const diffTime = currentDate - firstMonday;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        if (entries.length === 0) return [];
+
+        const firstDate = entries[0].date;
+        const firstMonday = new Date(firstDate);
+        const day = firstMonday.getUTCDay();
+        firstMonday.setUTCDate(firstMonday.getUTCDate() + (day === 0 ? -6 : 1 - day));
+
+        return entries.map(({ date, value }) => {
+            const diffDays = Math.floor((date - firstMonday) / 86400000);
             const weekNumber = Math.floor(diffDays / 7);
 
-            let dayIndex = currentDate.getDay();
+            let dayIndex = date.getUTCDay();
             dayIndex = dayIndex === 0 ? 6 : dayIndex - 1;
 
-            heatmapData.push({
+            return {
                 x: weekNumber,
                 y: dayIndex,
-                value: value,
-                date: currentDate
-            });
+                value,
+                date
+            };
         });
-
-        return heatmapData;
     };
-
     return { summaryStats, isLoading, error };
 }

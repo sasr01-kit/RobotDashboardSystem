@@ -11,7 +11,7 @@ const greenShades = [
     '#E8F5E9', '#A5D6A7', '#66BB6A', '#43A047', '#388E3C'
 ];
 
-export default function LineChart({ data, lineColor = '#20A090', showGrid = true, xAxisLabel, yAxisLabel }) {
+export default function LineChart({ data, lineColor = '#20A090', showGrid = true, xAxisLabel, yAxisLabel, averageLine }) {
     const hasData = data && ((data instanceof Map && data.size > 0) || (Array.isArray(data) && data.length > 0));
 
     if (!hasData) {
@@ -83,7 +83,22 @@ export default function LineChart({ data, lineColor = '#20A090', showGrid = true
                     fontSize: '11px',
                     color: '#666'
                 }
-            }
+            },
+            plotLines: averageLine ? [{
+                color: '#FF4444',
+                width: 2,
+                value: averageLine,
+                dashStyle: 'Dash',
+                label: {
+                    text: `Average: ${averageLine.toFixed(1)}`,
+                    align: 'right',
+                    style: {
+                        color: '#FF4444',
+                        fontSize: '10px'
+                    }
+                },
+                zIndex: 5
+            }] : []
         },
         legend: {
             enabled: series.length > 1,

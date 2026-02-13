@@ -1,8 +1,9 @@
+import math
 from pixelbot_backend.pixelbot_utils.Utils import Utils   
 import datetime
 from collections import defaultdict
 from collections import Counter
-import os
+
 
 class GlobalMetricsAPI:
 
@@ -19,11 +20,12 @@ class GlobalMetricsAPI:
         for child in self.children:
             sessions.extend(child.sessions)
 
-        sessions_per_day = Utils.calculate_avg_sessions_per_day(sessions, month, year, now)
+        sessions_per_day = Utils.calculate_avg_sessions_per_day(sessions, year, now)
         sessions_growth_rate = Utils.calculate_sessions_growth_rate(sessions, month, year)
         sessions_this_month = Utils.count_sessions_this_month(sessions, month, year)
         sessions_per_child_so_far = Utils.calculate_avg_sessions_per_child_so_far(self.children, sessions, now)
         daily_session_counts = self.getDailySessionHeatmap(sessions, year)
+        heatmap_ranges = self.get_heatmap_ranges(daily_session_counts)
 
         return {
             # total sessions for this month
@@ -35,17 +37,29 @@ class GlobalMetricsAPI:
             # growth rate of sessions compared to last month
             "sessionsGrowthRate": sessions_growth_rate,
             # list of daily session counts for heatmap
-            "dailySessionCounts": daily_session_counts
+            "dailySessionCounts": daily_session_counts,
+            # heatmap ranges depending on the busiest day 
+            "colorScale": { "dataClasses": heatmap_ranges },
         }
     
+    def get_child_obj(self, child_id):
+        for child in self.children:
+            if child.child_id == child_id:
+                return child
+    
     def send_child_recap(self, child_id):
-        child = self.child_api.get_child_obj(child_id)
+        child = self.get_child_obj(child_id)
+        
+        if child is None:
+            raise ValueError(f"Child with id {child_id} not found")
+
         sessions = child.sessions
 
         now = datetime.datetime.now()
         year = now.year
 
         recap = {
+            "name": child.name,
             "engagement": {
                 # Can be visualised as a box
                 "totalSessions": len(sessions),
@@ -70,6 +84,7 @@ class GlobalMetricsAPI:
                 "intimacyTrend": Utils.get_intimacy_trend(sessions, year),
             },
             "drawing": {
+                "drawings": child.get_drawings(),
                 # all these three metrics can be put under the drawing section in the same box
                 "averageStrokeCount": Utils.get_avg_stroke_count(sessions),
                 "averageNumberColors": Utils.get_avg_colors_used(sessions),
@@ -122,52 +137,31 @@ class GlobalMetricsAPI:
 
         return counter.most_common(top_n)
     
-    def get_recap_data(self, child_id):
-        now = datetime.datetime.now()
-        month = now.month
-        year = now.year
+    def get_heatmap_ranges(self, dailySessionCounts):
+        max_per_day = max(dailySessionCounts.values())
+        bucket = max_per_day / 4
 
-        child = self.child_api.get_child_obj(child_id)
-        sessions = child.sessions
-
-        recap = child.get_recap()
-
-        # current month
-        sessions_this_month = Utils.count_sessions_this_month(sessions, month, year)
-        currentWordCount = self.word_count_for_month(sessions, month, year)
-        currentIntimacy = self.avg_intimacy_for_month(sessions, month, year)
-
-        # previous month
-        prev_month = month - 1 if month > 1 else 12
-        prev_year = year if month > 1 else year - 1
-
-        prev_sessions = self.count_sessions_for_month(sessions, prev_month, prev_year)
-        prev_word_count = self.word_count_for_month(sessions, prev_month, prev_year)
-        prev_intimacy = self.avg_intimacy_for_month(sessions, prev_month, prev_year)
         
-        recap["sessionGrowthRate"] = Utils.calculate_difference(sessions_this_month, prev_sessions)
-        recap["wordCountGrowthRate"] = Utils.calculate_difference(currentWordCount, prev_word_count)
-        recap["intimacyScoreGrowthRate"] = Utils.calculate_growth(currentIntimacy, prev_intimacy)
+        if max_per_day <= 1:
+            return [
+                {"from": 0, "to": 0},
+                {"from": 1, "to": 1},
+            ]
+
+        b1 = max(1, math.floor(bucket))
+        b2 = max(b1 + 1, math.floor(bucket * 2))
+        b3 = max(b2 + 1, math.floor(bucket * 3))
+        b4 = max(b3 + 1, max_per_day)
+
+
         
-        return recap
-    
-    def count_sessions_for_month(self, sessions, month, year):
-        count_session = 0
-        for session in sessions:
-            if session.session_date.month == month and session.session_date.year == year:
-                count_session += 1
+        return [
+                {"from": 0, "to": 0},
+                {"from": 1, "to": b1},
+                {"from": b1 + 1, "to": b2},
+                {"from": b2 + 1, "to": b3},
+                {"from": b3 + 1, "to": b4}
+        ]
 
-        return count_session
     
-    def word_count_for_month(self, sessions, month, year):
-        return sum(session.getTotalWordCount() for session in sessions
-               if session.session_date.month == month and session.session_date.year == year)
-    
-    def avg_intimacy_for_month(self, sessions, month, year):
-        scores = []
-        for session in sessions:
-            if session.session_date.month == month and session.session_date.year == year:
-                scores.append(session.getAvgIntimacyScore())
-
-        return (float)(sum(scores))
 
