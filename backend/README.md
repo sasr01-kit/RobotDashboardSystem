@@ -105,6 +105,13 @@ This starts the rosbridge WebSocket server that the backend uses to communicate 
 
 These steps are optional, but should be executed **before** starting the backend/frontend if you want to verify the robot-side setup.
 
+#### Setting up local test data (Pixelbot)
+
+In the backend, change the file paths in `main.py` (line 84) and optionally other test files. If the path is not correct or data is faulty, the Pixelbot will currently block the 8080 Websocket and prevent the connection (will be fixed later in quality assurance).
+```bash
+child_api = ChildAPI("/yourFilePath", repository)
+```
+
 #### Teleoperation / Navigation (TurtleBot4)
 
 ```bash
@@ -115,7 +122,7 @@ ros2 launch turtlebot4_navigation slam.launch.py
 ros2 run turtlebot4_node turtlebot4_node
 ```
 
-#### Map-Only Demo
+#### Map-Only Demo (Turtlebot4)
 
 From the ROS machine, using the demo map launch (clone the following repo into the src folder (/src/) in the ROS workspace: https://github.com/sasr01-kit/map_only_launch.git). This also requires to re-build our ROS2 workspace:
 
