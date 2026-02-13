@@ -5,6 +5,7 @@ import { useWebSocketContext } from '../websocketUtil/WebsocketContext';
 export const FeedbackButton = ({ className, label, goalId }) => {
   const { send } = useWebSocketContext();
 
+  // Handle button click by sending feedback to backend
   const handleClick = () => {
     send({
       type: "GOAL_FEEDBACK",
