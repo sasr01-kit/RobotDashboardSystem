@@ -1,3 +1,4 @@
+import math
 from pixelbot_backend.pixelbot_utils.Utils import Utils   
 import datetime
 from collections import defaultdict
@@ -24,6 +25,7 @@ class GlobalMetricsAPI:
         sessions_this_month = Utils.count_sessions_this_month(sessions, month, year)
         sessions_per_child_so_far = Utils.calculate_avg_sessions_per_child_so_far(self.children, sessions, now)
         daily_session_counts = self.getDailySessionHeatmap(sessions, year)
+        heatmap_ranges = self.get_heatmap_ranges(daily_session_counts)
 
         return {
             # total sessions for this month
@@ -35,7 +37,9 @@ class GlobalMetricsAPI:
             # growth rate of sessions compared to last month
             "sessionsGrowthRate": sessions_growth_rate,
             # list of daily session counts for heatmap
-            "dailySessionCounts": daily_session_counts
+            "dailySessionCounts": daily_session_counts,
+            # heatmap ranges depending on the busiest day 
+            "colorScale": { "dataClasses": heatmap_ranges },
         }
     
     def get_child_obj(self, child_id):
@@ -132,5 +136,32 @@ class GlobalMetricsAPI:
                     counter[name] += 1
 
         return counter.most_common(top_n)
+    
+    def get_heatmap_ranges(self, dailySessionCounts):
+        max_per_day = max(dailySessionCounts.values())
+        bucket = max_per_day / 4
+
+        
+        if max_per_day <= 1:
+            return [
+                {"from": 0, "to": 0},
+                {"from": 1, "to": 1},
+            ]
+
+        b1 = max(1, math.floor(bucket))
+        b2 = max(b1 + 1, math.floor(bucket * 2))
+        b3 = max(b2 + 1, math.floor(bucket * 3))
+        b4 = max(b3 + 1, max_per_day)
+
+
+        
+        return [
+                {"from": 0, "to": 0},
+                {"from": 1, "to": b1},
+                {"from": b1 + 1, "to": b2},
+                {"from": b2 + 1, "to": b3},
+                {"from": b3 + 1, "to": b4}
+        ]
+
     
 
