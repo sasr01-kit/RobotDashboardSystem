@@ -59,16 +59,14 @@ export default function PixelbotSummaryView() {
                 </div>
             </div>
 
-            <CalendarHeatMap id="summary-heatmap" data={summaryStats.dailySessionCounts} onPrint={() => handlePrint('summary-heatmap')} />
+            <CalendarHeatMap id="summary-heatmap" data={summaryStats.dailySessionCounts} colorScale={summaryStats.colorScale} onPrint={() => handlePrint('summary-heatmap')} />
         </div>
     );
 
-    
     function formatGrowthRate(rate) {
         if (rate > 0) return `+${rate}`;
         return `${rate}`;
     }
-
 }
 
 

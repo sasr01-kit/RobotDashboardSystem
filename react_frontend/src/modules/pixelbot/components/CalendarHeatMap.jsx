@@ -2,7 +2,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useState, useEffect, useMemo } from 'react';
 
-export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint }) {
+export default function CalendarHeatMap({ id, data, colorScale, onPrint }) {
     const [heatmapLoaded, setHeatmapLoaded] = useState(false);
 
     useEffect(() => {
@@ -14,6 +14,37 @@ export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint 
             setHeatmapLoaded(true);
         });
     }, []);
+
+    
+// Helper: Add color/name/label based on percentage buckets
+    function enrichDataClasses(rawClasses) {
+        if (!rawClasses) return [];
+        return rawClasses.map((cls, index) => {
+            const { from, to } = cls;
+
+            
+        // derive name by bucket position
+        const names = ["No usage", "Low", "Medium", "High", "Intense"];
+        const safeName = names[index] || `Level ${index+1}`;
+
+        // derive label directly from from–to
+        const label = from === to ? `${from}` : `${from}–${to}`;
+
+        // derive color dynamically
+        const colors = ["#ebedf0","#c6e48b","#7bc96f","#239a3b","#196127"];
+        const color = colors[index] || "#196127";
+
+        return { ...cls, color, safeName, label };
+             });
+        }
+
+
+    
+    const enrichedColorScale = useMemo(() => ({
+        dataClasses: enrichDataClasses(colorScale?.dataClasses  || [])
+    }), [colorScale]);
+
+
 
     // Configuration for the heatmap chart
     const options = useMemo(() => ({
@@ -85,17 +116,11 @@ export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint 
             },
             gridLineWidth: 0
         },
+        
         colorAxis: {
-            min: 0,
-            max: 10,
-            stops: [
-                [0, '#ebedf0'],
-                [0.2, '#c6e48b'],
-                [0.4, '#7bc96f'],
-                [0.6, '#239a3b'],
-                [1, '#196127']
-            ]
+            dataClasses: enrichedColorScale.dataClasses,
         },
+
         legend: {
             enabled: false
         },
@@ -134,7 +159,7 @@ export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint 
         credits: {
             enabled: false
         }
-    }), [data]);
+    }), [data, enrichedColorScale]);
 
     if (!heatmapLoaded) {
         return <div>Loading heatmap...</div>;
@@ -154,6 +179,18 @@ export default function CalendarHeatMap({ id, data, startDate, endDate, onPrint 
                 highcharts={Highcharts}
                 options={options}
             />
+            <div className="heatmap-footer">
+                <div className="heatmap-legend">
+                    {enrichedColorScale.dataClasses.map((dataClasses, index) => (
+                        <div key={index} className="legend-item" title={dataClasses.safeName}>
+                             <span className="legend-label">{dataClasses.safeName}</span>
+                             <span className={`box box-${index}`} style={{ backgroundColor: dataClasses.color}}></span>
+                            <span>{dataClasses.label}</span>
+                        </div>
+                    ))}
+                
+                </div>
+            </div>
         </div>
     );
 }

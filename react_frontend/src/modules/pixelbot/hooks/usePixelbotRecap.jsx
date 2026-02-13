@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function usePixelbotRecap(childId, sessionId = null) {
+export function usePixelbotRecap(childId) {
   const [session, setSession] = useState(null);
   const [child, setChild] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,71 +19,73 @@ export function usePixelbotRecap(childId, sessionId = null) {
       setError(null);
 
       try {
-        if (!sessionId) {
-          // Fetch child recap
-          const res = await fetch(`http://localhost:8080/pixelbot/children/${childId}`);
-          if (!res.ok) throw new Error("Child not found");
+        const res = await fetch(`http://localhost:8080/pixelbot/children/${childId}/recap`);
+        if (!res.ok) throw new Error("Child recap not found");
 
-          const data = await res.json();
+        const data = await res.json();
 
-          const totalSessions = data.sessions.length;
-          const recapData = {
-            childName: data.name,
-            wordCountData: data.sessions.map(s => ({
-              label: s.sessionId,
-              value: parseInt(s.speechWidth?.totalWordCount) || 0
-            })),
-            speechTimeData: data.sessions.map(s => ({
-              label: s.sessionId,
-              value: (s.speechWidth?.totalSpeechTime || 0) / 60,
-            })),
-            colorsUsedData: [], // Backend does not provide colors used data currently
-            drawings: data.sessions.map(s => s.drawing).filter(Boolean),
-            metricValues: {
-              totalSessions: totalSessions,
-              totalSessionsTrend: "0", // Placeholder can be changed with real trend data logic
-              totalWordCount: data.sessions.reduce(
-                (sum, s) => sum + (parseInt(s.speechWidth?.totalWordCount) || 0),
-                0
-              ),
-              totalWordCountTrend: "0", // Placeholder can be changed with real trend data logic
-              averageIntimacyScore: totalSessions === 0
-                ? 0
-                : data.sessions.reduce(
-                    (sum, s) => sum + (parseFloat(s.speechDepth?.avgIntimacyScore) || 0),
-                    0
-                  ) / totalSessions,
-              averageIntimacyScoreTrend: "0" // Placeholder can be changed with real trend data logic
-            }
-          };
-
-          setChild(recapData);
-          setSession(null);
-        } else {
-          // Fetch specific session
-          const res = await fetch(
-            `http://localhost:8080/pixelbot/children/${childId}/sessions/${sessionId}`
-          );
-          if (!res.ok) throw new Error("Session not found");
-
-          const data = await res.json();
-
-          const normalizedSession = {
-            // 
-            ...data,
-            drawing: data.drawing
-              ? [
-                  {
-                    ...data.drawing,
-                    imagePath: data.drawing.imagePath
-                  }
-                ]
-              : []
-          };
-
-          setSession(normalizedSession);
-          setChild(null);
+        // Calculate trend percentage from sessionFrequencyTrend (last 2 months)
+        const sessionTrend = data.engagement?.sessionFrequencyTrend || [];
+        let sessionTrendPercentage = 0;
+        if (sessionTrend.length >= 2) {
+          const lastMonth = sessionTrend[sessionTrend.length - 1].count;
+          const previousMonth = sessionTrend[sessionTrend.length - 2].count;
+          if (previousMonth > 0) {
+            sessionTrendPercentage = ((lastMonth - previousMonth) / previousMonth) * 100;
+          }
         }
+
+        const recapDTO = {
+          name : data.name,
+          // Session frequency data for line chart
+          sessionFrequencyData: (data.engagement?.sessionFrequencyTrend || []).map(item => ({
+            label: item.month,
+            value: item.count
+          })),
+          
+          // Word count data for bar chart
+          wordCountData: (data.expressiveness?.wordCountGrowthRate || []).map(item => ({
+            label: item.sessionId,
+            value: item.wordCount
+          })),
+          
+          // Speech time data for line chart
+          speechTimeData: (data.expressiveness?.speechTimeGrowthRate || []).map(item => ({
+            label: item.sessionId,
+            value: item.speechTime / 60 // Convert to minutes
+          })),
+          
+          // Intimacy score data for line chart
+          intimacyScoreData: (data.opennes?.intimacyTrend || []).map(item => ({
+            label: item.sessionId,
+            value: item.intimacy
+          })),
+          
+          // Drawings 
+          drawings: (data.drawing?.drawings || []).map(d => `data:image/png;base64,${d.base64}`),
+          
+          // Metric values
+          metricValues: {
+            totalSessions: data.engagement?.totalSessions || 0,
+            sessionTrendPercentage: sessionTrendPercentage.toFixed(1),
+            
+            totalWordCount: data.expressiveness?.totalWordCount || 0,
+            averageWordCount: data.expressiveness?.averageWordCount || 0,
+            
+            averageIntimacyScore: data.opennes?.averageIntimacyScore || 0,
+            
+            averageStrokeCount: data.drawing?.averageStrokeCount || 0,
+            averageNumberColors: data.drawing?.averageNumberColors || 0,
+            averageFilledArea: data.drawing?.averageFilledArea || 0,
+            
+            averageNumberObjects: data.story?.averageNumberObjects || 0,
+            mostCommonObjects: data.story?.mostCommonObjects || [],
+            objectDiversity: data.story?.objectDiversity || 0
+          }
+        };
+
+        setChild(recapDTO);
+        setSession(null);
       } catch (err) {
         setError("Failed to load data.");
         console.error(err);
@@ -93,7 +95,7 @@ export function usePixelbotRecap(childId, sessionId = null) {
     };
 
     fetchData();
-  }, [childId, sessionId]);
+  }, [childId]);
 
   return { child, session, isLoading, error };
 }

@@ -28,6 +28,13 @@ class Child:
 
     def get_sessions(self):
         return self.sessions
+    
+    def get_drawings(self):
+        drawings = []
+        for session in self.sessions:
+            if session.drawing:
+             drawings.append(session.drawing)
+        return drawings
 
     def get_session_by_id(self, session_id: str):
         for session in self.sessions:

@@ -1,3 +1,4 @@
+import base64
 from pixelbot_backend.pixelbot_model.DrawingData import DrawingData
 from pixelbot_backend.pixelbot_model.Session import Session
 from pixelbot_backend.pixelbot_model.Child import Child
@@ -40,13 +41,13 @@ class DataLoader:
             if os.path.isdir(session_path):
                 session = self.load_session(session_id, session_path)
                 sessions.append(session)
-                child_id = self.short_hash(child_name, length=64)
+                child_id = self.short_hash(child_name, length=8)
         return Child(child_id=child_id, name=child_name, sessions=sessions)
 
     def load_session(self, session_id, session_path):
         drawing_path = self.find_drawing_file(session_path)
         if os.path.exists(drawing_path):
-            drawing = DrawingData(drawing_path)
+            drawing = self.getDrawingDataObject(drawing_path)
             session_date_string = self.extract_day_from_filename(drawing_path)
             session_date_obj = datetime.datetime.strptime(session_date_string, "%d-%m-%Y")
         else: 
@@ -139,8 +140,13 @@ class DataLoader:
                 return next(reader, {})
         return {}
     
-    def short_hash(self, name, length=64):
+    def short_hash(self, name, length=8):
         full_hash = hashlib.sha256(name.encode()).hexdigest()
         return full_hash[:length]
+    
+    def getDrawingDataObject(self, drawing_path):
+        with open(drawing_path, "rb") as file:
+            b64_format = base64.b64encode(file.read()).decode("utf-8")
+        return DrawingData(b64_format)
     
     

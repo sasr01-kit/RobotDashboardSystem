@@ -9,7 +9,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: fit-content;
 }
 
 .image-carousel {
@@ -17,14 +16,18 @@
     flex-direction: column;
     gap: 0.75rem;
     flex: 1;
+    width: 100%;
+    height: 100%;
 }
 
 .carousel-container {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 0;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0 0.5rem;
 }
 
 .carousel-image-wrapper {
@@ -32,46 +35,58 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
     min-height: 250px;
+    max-height: 400px;
     background-color: #f8f9fa;
-    border-radius: 0;
+    border-radius: 8px;
     overflow: hidden;
-    padding: 0;
+    padding: 1rem;
 }
 
 .carousel-image {
     max-width: 100%;
     max-height: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain;
+    display: block;
 }
 
 .carousel-btn {
     color: black;
     background-color: transparent;
     border: none;
-    border-radius: 50%;
     cursor: pointer;
-    font-size: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
+    transition: opacity 0.2s;
+    padding: 0.5rem;
+    flex-shrink: 0;
 }
 
-.carousel-btn.chevron {
+.carousel-btn:hover {
+    opacity: 0.7;
+}
+
+.chevron-icon {
     width: 24px;
     height: 24px;
-    padding: 0;
-    z-index: 10;
+}
+
+.carousel-chevron.prev {
+    transform: rotate(90deg);
+}
+
+.carousel-chevron.next {
+    transform: rotate(-90deg);
 }
 
 .carousel-indicators {
     display: flex;
     justify-content: center;
     gap: 0.35rem;
-    margin-bottom: 0.5rem;
+    padding: 0.5rem 0;
 }
 
 .carousel-indicator {

@@ -21,7 +21,6 @@ class Session:
     def to_dict(self):
         return {
             "sessionId": self.session_id,
-            "sessionDate": self.session_date,
             "sessionDate": self.session_date.strftime("%d-%m-%Y"),
             "drawing": self.drawing.to_dict(),
             "storySummary": self.story_summary,
@@ -37,7 +36,7 @@ class Session:
         return float(self.speech_depth.getAvgIntimacyScore())
     
     def getInterventionCount(self):
-        return int(self.speech_width.getInterventionCount())
+        return self.speech_width.intervention_count
     
     def getTotalSpeechTime(self):
         return float(self.speech_width.getTotalSpeechTime())
@@ -77,14 +76,30 @@ class Session:
    
     @staticmethod
     def from_dict(data):
+        session_id = data["sessionId"]
+        session_date_str = data["sessionDate"]
+
+        # Convert string date → datetime
+        session_date = None
+        if session_date_str:
+            session_date = datetime.datetime.strptime(session_date_str, "%d-%m-%Y")
+
+        drawing = DrawingData.from_dict(data["drawing"])
+        story_summary = data["storySummary"]
+        transcript = data["transcript"]
+
+        speech_width = SpeechSelfDisclosureWidth(**data["speechWidth"])
+        speech_depth = SpeechSelfDisclosureDepth(**data["speechDepth"])
+        drawing_width = DrawingSelfDisclosureWidth(**data["drawingWidth"])
+
         return Session(
-            session_id=data["sessionId"],
-            session_date=data["sessionDate"],
-            drawing=DrawingData.from_dict(data["drawing"]),
-            story_summary=data["storySummary"],
-            transcript=data["transcript"],
-            speech_width=SpeechSelfDisclosureWidth.from_dict(data["speechWidth"]),
-            speech_depth=SpeechSelfDisclosureDepth.from_dict(data["speechDepth"]),
-            drawing_width=DrawingSelfDisclosureWidth.from_dict(data["drawingWidth"])
+            session_id,
+            session_date,
+            drawing,
+            story_summary,
+            transcript,
+            speech_width,
+            speech_depth,
+            drawing_width,
         )
-   
+    

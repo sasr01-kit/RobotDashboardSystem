@@ -13,13 +13,13 @@ class SpeechSelfDisclosureWidth:
 
     def to_dict(self):
         return {
-            "interventionCount": self.intervention_count,
-            "totalWordCount": self.total_word_count,
-            "avgWordCountPerIntervention": self.average_word_count_per_intervention,
-            "stdWordCountPerIntervention": self.std_word_count_per_intervention,
-            "totalSpeechTime": self.total_speech_time,
-            "avgSpeechTimePerIntervention": self.average_speech_time_per_intervention,
-            "stdSpeechTimePerIntervention": self.std_speech_time_per_intervention
+            "intervention_count": self.intervention_count,
+            "total_word_count": self.total_word_count,
+            "average_word_count_per_intervention": self.average_word_count_per_intervention,
+            "std_word_count_per_intervention": self.std_word_count_per_intervention,
+            "total_speech_time": self.total_speech_time,
+            "average_speech_time_per_intervention": self.average_speech_time_per_intervention,
+            "std_speech_time_per_intervention": self.std_speech_time_per_intervention,
         }
     
     def getInterventionCount(self):
@@ -46,11 +46,11 @@ class SpeechSelfDisclosureWidth:
     @staticmethod
     def from_dict(data):
         return SpeechSelfDisclosureWidth(
-            intervention_count=data["interventionCount"],
-            total_word_count=data["totalWordCount"],
-            average_word_count_per_intervention=data["avgWordCountPerIntervention"],
-            std_word_count_per_intervention=data["stdWordCountPerIntervention"],
-            total_speech_time=data["totalSpeechTime"],
-            average_speech_time_per_intervention=data["avgSpeechTimePerIntervention"],
-            std_speech_time_per_intervention=data["stdSpeechTimePerIntervention"]
+            intervention_count=data["intervention_count"],
+            total_word_count=data["total_word_count"],
+            average_word_count_per_intervention=data["average_word_count_per_intervention"],
+            std_word_count_per_intervention=data["std_word_count_per_intervention"],
+            total_speech_time=data["total_speech_time"],
+            average_speech_time_per_intervention=data["average_speech_time_per_intervention"],
+            std_speech_time_per_intervention=data["std_speech_time_per_intervention"]
         )
