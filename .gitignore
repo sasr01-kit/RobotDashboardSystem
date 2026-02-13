@@ -4,6 +4,8 @@
 build/
 install/
 log/
+tree.txt
+warehouse_map.png
 
 # ================================
 # Python artifacts

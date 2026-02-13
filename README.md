@@ -19,7 +19,7 @@ Currently supports:
 
 ### Prerequisites
 
-- **Frontend**: Node.js (v16 or higher) and npm/pnpm
+- **Frontend**: Node.js (20.19 or higher) and npm/pnpm
 - **Backend**: Python 3.8+
 - **TurtleBot4**: ROS 2 environment with rosbridge server
 
@@ -28,6 +28,8 @@ See the component-specific READMEs for detailed setup:
 - Backend: `backend/README.md`
 
 ### Installation
+
+We recommend to install the whole system on Ubuntu-22.04. 
 
 1. Clone the repository. Please note that before cloning, the ros2 workspace must be set up correctly, and this repository must be placed inside the `src` folder of the ros2 workspace. Detailed information for this can be found in the backend README.
    ```bash
