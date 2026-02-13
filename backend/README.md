@@ -75,7 +75,7 @@ Notes:
 From the repository root:
 
 ```bash
-cd /ros2_ws/src/RobotDashboardSystem/backend
+cd ros2_ws/src/RobotDashboardSystem/backend
 
 # (Optional for Windows) Create and activate a virtual Linux environment in the terminal
 python -m venv venv # Install venv once
@@ -136,10 +136,7 @@ After the ROS and optional pre-setup tests are running, start the backend and fr
 From the repository root, in a terminal that has access to Python and the backend dependencies:
 
 ```bash
-cd backend
-
-# First-time setup (if not yet done)
-pip install -r requirements.txt
+cd ros2_ws/src/RobotDashboardSystem/backend
 
 # Start FastAPI (default: port 8080)
 source /opt/ros/humble/setup.bash
@@ -151,7 +148,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8080
 From another terminal:
 
 ```bash
-cd react_frontend
+cd ros2_ws/src/RobotDashboardSystem/react_frontend
 
 # First-time setup
 npm ci          # or: pnpm install
