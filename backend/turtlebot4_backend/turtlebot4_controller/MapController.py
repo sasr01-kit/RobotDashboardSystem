@@ -17,6 +17,20 @@ class MapController:
         rosbridge_host: str = "localhost",
         rosbridge_port: int = 9090
     ) -> None:
+        """
+        Initialize rosbridge subscriptions and prepare async dispatch.
+
+        This wires ROS topic callbacks to the async map model so the UI can
+        receive static map data once and live pose updates continuously.
+
+        Params:
+            map_model: Map model that publishes updates to observers.
+            rosbridge_host: Hostname for the rosbridge websocket server.
+            rosbridge_port: Port for the rosbridge websocket server.
+
+        Return:
+            None.
+        """
 
         self._map_model = map_model
         self._map_received = False
@@ -44,10 +58,20 @@ class MapController:
         self._ros.subscribe("/odom", "nav_msgs/msg/Odometry", self._robot_pose_callback)
         print("[MapController] Subscribed to /odom")
 
-    # Sends map PNG data immediately if already available on startup, otherwise waits for the /map callback to trigger it.
-    # This ensures the frontend can display the map as soon as possible.
+
     def _send_initial_map_png(self):
-        """If the map PNG is already available, send MAP_DATA immediately."""
+        """
+        Send MAP_DATA once if a cached PNG is already available.
+
+        This avoids waiting for /map messages during startup so the frontend can
+        render a map as soon as possible when prior data exists.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
         if self._map_model._mapDataPNG:
             print("[MapController] Sending initial MAP_DATA on startup")
 
@@ -64,8 +88,19 @@ class MapController:
 
             self._loop.call_soon_threadsafe(lambda: asyncio.create_task(send_initial()))
 
-    # Map callback only sends MAP_DATA once since the map is static. 
     def _map_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Handle the static /map message and publish MAP_DATA once.
+
+        The map is static, so we process it only the first time to reduce
+        bandwidth and avoid redundant frontend work.
+
+        Params:
+            message: Rosbridge JSON payload for nav_msgs/msg/OccupancyGrid.
+
+        Return:
+            None.
+        """
         if self._map_received:
             return
 
@@ -96,8 +131,19 @@ class MapController:
         self._map_received = True
         print("[MapController] MAP_DATA sent")
 
-    # Humans callback sends POSE_DATA continuously whenever new human poses are received.
     def _humans_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Handle /humans updates and publish POSE_DATA for detected humans.
+
+        Human positions are dynamic, so each update is forwarded to keep the UI
+        in sync with the latest tracked poses.
+
+        Params:
+            message: Rosbridge JSON payload for geometry_msgs/msg/PoseArray.
+
+        Return:
+            None.
+        """
         poses = message.get("poses", [])
         humans: List[Human] = []
 
@@ -121,8 +167,19 @@ class MapController:
 
         print(f"[MapController] POSE_DATA: {len(humans)} humans updated")
 
-    # Robot pose callback updates the robot's position and orientation dynamically.
     def _robot_pose_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Handle /odom updates and publish the robot pose.
+
+        The robot pose changes continuously, so each update is pushed to the UI
+        to keep navigation and visualization accurate.
+
+        Params:
+            message: Rosbridge JSON payload for nav_msgs/msg/Odometry.
+
+        Return:
+            None.
+        """
         pose = message.get("pose", {}).get("pose", {})
         if not pose:
             return
@@ -151,6 +208,18 @@ class MapController:
         print(f"[MapController] POSE_DATA: robot pose updated")
 
     def shutdown(self) -> None:
+        """
+        Close rosbridge connections and release resources.
+
+        This ensures sockets are closed cleanly and the controller stops
+        receiving callbacks when the application exits.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
         try:
             self._ros.terminate()
         except Exception:

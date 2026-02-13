@@ -12,6 +12,7 @@ from turtlebot4_backend.turtlebot4_model.DirectionCommand import DirectionComman
 class PathController:
     """
     Subscribes to path-related topics via RosbridgeConnection.
+    Bridges ROS messages to async model updates for the UI.
     """
 
     def __init__(
@@ -21,14 +22,30 @@ class PathController:
         rosbridge_host: str = "localhost",
         rosbridge_port: int = 9090
     ) -> None:
-        self._path_model = path_model
-        self._map_model = map_model
+        """
+        Set up ROS subscriptions and async dispatch to models.
 
-        # Event loop for scheduling async model updates
+        This connects to rosbridge and wires incoming topic data to the
+        path/map models so the frontend can stay up to date.
+
+        Params:
+            path_model: Path model that stores logs and path state.
+            map_model: Map model used to publish goals and poses.
+            rosbridge_host: Hostname for the rosbridge websocket server.
+            rosbridge_port: Port for the rosbridge websocket server.
+
+        Return:
+            None.
+        """
+        self._path_model = path_model 
+        self._map_model = map_model  
+
+        # Event loop used to safely schedule async model updates.
         self._loop = asyncio.get_event_loop()
-        self._connected = False
+        self._connected = False  # Tracks rosbridge connection state.
+        self._subscribed_topics = []  # Track subscriptions for clean shutdowns.
 
-        # Connect to rosbridge
+        # Rosbridge websocket connection for topic IO.
         self._ros = RosbridgeConnection(rosbridge_host, rosbridge_port)
         self._ros.connect()
         self._connected = True
@@ -40,6 +57,9 @@ class PathController:
         print("[PathController] Subscribed to /odom")
 
         # /rule_output: rule logs 
+        # Note: naming convention of the topic name may vary. The client must confirm the 
+        # name of the topic adverised by their specific turtlebot, and replace with the correct name.
+        # /rule_output acts as a placeholder in order to work with the publishers created in our mock data. 
         self._ros.subscribe("/rule_output", "std_msgs/msg/String", self._rule_callback)
         print("[PathController] Subscribed to /rule_output")
 
@@ -52,6 +72,18 @@ class PathController:
         print("[PathController] Subscribed to /dock_status")
 
     def _pose_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Update the robot pose in the map model.
+
+        This keeps the UI aligned with the robot's live position while the
+        path module is active.
+
+        Params:
+            message: Rosbridge JSON payload for nav_msgs/msg/Odometry.
+
+        Return:
+            None.
+        """
         if not self._path_model.get_is_path_module_active():
              return
 
@@ -76,24 +108,36 @@ class PathController:
             }
         }
 
-        # Schedule async update on MapModel
+        # Schedule async update on MapModel.
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self._map_model.set_robotPose(robot_pose))
         )
 
         print("[PathController] Robot pose updated via MapModel")
 
-    def _rule_callback(self, msg: Dict):
+    def _rule_callback(self, msg: Dict) -> None:
+        """
+        Process rule output messages and update goals and logs.
+
+        Rule outputs provide planning intent, so we translate them into
+        intermediate goals, global goals, and a log entry for review.
+
+        Params:
+            msg: Rosbridge JSON payload for std_msgs/msg/String.
+
+        Return:
+            None.
+        """
         if not self._path_model.get_is_path_module_active():
             return
 
         raw = msg.get("data")
 
-        # if input is already a dict (e.g. from mock/test), use it directly
+        # If input is already a dict (e.g. from mock/test), use it directly.
         if isinstance(raw, dict):
             data = raw
 
-        # if input is a JSON string, parse it
+        # If input is a JSON string, parse it.
         elif isinstance(raw, str):
             try:
                 data = json.loads(raw)
@@ -110,7 +154,7 @@ class PathController:
         position = data.get("position", {})
         rule_str = data.get("rule", "")
 
-        # 1. Intermediate waypoint
+        # 1. Intermediate waypoint.
         if goal_type == "intermediate":
             waypoint = {
                 "position": {
@@ -127,7 +171,7 @@ class PathController:
                 lambda: asyncio.create_task(self._map_model.set_intermediateWaypoints(updated))
             )
 
-        # 2. Global goal
+        # 2. Global goal.
         if goal_type == "global":
             goal = {
                 "position": {
@@ -142,7 +186,7 @@ class PathController:
                 lambda: asyncio.create_task(self._map_model.set_globalGoal(goal))
             )
 
-        # 3. Log rule entry
+        # 3. Log rule entry.
         entry = PathLogEntry(
             label="Goal Entry",
             id=f"goal_{len(self._path_model.get_path_history()) + 1}",
@@ -159,6 +203,25 @@ class PathController:
         print(f"[PathController] Logged rule: {rule_str}, type={goal_type}")
 
     def _global_goal_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Update the global goal marker from /gary/goal_pose.
+
+        Note: the exact name of the topic must be changed based on the precise name of the topic 
+        used by the client. The '/gary/goal_pose' is meant to act as a placeholder in order for 
+        these subscribers to work with the mock data. The notation of '/gary/goal_pose' was used 
+        to make the users aware of how the topic naming could potentially look. Therefore it is 
+        meant to strictly act as an example, since the topic name will vary based on the 
+        naming conventions for each turtlebot4, and the topics that they advertise. 
+
+        This method keeps the UI goal marker aligned with the planner's active target
+        while the path module is active.
+
+        Params:
+            message: Rosbridge JSON payload for geometry_msgs/msg/PoseStamped.
+
+        Return:
+            None.
+        """
         if not self._path_model.get_is_path_module_active():
             return
 
@@ -179,7 +242,7 @@ class PathController:
             })
         }
 
-        # Schedule async update on MapModel
+        # Schedule async update on MapModel.
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self._map_model.set_globalGoal(goal))
         )
@@ -187,9 +250,21 @@ class PathController:
         print("[PathController] Global goal updated via MapModel")
 
     def _dock_status_callback(self, msg: Dict[str, Any]) -> None:
+        """
+        Track docking status reported by the robot.
+
+        This mirrors the robot's docking state into the path model so the UI
+        can show current status.
+
+        Params:
+            msg: Rosbridge JSON payload for irobot_create_msgs/msg/DockStatus.
+
+        Return:
+            None.
+        """
         is_docked = bool(msg.get("is_docked", False))
 
-        # reflect in PathModel
+        # Reflect in PathModel.
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self._path_model.set_is_docked(is_docked))
         )
@@ -199,14 +274,22 @@ class PathController:
 
     def dock(self) -> None:
         """
-        Publishes a docking status to the /dock_status topic.
-        This is a user-triggered command.
+        Publish a simulated docked status.
+
+        This user-triggered command updates /dock_status to reflect a docked
+        state, which is useful for UI testing or manual control.
+
+        Params:
+            None.
+
+        Return:
+            None.
         """
         if not self._connected:
             print("[PathController] Not connected to rosbridge. Call connect() first.")
             return
         
-        # Create status message indicating docked
+        # Create status message indicating docked.
         dock_status_msg = {
             "is_docked": True,
             "dock_visible": True,
@@ -224,14 +307,22 @@ class PathController:
 
     def undock(self) -> None:
         """
-        Publishes an undocking status to the /dock_status topic.
-        This is a user-triggered command.
+        Publish a simulated undocked status.
+
+        This user-triggered command updates /dock_status to reflect an undocked
+        state, which is useful for UI testing or manual control.
+
+        Params:
+            None.
+
+        Return:
+            None.
         """
         if not self._connected:
             print("[PathController] Not connected to rosbridge. Call connect() first.")
             return
         
-        # Create status message indicating undocked
+        # Create status message indicating undocked.
         dock_status_msg = {
             "is_docked": False,
             "dock_visible": False,
@@ -248,6 +339,18 @@ class PathController:
         print("[PathController] Published dock status: docked=False")
 
     def cancelNavigation(self) -> None:
+        """
+        Send a stop command to halt robot motion.
+
+        This provides an immediate safety stop by publishing a zero-velocity
+        command to the robot.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
         self._ros.publish(
             "/cmd_vel",
             DirectionCommand.STOP.get_message(),
@@ -258,11 +361,31 @@ class PathController:
         print("[PathController] Published STOP command to /cmd_vel")
 
     def get_records(self):
-        """Return the current path history as a list of PathLogEntry."""
+        """
+        Fetch the current path history.
+
+        This provides the UI with the accumulated log entries for review.
+
+        Params:
+            None.
+
+        Return:
+            List of PathLogEntry items stored in the path model.
+        """
         return self._path_model.get_path_history()
    
     def stop(self):
-        """Clean up subscriptions and terminate connection."""
+        """
+        Stop subscriptions and close the rosbridge connection.
+
+        This releases resources and prevents further callbacks during shutdown.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
         self._connected = False
 
         # Unsubscribe all topics

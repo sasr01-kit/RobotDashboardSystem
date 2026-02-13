@@ -19,6 +19,21 @@ class StatusController:
         ros_port: int = 9090,
         loop: asyncio.AbstractEventLoop | None = None
     ):
+        """
+        Initialize status tracking and start subscriptions.
+
+        This sets up rosbridge access, keeps shared state, and begins listening
+        for status updates so the UI can react immediately.
+
+        Params:
+            robot_state: Shared state model updated by incoming status messages.
+            ros_host: Hostname for the rosbridge websocket server.
+            ros_port: Port for the rosbridge websocket server.
+            loop: Optional asyncio loop for scheduling async notifications.
+
+        Return:
+            None.
+        """
         self.robot_state = robot_state
         self._ros = RosbridgeConnection(host=ros_host, port=ros_port)
 
@@ -28,7 +43,18 @@ class StatusController:
         self.subscribeToStatus()
 
     def subscribeToStatus(self) -> None:
-        """Connect to rosbridge and subscribe to status topics."""
+        """
+        Connect to rosbridge and subscribe to status topics.
+
+        This runs connection/subscription in a background thread so the caller
+        is not blocked during startup.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
 
         def _connect_and_subscribe():
             try:
@@ -44,10 +70,9 @@ class StatusController:
                 return
 
             async def _mark_on_and_notify():
-                # Notify listeners immediately that the robot is on as the connection is established, 
-                # as it means the robot is powered on and rosbridge is running. 
-                # The other status fields will be updated asynchronously as their respective messages are received.
-                await self.robot_state.set_is_on(True) 
+                # Connection implies robot and rosbridge are online.
+                # Other fields update as their messages arrive.
+                await self.robot_state.set_is_on(True)
                 await self._notify_listeners()
 
             self._loop.call_soon_threadsafe(
@@ -71,27 +96,84 @@ class StatusController:
     # These callbacks are invoked by the (synchronous) ROS client in its own thread.
     # We therefore schedule the async updater on the asyncio loop in a thread-safe way.
     def _battery_cb(self, msg: dict) -> None:
+        """
+        Bridge battery messages into the async updater.
+
+        The ROS client calls this synchronously, so we schedule the async
+        handler on the event loop.
+
+        Params:
+            msg: Decoded ROS message dict for battery state.
+
+        Return:
+            None.
+        """
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self.updateBattery(msg))
         )
 
     def _wifi_cb(self, msg: dict) -> None:
+        """
+        Bridge wifi messages into the async updater.
+
+        This schedules the async handler so it runs on the event loop.
+
+        Params:
+            msg: Decoded ROS message dict for wifi state.
+
+        Return:
+            None.
+        """
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self.updateWifi(msg))
         )
 
     def _pi_cb(self, msg: dict) -> None:
+        """
+        Bridge Raspberry Pi messages into the async updater.
+
+        This schedules the async handler so it runs on the event loop.
+
+        Params:
+            msg: Decoded ROS message dict for Pi connection state.
+
+        Return:
+            None.
+        """
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self.updatePiConnection(msg))
         )
 
     def _comms_cb(self, msg: dict) -> None:
+        """
+        Bridge comms messages into the async updater.
+
+        This schedules the async handler so it runs on the event loop.
+
+        Params:
+            msg: Decoded ROS message dict for communications state.
+
+        Return:
+            None.
+        """
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self.updateCommsConnection(msg))
         )
 
     # Async updaters that modify RobotState and notify listeners upon proper value changes 
     async def updateBattery(self, msg: dict) -> None:
+        """
+        Update the battery percentage in RobotState.
+
+        This normalizes input to 0-100 and notifies listeners when a valid
+        value is received.
+
+        Params:
+            msg: Decoded ROS message dict for battery state.
+
+        Return:
+            None.
+        """
         batteryPercentage = None
         if isinstance(msg, dict) and 'percentage' in msg and msg['percentage'] is not None:
             try:
@@ -108,18 +190,54 @@ class StatusController:
             await self._notify_listeners()
 
     async def updateWifi(self, msg: dict) -> None:
+        """
+        Update wifi connectivity state in RobotState.
+
+        This extracts a boolean and notifies listeners when a valid value is
+        received.
+
+        Params:
+            msg: Decoded ROS message dict for wifi state.
+
+        Return:
+            None.
+        """
         val = self._extract_bool_from_msg(msg)
         if val is not None:
             await self.robot_state.set_is_wifi_connected(val)
             await self._notify_listeners()
 
     async def updatePiConnection(self, msg: dict) -> None:
+        """
+        Update Raspberry Pi connectivity state in RobotState.
+
+        This extracts a boolean and notifies listeners when a valid value is
+        received.
+
+        Params:
+            msg: Decoded ROS message dict for Pi connection state.
+
+        Return:
+            None.
+        """
         val = self._extract_bool_from_msg(msg)
         if val is not None:
             await self.robot_state.set_is_raspberry_pi_connected(val)
             await self._notify_listeners()
 
     async def updateCommsConnection(self, msg: dict) -> None:
+        """
+        Update communications connectivity state in RobotState.
+
+        This extracts a boolean and notifies listeners when a valid value is
+        received.
+
+        Params:
+            msg: Decoded ROS message dict for communications state.
+
+        Return:
+            None.
+        """
         val = self._extract_bool_from_msg(msg)
         if val is not None:
             await self.robot_state.set_is_comms_connected(val)
@@ -127,6 +245,18 @@ class StatusController:
 
     # helper to pull boolean out of std_msgs/Bool-like or dict {'data': True}
     def _extract_bool_from_msg(self, msg: dict) -> bool | None:
+        """
+        Extract a boolean value from common ROS message shapes.
+
+        This handles bools directly and dicts that wrap the value under keys
+        like 'data' or 'value'.
+
+        Params:
+            msg: Decoded ROS message dict or primitive value.
+
+        Return:
+            True/False when a value is present, otherwise None.
+        """
         if msg is None:
             return None
         if isinstance(msg, bool):
@@ -140,6 +270,18 @@ class StatusController:
 
     # Listener API for WebSocket handlers: attach an async callback(msg_dict)
     def attach_listener(self, cb: Callable[[Dict], Awaitable[None]]) -> Callable[[], None]:
+        """
+        Register a websocket listener for status updates.
+
+        This lets UI handlers receive RobotState changes as they happen and
+        returns a function to detach the listener later.
+
+        Params:
+            cb: Async callback that accepts a status dict.
+
+        Return:
+            A function that removes the callback when called.
+        """
         self._listeners.append(cb)
 
         def detach():
@@ -151,6 +293,18 @@ class StatusController:
         return detach
 
     async def _notify_listeners(self) -> None:
+        """
+        Notify all registered listeners with the latest RobotState.
+
+        This pushes state updates to each listener and ignores per-listener
+        errors to avoid blocking others.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
         for listener in list(self._listeners):
             try:
                 await listener(self.robot_state.toJSON())
@@ -158,6 +312,17 @@ class StatusController:
                 pass
 
     def stop(self) -> None:
+        """
+        Terminate the rosbridge connection.
+
+        This stops incoming status messages and releases websocket resources.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
         try:
             self._ros.terminate()
         except Exception:
