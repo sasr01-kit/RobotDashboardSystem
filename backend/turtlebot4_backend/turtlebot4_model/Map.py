@@ -2,16 +2,30 @@ import os
 import base64
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import List, Optional, Dict, Any
+from typing import Dict, Any
 from turtlebot4_backend.turtlebot4_model.Subject import Subject
 from turtlebot4_backend.turtlebot4_model.MapData import MapData
 from geometry_msgs.msg import PoseStamped
 
 class Map(Subject):
-    # Save directory for generated map PNGs. Ensure this directory exists and is writable.
+    """Manage map data, pose updates, and observer notifications."""
+
+    # Save directory for generated map PNGs.
     SAVE_DIR = os.path.expanduser("~/ros2_ws/src/RobotDashboardSystem")
 
     def __init__(self, mapData=None, robotPose=None, globalGoal=None, intermediateWaypoints=None):
+        """Initialize the map model and optional state.
+
+        Params:
+            self: Map instance.
+            mapData: Initial map data model.
+            robotPose: Initial robot pose.
+            globalGoal: Initial global goal pose.
+            intermediateWaypoints: Initial list of waypoint poses.
+
+        Returns:
+            None.
+        """
         super().__init__()
         self._mapData = mapData if mapData else MapData()
         self._mapDataPNG = None
@@ -22,8 +36,17 @@ class Map(Subject):
         if mapData:
             self._convert_mapdata_to_png()
 
-    # PNG conversion 
     def _convert_mapdata_to_png(self) -> None:
+        """Convert map data into a PNG and store it as base64.
+        Base64 is a text-safe encoding for binary data, so the PNG can be
+        included in JSON payloads without raw bytes.
+
+        Params:
+            self: Map instance.
+
+        Returns:
+            None.
+        """
         mapData = self._mapData
         width = int(mapData.get_width() / mapData.get_resolution())
         height = int(mapData.get_height() / mapData.get_resolution())
@@ -49,8 +72,16 @@ class Map(Subject):
         with open(png_path, "rb") as f:
             self._mapDataPNG = base64.b64encode(f.read()).decode("utf-8")
 
-    # STATIC MAP UPDATE
     async def set_mapData(self, value: MapData) -> None:
+        """Update map data, regenerate PNG, and notify observers.
+
+        Params:
+            self: Map instance.
+            value: New map data.
+
+        Returns:
+            None.
+        """
         self._mapData = value
         self._convert_mapdata_to_png()
 
@@ -66,23 +97,67 @@ class Map(Subject):
 
     # DYNAMIC POSE UPDATE
     async def set_robotPose(self, value: PoseStamped) -> None:
+        """Update the robot pose and notify observers.
+
+        Params:
+            self: Map instance.
+            value: New robot pose.
+
+        Returns:
+            None.
+        """
         self._robotPose = value
         await self._send_pose_update()
 
     async def set_globalGoal(self, value: PoseStamped) -> None:
+        """Update the global goal and notify observers.
+
+        Params:
+            self: Map instance.
+            value: New global goal pose.
+
+        Returns:
+            None.
+        """
         self._globalGoal = value
         await self._send_pose_update()
 
     async def set_intermediateWaypoints(self, value) -> None:
+        """Update intermediate waypoints and notify observers.
+
+        Params:
+            self: Map instance.
+            value: New list of waypoint poses.
+
+        Returns:
+            None.
+        """
         self._intermediateWaypoints = value
         await self._send_pose_update()
 
     async def set_detectedHumans(self, humans) -> None:
+        """Update detected humans and notify observers.
+
+        Params:
+            self: Map instance.
+            humans: Collection of detected human objects.
+
+        Returns:
+            None.
+        """
         self._detectedHumans = humans
         await self._send_pose_update()
 
     # Helper to send POSE_DATA
     async def _send_pose_update(self):
+        """Send the latest pose-related data to observers.
+
+        Params:
+            self: Map instance.
+
+        Returns:
+            None.
+        """
         await self.notify_observers({
             "type": "POSE_DATA",
             "robotPose": self._pose_to_dict(self._robotPose),
@@ -92,6 +167,15 @@ class Map(Subject):
         })
 
     def _pose_to_dict(self, pose):
+        """Convert a pose to a JSON-compatible dict.
+
+        Params:
+            self: Map instance.
+            pose: Pose mapping or PoseStamped instance.
+
+        Returns:
+            Dict[str, Any] | None: Converted pose data, or None if not set.
+        """
         if pose is None:
             return None
 
