@@ -29,7 +29,7 @@ See the component-specific READMEs for detailed setup:
 
 ### Installation
 
-1. Clone the repository. Please note that before cloning, the ros2 workspace must be set up correctly, and this repository must be placed inside the `src` folder of the ros2 workspace. Detailed information for this can be found in the backend README:
+1. Clone the repository. Please note that before cloning, the ros2 workspace must be set up correctly, and this repository must be placed inside the `src` folder of the ros2 workspace. Detailed information for this can be found in the backend README.
    ```bash
    git clone https://github.com/sasr01-kit/RobotDashboardSystem.git
    cd RobotDashboardSystem
