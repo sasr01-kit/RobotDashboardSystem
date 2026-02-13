@@ -1,6 +1,5 @@
 from typing import Dict, Any
 
-
 class Human:
     def __init__(
         self,

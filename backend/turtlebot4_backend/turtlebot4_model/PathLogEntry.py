@@ -1,7 +1,5 @@
-# PathLogEntry.py
 from datetime import datetime
 from typing import Optional
-
 
 class PathLogEntry:
     def __init__(
@@ -10,7 +8,6 @@ class PathLogEntry:
         id: str = "",
         goal_type: str = "",
         timestamp: Optional[datetime] = None, 
-        #Optional[X] is equivalent to Union[X, None].
         fuzzy_output: str = "",
         user_feedback: str = "",
     ) -> None:

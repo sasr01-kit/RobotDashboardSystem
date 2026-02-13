@@ -7,8 +7,11 @@ from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import Rosbrid
 from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
 from turtlebot4_backend.turtlebot4_model.Subject import Subject
 
-
 class StatusController:
+    """
+    Subscribes to robot status topics via RosbridgeConnection and updates RobotState.
+    Also provides a listener API for WebSocket handlers to receive status updates.
+    """
     def __init__(
         self,
         robot_state: RobotState,
@@ -65,10 +68,8 @@ class StatusController:
 
         threading.Thread(target=_connect_and_subscribe, daemon=True).start()
 
-    # --- roslibpy callbacks (synchronous) ---
     # These callbacks are invoked by the (synchronous) ROS client in its own thread.
     # We therefore schedule the async updater on the asyncio loop in a thread-safe way.
-
     def _battery_cb(self, msg: dict) -> None:
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self.updateBattery(msg))
@@ -89,8 +90,7 @@ class StatusController:
             lambda: asyncio.create_task(self.updateCommsConnection(msg))
         )
 
-    # --- async updaters that modify RobotState and notify listeners upon proper value changes ---
-
+    # Async updaters that modify RobotState and notify listeners upon proper value changes 
     async def updateBattery(self, msg: dict) -> None:
         batteryPercentage = None
         if isinstance(msg, dict) and 'percentage' in msg and msg['percentage'] is not None:

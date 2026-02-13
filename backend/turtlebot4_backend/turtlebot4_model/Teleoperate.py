@@ -1,4 +1,3 @@
-# Teleoperate.py
 from typing import List, Dict, Any
 
 class Teleoperate:
@@ -8,6 +7,7 @@ class Teleoperate:
         # Thus it needs its own list of observers (the controller) and a notify mechanism. 
         self._observers = [] 
 
+    # Observer pattern methods for notifying controller of new commands
     def attach(self, callback):
         if callback not in self._observers:
             self._observers.append(callback)

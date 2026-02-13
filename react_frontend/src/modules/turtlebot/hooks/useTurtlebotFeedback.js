@@ -1,7 +1,8 @@
-// -------------------------------------------------------------
-// GLOBAL FEEDBACK STORE
-// -------------------------------------------------------------
+// Global state and listener management for Turtlebot feedback, allowing 
+// consistent feedback data across different components without prop drilling 
+// or multiple WebSocket subscriptions
 
+// Default state structure for feedback data
 let globalFeedbackState = {
   feedbackSummary: null,
   feedbackEntries: []
@@ -15,15 +16,16 @@ export function updateGlobalFeedbackState(patch) {
 }
 
 import { useEffect, useState } from "react";
-import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext";
+import { useWebSocketContext } from "../websocketUtil/WebsocketContext";
 
+// Custom hook to provide Turtlebot feedback data to components
 export function useTurtlebotFeedback() {
   const { subscribe } = useWebSocketContext();
 
   const [feedbackDTO, setFeedbackDTO] = useState(globalFeedbackState);
 
   useEffect(() => {
-    // Register this hook instance as a listener
+    // Hook is initialized, and subscribed to global feedback state updates for consistency across components and pages
     feedbackListeners.add(setFeedbackDTO);
     setFeedbackDTO(globalFeedbackState);
 
@@ -34,7 +36,9 @@ export function useTurtlebotFeedback() {
     if (!subscribe) return;
 
     return subscribe((data) => {
+      // Debug log for incoming feedback-related messages from the backend
       console.log("[FEEDBACK HOOK] incoming:", data);
+      // Parse incoming Websocket messages
       try {
         if (data.type === "FEEDBACK_SUMMARY") {
           updateGlobalFeedbackState({

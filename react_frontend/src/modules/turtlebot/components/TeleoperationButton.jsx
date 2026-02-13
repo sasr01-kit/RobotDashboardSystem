@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
+// Reusable button component for each teleoperation controls
 export default function TeleoperationButton({ direction, icon, onClick }) { 
     const [clicked, setClicked] = useState(false); 
 

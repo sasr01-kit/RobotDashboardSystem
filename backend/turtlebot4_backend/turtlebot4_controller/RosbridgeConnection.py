@@ -1,24 +1,15 @@
-"""
-Simple RosbridgeConnection wrapper around roslibpy.Ros for clarity and reuse.
-
-- Keeps connection state (isConnected)
-- Provides simple subscribe/publish/call_service helpers
-
-Usage (example at bottom):
-  conn = RosbridgeConnection('robot-ip', 9090)
-  conn.connect()
-  conn.subscribe('/battery_state', 'sensor_msgs/msg/BatteryState', callback)
-  conn.publish('/some_topic', {'data': 'hi'}, msg_type='std_msgs/msg/String')
-  resp = conn.call_service('/do_something', 'some_pkg/srv/SomeService', {'arg': 1})
-  conn.terminate()
-"""
-
 import time
 import threading
 import roslibpy
 from typing import Callable, Dict, Optional
 
 class RosbridgeConnection:
+    """
+    Simple RosbridgeConnection wrapper around roslibpy.Ros for clarity and reuse.
+
+    - Keeps connection state (isConnected)
+    - Provides simple subscribe/publish/call_service helpers
+    """
     def __init__(self, host: str = 'localhost', port: int = 9090):
         # Connection parameters
         self.host = host
@@ -26,11 +17,9 @@ class RosbridgeConnection:
 
         # roslibpy client instance (None until connect())
         self.client: Optional[roslibpy.Ros] = None
-
-        # Simple flag other code can check
         self.isConnected: bool = False
 
-        # Keep created Topic objects so we can reuse/unsubscribe later
+        # Keep created Topic objects so it can reused/unsubscribed later
         self._topics: Dict[str, roslibpy.Topic] = {}
 
         # Keep created Service objects if needed
@@ -158,7 +147,7 @@ class RosbridgeConnection:
                 pass
         self._topics.clear()
 
-        # Close services (roslibpy.Service has no explicit terminate; just drop refs)
+        # Close services
         self._services.clear()
 
         # Terminate client

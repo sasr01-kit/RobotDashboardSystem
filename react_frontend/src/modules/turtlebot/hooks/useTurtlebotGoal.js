@@ -1,7 +1,8 @@
-// -------------------------------------------------------------
-// GLOBAL PATH STORE
-// -------------------------------------------------------------
+// Global state and listener management for Turtlebot goal data, allowing 
+// consistent goal-related data across different components without prop drilling 
+// or multiple WebSocket subscriptions
 
+// Default state structure for goal data
 let globalGoalState = {
   pathHistory: [],
   isPathModuleActive: false,
@@ -16,41 +17,35 @@ export function updateGlobalGoalState(patch) {
 }
 
 import { useState, useEffect } from "react";
-import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext";
+import { useWebSocketContext } from "../websocketUtil/WebsocketContext";
 
 export function useTurtlebotGoal() {
   const { subscribe } = useWebSocketContext();
 
-  // Initialize from global store
   const [goalDTO, setGoalDTO] = useState(globalGoalState);
 
-  // Subscribe this hook instance to global store updates
   useEffect(() => {
+    // Hook is initialized, and subscribed to global goal state updates for consistency across components and pages
     goalListeners.add(setGoalDTO);
     setGoalDTO(globalGoalState);
     return () => goalListeners.delete(setGoalDTO);
   }, []);
 
-  // Subscribe to WebSocket messages
   useEffect(() => {
     if (!subscribe) return;
 
     return subscribe((data) => {
       if (data.type !== "PATH_UPDATE") return;
-
+      // Debug log for incoming path-related messages from the backend
       console.log("[GOAL HOOK] incoming PATH_DATA:", data);
 
-      // Parse backend pathHistory
+      // Parse backend pathHistory for frontend use
       const parsedHistory = (data.pathHistory || []).map(entry => ({
         id: entry.id,
         label: entry.label,
         timestamp: entry.timestamp,
         goalType: entry.goalType,
-
-        // Split fuzzyOutput into goal + human parts if needed
-        fuzzy_output_goal: entry.fuzzyOutput || "",
-        fuzzy_output_human: entry.fuzzyOutput || "",
-
+        fuzzy_output_goal: entry.fuzzyOutput,
         feedback: entry.userFeedback || ""
       }));
 

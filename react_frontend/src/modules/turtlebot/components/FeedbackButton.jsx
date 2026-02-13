@@ -1,29 +1,7 @@
 import { motion } from 'framer-motion';
-import { useWebSocketContext } from '../WebsocketUtil/WebsocketContext';
+import { useWebSocketContext } from '../websocketUtil/WebsocketContext';
 
-/* MOCK VERSION : 
-export const FeedbackButton = ({ className, label, goalId }) => { 
-
-    const handleClick = () => { 
-        console.log( `%c[MOCK FEEDBACK]`, 
-            "color: #4a90e2; font-weight: bold;", 
-            `Goal ID: ${goalId}, Feedback: ${label}` ); 
-        }; 
-        
-    return ( 
-        <motion.button 
-            className={`feedback-button ${className}`}
-            onClick={handleClick} 
-            whileTap={{ scale: 0.95}} 
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }} 
-        >
-            {label} 
-        </motion.button> 
-    ); 
-}; */
-
-
+// Reusable button component, used for good button and bad button to send feedback to the backend
 export const FeedbackButton = ({ className, label, goalId }) => {
   const { send } = useWebSocketContext();
 

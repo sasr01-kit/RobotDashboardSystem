@@ -4,8 +4,7 @@ import battery60 from "../assets/battery_60.svg";
 import battery20 from "../assets/battery_20.svg";
 import battery0 from "../assets/battery_0.svg";
 
-/* Map for dynamic minimized battery icons */
-
+// Map for dynamic minimized battery icons based on battery percentage
 export const BATTERY_ICONS = {
   100: battery100,
   80: battery80,
@@ -14,7 +13,7 @@ export const BATTERY_ICONS = {
   0: battery0
 };
 
-
+// Function to get the appropriate battery icon based on the current battery level
 export const getBatteryIcon = (level) => {
   if (level > 80) return BATTERY_ICONS[100];
   if (level > 60) return BATTERY_ICONS[80];

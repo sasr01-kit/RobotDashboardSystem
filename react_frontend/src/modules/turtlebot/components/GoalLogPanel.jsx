@@ -1,6 +1,7 @@
 import { GoalEntryBlock } from './GoalEntryBlock';
 import { motion } from 'framer-motion';
 
+// Component to display the goal log panel, showing a list of goal entries
 export const GoalLogPanel = ({ logs, entryRefs }) => {
   return (
     <motion.div 

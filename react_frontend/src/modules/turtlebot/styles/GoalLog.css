@@ -4,7 +4,7 @@
 .path-log-container {
   max-height: 90vh;
   max-width: 600px;
-  background: #fff;
+  background: var(--grid-white);
   border-radius: 12px;
   padding: 1rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -23,7 +23,7 @@
 
 .dropdown-label {
   background-color: var(--kit-blue); 
-  color: white; 
+  color: var(--grid-white); 
   padding: 0.6rem 1rem; 
   height: 3.5rem;
   border-radius: 10px; 
@@ -47,8 +47,8 @@
   margin-top: 0.4rem; 
   max-height: 15rem; /* choose any height you want */ 
   overflow-y: auto; /* scrolls when content exceeds height */
-  background: white; 
-  border: 1px solid #f6f6f6; 
+  background: var(--grid-white); 
+  border: 1px solid var(--bg-light); 
   border-radius: 6px; 
   box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
   list-style: none; 
@@ -74,7 +74,7 @@
 .dropdown-menu li:hover { 
   background-color: var(--kit-green); 
   opacity: 80%;
-  color: white;
+  color: var(--grid-white);
 }
 
 .triangle {
@@ -86,7 +86,7 @@
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 0.95rem;
-  background-color: #f8f8f8;
+  background-color: var(--bg-light);
 }
 
 /* Goal Log Panel Styling */
@@ -113,7 +113,7 @@
 }
 
 .goal-entry-block {
-  background: #fff;
+  background: var(--bg-light);
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   padding: 1rem;
@@ -166,7 +166,7 @@
   font-size: 15px;
   font-weight: bold;
   min-width: 120px;
-  color: white;
+  color: var(--grid-white);
   cursor: pointer;
   white-space: nowrap;
   position: relative;
@@ -179,9 +179,9 @@
 }
 
 .good-feedback-button {
-  background-color: #5AAE61;
+  background-color: var(--success-green);
 }
 
 .bad-feedback-button {
-  background-color: #FF5A5F;
+  background-color: var(--error-red);
 }

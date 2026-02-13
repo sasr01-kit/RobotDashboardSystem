@@ -5,7 +5,6 @@ from turtlebot4_backend.turtlebot4_model.Map import Map
 from turtlebot4_backend.turtlebot4_model.MapData import MapData
 from turtlebot4_backend.turtlebot4_model.Human import Human
 
-
 class MapController:
     """
     Subscribes to /map, /humans, and /odom via RosbridgeConnection.
@@ -21,6 +20,10 @@ class MapController:
 
         self._map_model = map_model
         self._map_received = False
+
+        # ROS callbacks run synchronously, but the WebSocket
+        # updates are asynchronous and require 'await'. The event loop is used to safely
+        # schedule async tasks from inside these synchronous ROS callbacks.
         self._loop = asyncio.get_event_loop()
 
         # Connect to rosbridge
@@ -29,18 +32,20 @@ class MapController:
         print("[MapController] Connected to rosbridge")
 
         # Subscribe to topics
+        # /map: static map data 
         self._ros.subscribe("/map", "nav_msgs/msg/OccupancyGrid", self._map_callback)
         print("[MapController] Subscribed to /map")
 
+        # /humans: dynamic human poses 
         self._ros.subscribe("/humans", "geometry_msgs/msg/PoseArray", self._humans_callback)
         print("[MapController] Subscribed to /humans")
 
+        # /odom: dynamic robot pose 
         self._ros.subscribe("/odom", "nav_msgs/msg/Odometry", self._robot_pose_callback)
         print("[MapController] Subscribed to /odom")
 
-    # -------------------------------------------------------------------------
-    # SEND MAP PNG ON STARTUP
-    # -------------------------------------------------------------------------
+    # Sends map PNG data immediately if already available on startup, otherwise waits for the /map callback to trigger it.
+    # This ensures the frontend can display the map as soon as possible.
     def _send_initial_map_png(self):
         """If the map PNG is already available, send MAP_DATA immediately."""
         if self._map_model._mapDataPNG:
@@ -59,9 +64,7 @@ class MapController:
 
             self._loop.call_soon_threadsafe(lambda: asyncio.create_task(send_initial()))
 
-    # -------------------------------------------------------------------------
-    # MAP CALLBACK (STATIC)
-    # -------------------------------------------------------------------------
+    # Map callback only sends MAP_DATA once since the map is static. 
     def _map_callback(self, message: Dict[str, Any]) -> None:
         if self._map_received:
             return
@@ -85,7 +88,7 @@ class MapController:
             occupancyGrid=occupancy_grid
         )
 
-        # Schedule async update
+        # Schedule async update to map model
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self._map_model.set_mapData(map_data))
         )
@@ -93,9 +96,7 @@ class MapController:
         self._map_received = True
         print("[MapController] MAP_DATA sent")
 
-    # -------------------------------------------------------------------------
-    # HUMANS CALLBACK (DYNAMIC)
-    # -------------------------------------------------------------------------
+    # Humans callback sends POSE_DATA continuously whenever new human poses are received.
     def _humans_callback(self, message: Dict[str, Any]) -> None:
         poses = message.get("poses", [])
         humans: List[Human] = []
@@ -114,16 +115,13 @@ class MapController:
                 )
             )
 
-        # Schedule async update
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self._map_model.set_detectedHumans(humans))
         )
 
         print(f"[MapController] POSE_DATA: {len(humans)} humans updated")
 
-    # -------------------------------------------------------------------------
-    # ROBOT POSE CALLBACK (DYNAMIC)
-    # -------------------------------------------------------------------------
+    # Robot pose callback updates the robot's position and orientation dynamically.
     def _robot_pose_callback(self, message: Dict[str, Any]) -> None:
         pose = message.get("pose", {}).get("pose", {})
         if not pose:
@@ -146,16 +144,12 @@ class MapController:
             }
         }
 
-        # Schedule async update
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self._map_model.set_robotPose(robot_pose))
         )
 
         print(f"[MapController] POSE_DATA: robot pose updated")
 
-    # -------------------------------------------------------------------------
-    # SHUTDOWN
-    # -------------------------------------------------------------------------
     def shutdown(self) -> None:
         try:
             self._ros.terminate()

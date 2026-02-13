@@ -8,6 +8,7 @@ from turtlebot4_backend.turtlebot4_model.MapData import MapData
 from geometry_msgs.msg import PoseStamped
 
 class Map(Subject):
+    # Save directory for generated map PNGs. Ensure this directory exists and is writable.
     SAVE_DIR = os.path.expanduser("~/ros2_ws/src/RobotDashboardSystem")
 
     def __init__(self, mapData=None, robotPose=None, globalGoal=None, intermediateWaypoints=None):
@@ -94,7 +95,7 @@ class Map(Subject):
         if pose is None:
             return None
 
-        # --- CASE 1: pose is already a dict (mock/test data) ---
+        # Pose can be a dict (simulator) or a PoseStamped (real robot)
         if isinstance(pose, dict):
             return {
                 "position": {
@@ -110,7 +111,6 @@ class Map(Subject):
                 }
             }
 
-        # --- CASE 2: pose is a PoseStamped (real robot) ---
         return {
             "position": {
                 "x": pose.pose.position.x,

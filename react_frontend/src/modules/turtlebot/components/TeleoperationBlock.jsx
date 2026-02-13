@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from 'react';
-import { useModeContext } from "../ModeUtil/ModeContext.js";
-import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext.js";
-
+import { useModeContext } from "../modeUtil/ModeContext.js";
+import { useWebSocketContext } from "../websocketUtil/WebsocketContext.js";
 import TeleoperationButton from "./TeleoperationButton.jsx";
 import teleopIcon from '../assets/teleopIcon.svg';
 import upIcon from '../assets/upButton.svg';
@@ -13,6 +12,7 @@ import rotateLeftIcon from '../assets/rotateLeftButton.svg';
 import rotateRightIcon from '../assets/rotateRightButton.svg';
 import stopIcon from '../assets/stopButton.svg';
 
+// Component to control the Teleoperation Module of the Turtlebot, with backend integration
 export default function TeleoperationBlock() {
     const { mode } = useModeContext(); 
     const isTeleoperating = mode === 'Teleoperating';
@@ -25,6 +25,7 @@ export default function TeleoperationBlock() {
     const dir = direction.toUpperCase(); 
     let command = null;
 
+    // Map the button direction to the corresponding command pattern for the backend
     switch (dir) { 
         case 'UP': 
             command = 'FORWARD'; 

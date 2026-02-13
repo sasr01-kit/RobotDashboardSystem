@@ -8,8 +8,10 @@ from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import Rosbrid
 from turtlebot4_backend.turtlebot4_model.Teleoperate import Teleoperate
 from turtlebot4_backend.turtlebot4_model.DirectionCommand import DirectionCommand
 
-
 class TeleopController:
+    """
+    Subscribes to Teleoperate model updates and publishes drive commands to ROSBridge.
+    """
     def __init__( 
         self, 
         teleop: Teleoperate, 
@@ -38,9 +40,9 @@ class TeleopController:
             return
 
         print("[TeleopController] Connected to ROSBridge")
-        self._ros.publish('/cmd_vel', {}, msg_type='geometry_msgs/msg/Twist')  # Advertise the topic with an empty message to ensure it exists before we try to publish real commands
+        # Advertise the topic with an empty message to ensure it exists before we try to publish real commands
+        self._ros.publish('/cmd_vel', {}, msg_type='geometry_msgs/msg/Twist')  
         print("[TeleopController] /cmd_vel advertised")
-
 
     # Teleoperate model calls this synchronously → schedule async work
     def _on_teleop_update(self, source, data):

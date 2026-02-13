@@ -1,5 +1,6 @@
 import { FeedbackButton } from './FeedbackButton';
 
+// Component to display individual goal entries in the GoalLogPanel
 export const GoalEntryBlock = ({ log }) => {
   return (
     <div className="goal-entry-block">

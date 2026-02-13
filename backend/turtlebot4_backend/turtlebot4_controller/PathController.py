@@ -12,14 +12,6 @@ from turtlebot4_backend.turtlebot4_model.DirectionCommand import DirectionComman
 class PathController:
     """
     Subscribes to path-related topics via RosbridgeConnection.
-
-    Responsibilities:
-    - Listen to /odom for robot pose (dynamic)
-    - Listen to /gary/goal_pose for global goal
-    - Listen to /rule_output for rule logs
-    - Update:
-        * MapModel: robotPose, globalGoal
-        * PathModel: rule logs
     """
 
     def __init__(
@@ -43,19 +35,19 @@ class PathController:
         print("[PathController] Connected to rosbridge")
 
         # Subscriptions
-        # /odom: robot pose (Odometry)
+        # /odom: robot pose 
         self._ros.subscribe("/odom", "nav_msgs/msg/Odometry", self._pose_callback)
         print("[PathController] Subscribed to /odom")
 
-        # /rule_output: rule logs (e.g. String or custom)
+        # /rule_output: rule logs 
         self._ros.subscribe("/rule_output", "std_msgs/msg/String", self._rule_callback)
         print("[PathController] Subscribed to /rule_output")
 
-        # /gary/goal_pose: global goal (PoseStamped)
+        # /gary/goal_pose: global goal 
         self._ros.subscribe("/gary/goal_pose", "geometry_msgs/msg/PoseStamped", self._global_goal_callback)
         print("[PathController] Subscribed to /gary/goal_pose")
 
-        # /dock_status: docking status (DockStatus)
+        # /dock_status: docking status
         self._ros.subscribe("/dock_status", "irobot_create_msgs/msg/DockStatus", self._dock_status_callback)
         print("[PathController] Subscribed to /dock_status")
 

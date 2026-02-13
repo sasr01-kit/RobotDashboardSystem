@@ -1,18 +1,19 @@
 import "./Turtlebot.css";
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { ModeProvider } from './ModeUtil/ModeProvider.jsx';
+import { ModeProvider } from './modeUtil/ModeProvider.jsx';
 import TurtlebotLayout from './TurtlebotLayout.jsx';
 import TurtlebotStatusPage from './pages/TurtlebotStatusPage.jsx';
 import TurtlebotMapPage from './pages/TurtlebotMapPage.jsx';
 import TurtlebotFeedbackPage from './pages/TurtlebotFeedbackPage.jsx';
-import { useTurtlebotStatus } from "./Hooks/useTurtlebotStatus.js";
-import { useTurtlebotMap } from "./Hooks/useTurtlebotMap.js";
-import { useTurtlebotFeedback } from "./Hooks/useTurtlebotFeedback.js";
+import { useTurtlebotStatus } from "./hooks/useTurtlebotStatus.js";
+import { useTurtlebotMap } from "./hooks/useTurtlebotMap.js";
+import { useTurtlebotFeedback } from "./hooks/useTurtlebotFeedback.js";
 
+// The main Turtlebot component that sets up routing and context for the Turtlebot module.
 export default function Turtlebot() {
-    useTurtlebotStatus(); // Ensure status is loaded at top level
-    useTurtlebotMap(); // Ensure map is loaded at top level
-    useTurtlebotFeedback(); // Ensure feedback is loaded at top level
+    useTurtlebotStatus(); // Ensure status hook is loaded at top level and initialize global state
+    useTurtlebotMap(); // Ensure map hook is loaded at top level and initialize global state
+    useTurtlebotFeedback(); // Ensure feedback hook is loaded at top level and initialize global state
     return (
         <ModeProvider>
             <Routes>

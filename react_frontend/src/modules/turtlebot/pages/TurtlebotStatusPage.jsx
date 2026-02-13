@@ -8,13 +8,15 @@ import raspberryPi from '../assets/raspberry.svg';
 import comms from '../assets/comms.svg'; 
 import PowerStatus from '../components/PowerStatus.jsx';
 import ModeStatus from '../components/ModeStatus.jsx';
-import { useTurtlebotStatus } from '../Hooks/useTurtlebotStatus.js';
+import { useTurtlebotStatus } from '../hooks/useTurtlebotStatus.js';
 import GeneralStatusBlock from '../components/GeneralStatusBlock.jsx';
 import TeleoperationBlock from '../components/TeleoperationBlock.jsx';
 import PathExecutionBlock from "../components/PathExecutionBlock.jsx";
 import DockingBlock from "../components/DockingBlock.jsx";
 
-
+// This page displays the current status of the Turtlebot, including power, battery, connectivity, and mode. 
+// It also provides controls for teleoperation, path execution, and docking. 
+// The useTurtlebotStatus hook is used to access the latest status data from the backend.
 export default function TurtlebotStatusPage() {
     const { statusDTO, error } = useTurtlebotStatus();
 

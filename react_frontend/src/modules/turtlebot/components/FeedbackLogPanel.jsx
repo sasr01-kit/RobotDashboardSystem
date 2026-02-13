@@ -1,6 +1,7 @@
 import { FeedbackEntryBlock } from "./FeedbackEntryBlock";
 import { motion } from 'framer-motion';
 
+// Component to display the feedback log panel, showing a list of feedback entries
 export const FeedbackLogPanel = ({ entries }) => {
   return (
     <motion.div 

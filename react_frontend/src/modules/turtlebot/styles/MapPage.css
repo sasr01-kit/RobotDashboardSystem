@@ -1,3 +1,5 @@
+/* Styling for Map Page */
+
 .turtlebot-map-page {
     display: flex;
     flex-direction: row;
@@ -25,7 +27,7 @@
   align-items: center;
   gap: 1.1rem;
   padding: 0.4rem 0.8rem;
-  background: #fff;
+  background: var(--grid-white);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); 
   border-radius: 12px;
   height: 3.5rem;
@@ -39,7 +41,7 @@
   mask-position: center;
 }
 
-/* Masks for boolean icons */
+/* Masks for boolean icons in the minimized status bar */
 .mini-power-icon {
   mask-image: url('../assets/power.svg');
 }

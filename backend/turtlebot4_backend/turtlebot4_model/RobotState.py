@@ -21,6 +21,7 @@ class RobotState(Subject):
         self._is_comms_connected = is_comms_connected
         self._is_raspberry_pi_connected = is_raspberry_pi_connected
         self._path_model = path_model
+
     # Getters
     def get_is_on(self) -> bool:
         return self._is_on
@@ -37,7 +38,7 @@ class RobotState(Subject):
     def get_is_raspberry_pi_connected(self) -> bool | None:
         return self._is_raspberry_pi_connected
 
-    # Setters (each notifies observers on change)
+    # Setters 
     async def set_is_on(self, value: bool) -> None:
         if self._is_on != value:
             self._is_on = value

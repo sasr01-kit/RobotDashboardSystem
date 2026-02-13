@@ -1,5 +1,3 @@
-# FeedbackLogEntry.py
-
 class FeedbackLogEntry:
     def __init__(
         self,

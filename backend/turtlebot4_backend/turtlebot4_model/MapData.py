@@ -18,7 +18,7 @@ class MapData:
         self._height = height
         self._occupancyGrid = occupancyGrid if occupancyGrid is not None else []
 
-    # ===== Getters =====
+    # Getters
     def get_resolution(self) -> float:
         return self._resolution
 
@@ -31,7 +31,7 @@ class MapData:
     def get_occupancyGrid(self) -> List[int]:
         return self._occupancyGrid
 
-    # ===== Setters =====
+    #  Setters
     def set_resolution(self, value: float) -> None:
         self._resolution = value
 
@@ -44,7 +44,6 @@ class MapData:
     def set_occupancyGrid(self, value: List[int]) -> None:
         self._occupancyGrid = value
 
-    # ===== JSON Serialization =====
     def toJSON(self) -> Dict[str, Any]:
         """
         Convert the static map data into a JSON-ready dictionary for frontend.

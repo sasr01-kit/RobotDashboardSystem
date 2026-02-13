@@ -1,11 +1,12 @@
-import { useModeContext } from '../ModeUtil/ModeContext.js';
+import { useModeContext } from '../modeUtil/ModeContext.js';
 
+// Component to display the current mode status of the Turtlebot
 export default function ModeStatus() {
     const { mode } = useModeContext();
 
     const message = mode || 'Unknown';
 
-    const modeColor = message === 'Teleoperating' ? '#5AAE61' : '#2196F3';
+    const modeColor = message === 'Teleoperating' ? "var(--success-green)" : "var(--primary-blue)";
 
     return (
         <div className="mode-status">

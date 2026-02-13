@@ -2,7 +2,6 @@ from typing import List, Dict, Any
 from turtlebot4_backend.turtlebot4_model.Subject import Subject
 from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
 
-
 class Path(Subject):
     def __init__(
         self,
@@ -14,7 +13,7 @@ class Path(Subject):
         self._path_history: List[PathLogEntry] = path_history if path_history is not None else []
         self._is_path_module_active: bool = is_path_module_active
         self._is_docked: bool = is_docked
-        self._path_controller = None  # Will be set by PathController
+        self._path_controller = None 
 
     # Getters
     def get_path_history(self) -> List[PathLogEntry]:
@@ -54,7 +53,6 @@ class Path(Subject):
         """Set the PathController reference for triggering commands."""
         self._path_controller = controller
 
-    # Convenience methods for modifying the history
     async def add_log_entry(self, entry: PathLogEntry) -> None:
         self._path_history.append(entry)
         await self.notify_observers({ 
@@ -70,6 +68,8 @@ class Path(Subject):
                 **self.toJSON() 
             })
     
+    # Handles user feedback updates from the frontend, matching them to the correct PathLogEntry 
+    # and updating the feedback summary.
     async def apply_feedback(self, msg: Dict[str, Any]) -> None:
         goal_id = msg.get("goalId")
         feedback = msg.get("feedback")
@@ -87,10 +87,6 @@ class Path(Subject):
                 await self.update_log_entry(i, entry)
                 print(f"[Path] Feedback updated for {goal_id}: {feedback}")
 
-                # ---------------------------------------------------------
-                # Compute startPoint, endPoint, duration
-                # ---------------------------------------------------------
-                # End point = this entry
                 end_point = entry.get_goal_type()
 
                 # Start point = previous entry (if exists)
@@ -107,9 +103,7 @@ class Path(Subject):
                     start_point = "START"
                     duration = 0
 
-                # ---------------------------------------------------------
-                # Send FEEDBACK_ENTRY for feedback page
-                # ---------------------------------------------------------
+                # Notify frontend of new feedback entry
                 await self.notify_observers({
                     "type": "FEEDBACK_ENTRY",
                     "startPoint": start_point,
@@ -118,13 +112,11 @@ class Path(Subject):
                     "feedback": feedback
                 })
 
-                # Send summary
+                # Send summary of good/bad ratios for all feedback received so far
                 await self._send_feedback_summary()
                 return
 
         print(f"[Path] No matching goal entry found for feedback: {goal_id}")
-
-
 
     async def _send_feedback_summary(self):
         total = len(self._path_history)
@@ -142,7 +134,6 @@ class Path(Subject):
             "badRatio": bad_ratio
         })
 
-    # Serialization
     def toJSON(self) -> Dict[str, Any]:
         print()
         """

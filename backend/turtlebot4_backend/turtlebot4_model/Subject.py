@@ -1,9 +1,8 @@
-# Subject.py
 from abc import ABC
 from typing import List
 from turtlebot4_backend.turtlebot4_model.Observer import Observer
 
-
+# Subject defines the interface for subjects that maintain a list of observers and notify them of state changes.
 class Subject(ABC):
 
     def __init__(self) -> None:

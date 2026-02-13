@@ -1,9 +1,7 @@
-# Feedback.py
 from typing import List, Dict, Any
 
 from PathLogEntry import PathLogEntry
 from FeedbackLogEntry import FeedbackLogEntry
-
 
 class Feedback:
     def __init__(self) -> None:
@@ -37,8 +35,6 @@ class Feedback:
 
     def set_feedback_history(self, history: List[FeedbackLogEntry]) -> None:
         self._feedback_history = history
-
-    # Core behavior
 
     def calculate_feedback_ratio(self, path_history: List[PathLogEntry]) -> float:
         """

@@ -1,5 +1,6 @@
 import {motion} from "framer-motion";
 
+// Component to display the power status of the Turtlebot
 export default function PowerStatus({ isOn }) { 
     const color = isOn ? 'var(--success-green)' : 'var(--error-red)'; 
 

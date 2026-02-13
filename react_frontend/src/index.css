@@ -24,6 +24,9 @@
   --bg-light: #F6F6F6;
   --success-green: #5AAE61;
   --error-red: #FF5A5F;
+  --primary-blue: #2196F3;
+  --grid-white: #FFF;
+  --text-grey: #333;
 
     /* IMPORTANT: force light look */
   color-scheme: light;
