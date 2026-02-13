@@ -75,7 +75,7 @@ Notes:
 From the repository root:
 
 ```bash
-cd backend
+cd /ros2_ws/src/RobotDashboardSystem/backend
 
 # (Optional for Windows) Create and activate a virtual Linux environment in the terminal
 python -m venv venv # Install venv once
