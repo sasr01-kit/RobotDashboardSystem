@@ -1,4 +1,4 @@
-/* Page styling */
+/* Turtlebot General Page Styling */
 
 .turtlebot-map-page {
     color: #000;
@@ -15,18 +15,15 @@
 }
 
 /* Navbar Styling*/
-
 .turtlebot-navbar {
     position: fixed;
-    top: var(--header-height); /* place below header*/
-    height: var(--navbar-height); /* consistent navbar height */
-    z-index: 900; /* below header (header has 1000) */
-
+    top: var(--header-height); 
+    height: var(--navbar-height); 
+    z-index: 900; 
     padding-bottom: 1rem;
     padding-left: 2rem;
     text-align: left;
     background-color: var(--bg-light);
-
     max-height: var(--navbar-height);
     min-width: 100vw;
 }
@@ -60,29 +57,26 @@
     transition: width 0.3s ease, left 0.3s ease;
 }
 
-
 .tab-button:hover:not(.disabled) {
-    color: #00A699; 
+    color: var(--kit-green); 
 }
-
 
 .tab-button.active {
    color: #242626;
    font-weight: 600; 
 }
 
-
 .tab-button.active::after {
     width: 100%;
     left: 0;
 }
-
 
 .tab-button.disabled {
     color: #aaa;
     position: relative;
 }
 
+/* Tooltip for disabled tab */
 .tab-button.disabled:hover::after { 
     content: "Not available while teleoperating"; 
     position: absolute; 
@@ -100,13 +94,11 @@
     height: max-content;    
 }
 
-
 /* Turtlebot Layout */
 .turtlebot-layout {
     display: flex;
     flex-direction: column;
 }
-
 
 .turtlebot-content {
     flex: 1;

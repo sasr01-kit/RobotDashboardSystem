@@ -1,13 +1,15 @@
+import { motion } from "framer-motion"; // Provides animation for the components
 import { useCallback, useState, useEffect } from "react";
-import { useWebSocketContext } from '../WebsocketUtil/WebsocketContext.js';
-import { motion } from "framer-motion";
+import { useWebSocketContext } from '../websocketUtil/WebsocketContext.js';
+import { useTurtlebotStatus } from "../hooks/useTurtlebotStatus.js";
 import dockIcon from '../assets/dockIcon.svg';
-import { useTurtlebotStatus } from "../Hooks/useTurtlebotStatus.js";
 
+// Component to control docking/undocking the Turtlebot, with backend integration
 const DockingBlock = () => {
   const { statusDTO } = useTurtlebotStatus();
   const { send } = useWebSocketContext();
 
+  // Local pending state to manage button disabled state and spinner if backend is still processing last command
   const [isPending, setIsPending] = useState(false);
 
   const isDocked = statusDTO.isDocked;
@@ -17,14 +19,14 @@ const DockingBlock = () => {
 
     setIsPending(true);
 
-    // Send real backend command
+    // Send command to backend to toggle docking state
     send({
       dockStatus: !isDocked
     });
   }, [isDocked, isPending, send]);
 
   useEffect(() => {
-    // When backend updates docking state, clear pending
+    // When backend already updates the docking state, clear pending
     if (isPending && statusDTO.isDocked === isDocked) {
       setIsPending(false);
     }
@@ -46,7 +48,7 @@ const DockingBlock = () => {
           <span className="command-label">Docking</span>
 
           <motion.span
-            className={`command-status ${isDocked ? "off" : "on"}`}
+            className={`command-status ${isDocked ? "on" : "off"}`}
             animate={{ scale: isDocked ? 1.1 : 1 }}
           >
             Status : {isDocked ? "Docked" : "Undocked"}
@@ -54,7 +56,7 @@ const DockingBlock = () => {
         </div>
 
         <motion.button
-          className={`execution-button ${isDocked ? "start" : "stop"}`}
+          className={`execution-button ${isDocked ? "stop" : "start"}`}
           onClick={handleClick}
           disabled={isPending}
           whileHover={!isPending ? { scale: 1.05 } : {}}
@@ -79,6 +81,5 @@ const DockingBlock = () => {
     </motion.div>
   );
 };
-
 
 export default DockingBlock;

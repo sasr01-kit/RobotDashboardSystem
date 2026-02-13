@@ -1,7 +1,11 @@
 import '../styles/MapView.css';
 import { useEffect, useRef } from "react";
-import { useTurtlebotMap } from "../Hooks/useTurtlebotMap";
+import { useTurtlebotMap } from "../hooks/useTurtlebotMap";
 
+// Component to display the map view, including canvas rendering of the map, robot position, 
+// human positions with proxemic zones, global goal, and intermediate waypoints
+
+// onMapResize notifies the parent component on how tall the map image is so the layout can adjust accordingly
 export default function MapView({ onMapResize }) {
   const canvasRef = useRef(null);
   const map = useTurtlebotMap();
@@ -28,17 +32,15 @@ export default function MapView({ onMapResize }) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img, 0, 0);
 
-    // ---------------------------
-    // Draw humans + proxemic zones
-    // ---------------------------
+    // Human drawing with proxemic zones
     if (map.humans) {
       map.humans.forEach(h => {
+        // Adjust the coordinates according to map resolution
         const px = h.position.x / map.resolution;
         const py = h.position.y / map.resolution;
 
         const zones = h.proxemicDistances || {};
 
-        // Helper to draw a ring
         const drawZone = (radiusMeters, color) => {
           const r = radiusMeters / map.resolution;
           ctx.beginPath();
@@ -67,9 +69,7 @@ export default function MapView({ onMapResize }) {
       });
     }
 
-    // ---------------------------
-    // Draw global goal
-    // ---------------------------
+    // Global goal drawing
     if (map.globalGoal) {
       const gx = map.globalGoal.position.x / map.resolution;
       const gy = map.globalGoal.position.y / map.resolution;
@@ -84,9 +84,7 @@ export default function MapView({ onMapResize }) {
       ctx.stroke();
     }
 
-    // ---------------------------
-    // Draw intermediate waypoints
-    // ---------------------------
+    // Intermediate waypoints drawing
     if (map.intermediateWaypoints && map.intermediateWaypoints.length > 0) {
       map.intermediateWaypoints.forEach(wp => {
         const wx = wp.position.x / map.resolution;
@@ -103,9 +101,7 @@ export default function MapView({ onMapResize }) {
       });
     }
 
-    // ---------------------------
-    // Draw robot
-    // ---------------------------
+    // Robot drawing
     if (map.robotPose) {
       const { x, y } = map.robotPose.position;
       const px = x / map.resolution;

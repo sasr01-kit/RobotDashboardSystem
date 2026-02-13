@@ -3,10 +3,10 @@
 .command-execution-block {
     display: flex;
     flex-direction: row;
-    background: #fff;
+    background: var(--grid-white);
     border-radius: 12px;
     padding: 12px;
-    color: #333;
+    color: var(--text-grey);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -44,11 +44,11 @@
 }
 
 .command-status.on {
-    color: #5AAE61;
+    color: var(--success-green);
 }
 
 .command-status.off {
-    color: #FF5A5F;
+    color: var(--error-red);
 }
 
 .execution-button {
@@ -58,7 +58,7 @@
     font-size: 15px;
     font-weight: bold;
     min-width: 120px;
-    color: white;
+    color: var(--grid-white);
     cursor: pointer;
     white-space: nowrap;
     position: relative;
@@ -71,18 +71,18 @@
 }
 
 .execution-button.start {
-    background: #5AAE61;
+    background: var(--success-green);
 }
 
 .execution-button.stop {
-    background: #FF5A5F;
+    background: var(--error-red);
 }
 
 .spinner {
     width: 20px;
     height: 20px;
     border: 2px solid rgba(255, 255, 255, 0.4);
-    border-top-color: white;
+    border-top-color: var(--grid-white);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }

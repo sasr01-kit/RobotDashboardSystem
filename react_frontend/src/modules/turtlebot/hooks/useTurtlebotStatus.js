@@ -1,7 +1,8 @@
-// -------------------------------------------------------------
-// GLOBAL STORE (persists across page changes)
-// -------------------------------------------------------------
+// Global state and listener management for Turtlebot status data, allowing 
+// consistent status-related data across different components without prop drilling 
+// or multiple WebSocket subscriptions
 
+// Default state structure for status data
 let globalStatusState = {
   isOn: false,
   batteryPercentage: null,
@@ -12,46 +13,33 @@ let globalStatusState = {
   isDocked: true
 };
 
-// All hook instances subscribe here
 const listeners = new Set();
 
-// Called by WebSocket callback to update global state
 export function updateGlobalStatusState(patch) {
   globalStatusState = { ...globalStatusState, ...patch };
   listeners.forEach(fn => fn(globalStatusState));
 }
 
-
-
-// -------------------------------------------------------------
-// HOOK
-// -------------------------------------------------------------
-
 import { useState, useEffect } from "react";
-import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext";
+import { useWebSocketContext } from "../websocketUtil/WebsocketContext";
 
+// Custom hook to provide Turtlebot status data to components
 export function useTurtlebotStatus() {
   const { subscribe } = useWebSocketContext();
-
-  // Initialize from global state (not defaults)
   const [statusDTO, setStatusDTO] = useState(globalStatusState);
   const [error, setError] = useState(null);
 
-  // Subscribe this hook instance to global store updates
   useEffect(() => {
     listeners.add(setStatusDTO);
-
-    // Immediately sync with latest global state
     setStatusDTO(globalStatusState);
-
     return () => listeners.delete(setStatusDTO);
   }, []);
 
-  // Subscribe to WebSocket messages
   useEffect(() => {
     if (!subscribe) return;
 
     return subscribe((data) => {
+      // Debug log for incoming status-related messages from the backend
       console.log("[STATUS HOOK] incoming:", data);
 
       try {

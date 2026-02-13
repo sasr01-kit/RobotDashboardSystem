@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
+// Dropdown navigation component for selecting and viewing path logs
+// onSelect is a callback function for the parent component GoalLogPanel to scroll to the selected log entry
 export const PathLogDropdownNav = ({ logs, onSelect }) => {
     const [isOpen, setIsOpen] = useState(false);
 

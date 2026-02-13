@@ -5,7 +5,6 @@ from turtlebot4_backend.turtlebot4_model.Map import Map
 from turtlebot4_backend.turtlebot4_model.MapData import MapData
 from turtlebot4_backend.turtlebot4_model.Human import Human
 
-
 class MapController:
     """
     Subscribes to /map, /humans, and /odom via RosbridgeConnection.
@@ -18,9 +17,27 @@ class MapController:
         rosbridge_host: str = "localhost",
         rosbridge_port: int = 9090
     ) -> None:
+        """
+        Initialize rosbridge subscriptions and prepare async dispatch.
+
+        This wires ROS topic callbacks to the async map model so the UI can
+        receive static map data once and live pose updates continuously.
+
+        Params:
+            map_model: Map model that publishes updates to observers.
+            rosbridge_host: Hostname for the rosbridge websocket server.
+            rosbridge_port: Port for the rosbridge websocket server.
+
+        Return:
+            None.
+        """
 
         self._map_model = map_model
         self._map_received = False
+
+        # ROS callbacks run synchronously, but the WebSocket
+        # updates are asynchronous and require 'await'. The event loop is used to safely
+        # schedule async tasks from inside these synchronous ROS callbacks.
         self._loop = asyncio.get_event_loop()
 
         # Connect to rosbridge
@@ -29,20 +46,32 @@ class MapController:
         print("[MapController] Connected to rosbridge")
 
         # Subscribe to topics
+        # /map: static map data 
         self._ros.subscribe("/map", "nav_msgs/msg/OccupancyGrid", self._map_callback)
         print("[MapController] Subscribed to /map")
 
+        # /humans: dynamic human poses 
         self._ros.subscribe("/humans", "geometry_msgs/msg/PoseArray", self._humans_callback)
         print("[MapController] Subscribed to /humans")
 
+        # /odom: dynamic robot pose 
         self._ros.subscribe("/odom", "nav_msgs/msg/Odometry", self._robot_pose_callback)
         print("[MapController] Subscribed to /odom")
 
-    # -------------------------------------------------------------------------
-    # SEND MAP PNG ON STARTUP
-    # -------------------------------------------------------------------------
+
     def _send_initial_map_png(self):
-        """If the map PNG is already available, send MAP_DATA immediately."""
+        """
+        Send MAP_DATA once if a cached PNG is already available.
+
+        This avoids waiting for /map messages during startup so the frontend can
+        render a map as soon as possible when prior data exists.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
         if self._map_model._mapDataPNG:
             print("[MapController] Sending initial MAP_DATA on startup")
 
@@ -59,10 +88,19 @@ class MapController:
 
             self._loop.call_soon_threadsafe(lambda: asyncio.create_task(send_initial()))
 
-    # -------------------------------------------------------------------------
-    # MAP CALLBACK (STATIC)
-    # -------------------------------------------------------------------------
     def _map_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Handle the static /map message and publish MAP_DATA once.
+
+        The map is static, so we process it only the first time to reduce
+        bandwidth and avoid redundant frontend work.
+
+        Params:
+            message: Rosbridge JSON payload for nav_msgs/msg/OccupancyGrid.
+
+        Return:
+            None.
+        """
         if self._map_received:
             return
 
@@ -85,7 +123,7 @@ class MapController:
             occupancyGrid=occupancy_grid
         )
 
-        # Schedule async update
+        # Schedule async update to map model
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self._map_model.set_mapData(map_data))
         )
@@ -93,10 +131,19 @@ class MapController:
         self._map_received = True
         print("[MapController] MAP_DATA sent")
 
-    # -------------------------------------------------------------------------
-    # HUMANS CALLBACK (DYNAMIC)
-    # -------------------------------------------------------------------------
     def _humans_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Handle /humans updates and publish POSE_DATA for detected humans.
+
+        Human positions are dynamic, so each update is forwarded to keep the UI
+        in sync with the latest tracked poses.
+
+        Params:
+            message: Rosbridge JSON payload for geometry_msgs/msg/PoseArray.
+
+        Return:
+            None.
+        """
         poses = message.get("poses", [])
         humans: List[Human] = []
 
@@ -114,17 +161,25 @@ class MapController:
                 )
             )
 
-        # Schedule async update
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self._map_model.set_detectedHumans(humans))
         )
 
         print(f"[MapController] POSE_DATA: {len(humans)} humans updated")
 
-    # -------------------------------------------------------------------------
-    # ROBOT POSE CALLBACK (DYNAMIC)
-    # -------------------------------------------------------------------------
     def _robot_pose_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Handle /odom updates and publish the robot pose.
+
+        The robot pose changes continuously, so each update is pushed to the UI
+        to keep navigation and visualization accurate.
+
+        Params:
+            message: Rosbridge JSON payload for nav_msgs/msg/Odometry.
+
+        Return:
+            None.
+        """
         pose = message.get("pose", {}).get("pose", {})
         if not pose:
             return
@@ -146,17 +201,25 @@ class MapController:
             }
         }
 
-        # Schedule async update
         self._loop.call_soon_threadsafe(
             lambda: asyncio.create_task(self._map_model.set_robotPose(robot_pose))
         )
 
         print(f"[MapController] POSE_DATA: robot pose updated")
 
-    # -------------------------------------------------------------------------
-    # SHUTDOWN
-    # -------------------------------------------------------------------------
     def shutdown(self) -> None:
+        """
+        Close rosbridge connections and release resources.
+
+        This ensures sockets are closed cleanly and the controller stops
+        receiving callbacks when the application exits.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
         try:
             self._ros.terminate()
         except Exception:

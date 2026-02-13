@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import WebSocketContext from "./WebsocketContext.js";
 
+// Provider component to wrap around parts of the app that need access to the WebSocket connection
 export default function WebSocketProvider({ children }) {
   const socketRef = useRef(null);
   const subscribersRef = useRef(new Set());
   const [isConnected, setIsConnected] = useState(false);
 
   const connect = () => {
+    // Debug log for WebSocket connection attempts
     console.log("[WS] Attempting connection...");
+    // Establish a WebSocket connection to the backend server, 
+    // adjust the correct URL for the backend WebSocket endpoint as needed
     const ws = new WebSocket("ws://localhost:8080/ws");
     socketRef.current = ws;
 
@@ -19,12 +23,12 @@ export default function WebSocketProvider({ children }) {
     ws.onclose = () => {
       console.log("[WS] Disconnected. Reconnecting in 1s...");
       setIsConnected(false);
-      setTimeout(connect, 1000); // auto-reconnect
+      setTimeout(connect, 1000); // Allows auto-reconnection
     };
 
     ws.onerror = (err) => {
       console.error("[WS] Error:", err);
-      ws.close(); // triggers reconnect
+      ws.close(); // Triggers reconnection
     };
 
     ws.onmessage = (event) => {

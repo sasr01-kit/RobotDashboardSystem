@@ -1,7 +1,8 @@
-// -------------------------------------------------------------
-// GLOBAL STORE (persists across page changes)
-// -------------------------------------------------------------
+// Global state and listener management for Turtlebot map data, allowing 
+// consistent map-related data across different components without prop drilling 
+// or multiple WebSocket subscriptions
 
+// Default state structure for map data
 let globalMapState = {
   mapUrl: null,
   resolution: null,
@@ -13,48 +14,38 @@ let globalMapState = {
   intermediateWaypoints: []
 };
 
-// All hook instances subscribe here
 const listeners = new Set();
 
-// Called by WebSocket callback to update global state
 export function updateGlobalMapState(patch) {
   globalMapState = { ...globalMapState, ...patch };
   listeners.forEach(fn => fn(globalMapState));
 }
 
-// -------------------------------------------------------------
-// HOOK
-// -------------------------------------------------------------
-
 import { useState, useEffect } from "react";
-import { useWebSocketContext } from "../WebsocketUtil/WebsocketContext";
+import { useWebSocketContext } from "../websocketUtil/WebsocketContext";
 
+// Custom hook to provide Turtlebot map data to components
 export function useTurtlebotMap() {
   const { subscribe } = useWebSocketContext();
-
-  // Initialize from global state (not defaults)
   const [mapDTO, setMapDTO] = useState(globalMapState);
 
-  // Subscribe this hook instance to global store updates
   useEffect(() => {
+    // Hook is initialized, and subscribed to global map state updates for consistency across components and pages
     listeners.add(setMapDTO);
-
-    // Immediately sync with latest global state
     setMapDTO(globalMapState);
-
     return () => listeners.delete(setMapDTO);
   }, []);
 
-  // Subscribe to WebSocket messages
   useEffect(() => {
     if (!subscribe) return;
 
     return subscribe((data) => {
+      // Debug log for incoming map-related messages from the backend
       console.log("[MAP HOOK] incoming:", data);
 
       if (data.type === "MAP_DATA") {
         const mapData = data.mapData;
-
+        // Convert occupancy grid PNG from backend into data URL for frontend use
         updateGlobalMapState({
           mapUrl: mapData.occupancyGridPNG
             ? `data:image/png;base64,${mapData.occupancyGridPNG}`

@@ -70,10 +70,10 @@ src/
     │   ├── TurtlebotLayout.jsx
     │   ├── TurtlebotNavBar.jsx
     │   ├── components/      # Reusable UI components
-    │   ├── Hooks/           # Custom React hooks for backend communication
+    │   ├── hooks/           # Custom React hooks for backend communication
     │   ├── pages/           # Dashboard pages/views
-    │   ├── WebsocketUtil/   # WebSocket connection management for backend communication
-    │   └── ModeUtil/        # Mode switching utilities
+    │   ├── websocketUtil/   # WebSocket connection management for backend communication
+    │   └── modeUtil/        # Mode switching utilities
     └── pixelbot/            # Pixelbot dashboard module
         ├── Pixelbot.jsx     # Main dashboard component
         ├── PixelbotLayout.jsx

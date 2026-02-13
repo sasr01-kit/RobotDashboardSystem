@@ -10,7 +10,7 @@
     width: 70%;
     max-height: fit-content;
     justify-self: center;
-    background-color: #fff;
+    background-color: var(--grid-white);
     border-radius: 8px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     padding: 1rem;
@@ -27,7 +27,7 @@
 .feedback-history-container {
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    background-color: var(--grid-white);
     border-radius: 8px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     padding: 1rem;
@@ -40,7 +40,7 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     font-weight: 600;
     font-size: 0.9rem;
-    color: #fff;
+    color: var(--grid-white);
     padding: 0.6rem 1rem;
     background-color: var(--kit-green);
     opacity: 70%;

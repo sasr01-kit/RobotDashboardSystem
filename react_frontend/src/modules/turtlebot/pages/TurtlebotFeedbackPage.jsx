@@ -1,9 +1,11 @@
 import '../styles/FeedbackPage.css';
 import { FeedbackLogPanel } from "../components/FeedbackLogPanel.jsx";
-import { useTurtlebotFeedback } from "../Hooks/useTurtlebotFeedback.js";
+import { useTurtlebotFeedback } from "../hooks/useTurtlebotFeedback.js";
 import { FeedbackSummaryChart } from '../components/FeedbackSummaryChart';
 import { motion } from 'framer-motion';
 
+// This page displays a summary of feedback received from the Turtlebot, as well as a detailed log of individual feedback entries. 
+// It uses the useTurtlebotFeedback hook to access feedback data.
 export default function TurtlebotFeedbackPage() {
     const { feedbackEntries } = useTurtlebotFeedback(); 
 

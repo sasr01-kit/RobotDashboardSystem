@@ -1,10 +1,11 @@
-import Highcharts, { width } from "highcharts";
+import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { useTurtlebotFeedback } from "../Hooks/useTurtlebotFeedback"; 
+import { useTurtlebotFeedback } from "../hooks/useTurtlebotFeedback"; 
 
+// Component to display a pie chart summarizing the ratio of good vs bad feedback using the Highcharts library
 export const FeedbackSummaryChart = () => {
   const { feedbackSummaryDTO } = useTurtlebotFeedback();
-
+  
   const good = feedbackSummaryDTO?.goodRatio ?? 0;
   const bad = feedbackSummaryDTO?.badRatio ?? 0;
 

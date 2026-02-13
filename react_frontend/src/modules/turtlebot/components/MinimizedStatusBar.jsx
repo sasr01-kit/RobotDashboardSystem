@@ -1,7 +1,8 @@
 import { getBatteryIcon } from "../assets/batteryMap";
-import { useTurtlebotStatus } from "../Hooks/useTurtlebotStatus";
+import { useTurtlebotStatus } from "../hooks/useTurtlebotStatus";
 import { motion } from "framer-motion";
 
+// Component to display the minimized status bar with key Turtlebot status indicators as icons
 export const MinimizedStatusBar = () => {
   const { statusDTO } = useTurtlebotStatus();
 

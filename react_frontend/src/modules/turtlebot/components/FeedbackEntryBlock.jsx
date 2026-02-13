@@ -1,3 +1,4 @@
+// Component to display individual feedback entries in the FeedbackBlock
 export const FeedbackEntryBlock = ({ entry }) => {
   const { startPoint, endPoint, duration, feedback } = entry;
 
