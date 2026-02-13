@@ -19,12 +19,13 @@ from pixelbot_backend.pixelbot_controller.ChildAPI import ChildAPI
 from pixelbot_backend.pixelbot_controller.SessionAPI import SessionAPI
 from pixelbot_backend.pixelbot_controller.GlobalMetricsAPI import GlobalMetricsAPI
 
+# Main FastAPI application for the dashboard backend
 app = FastAPI()
 
-# Turtlebot mockup websocket API
 # Store all connected WebSocket clients
 connected_clients = set()
 
+# Initialize models and controllers
 teleoperate = Teleoperate()
 teleop_controller = TeleopController(teleoperate)
 map_model = Map()
@@ -34,10 +35,12 @@ path_controller = PathController(path_model, map_model)
 robot_state = RobotState(path_model) 
 status_controller = StatusController(robot_state)
 
+# WebSocket endpoint for real-time communication with the turtlebot4 dashboard
 @app.websocket("/ws") 
 async def websocket_endpoint(websocket: WebSocket): 
     await websocket.accept() 
     
+    # Create and attach observer for this client
     observer = ConcreteObserver(websocket) 
     robot_state.attach(observer) 
     map_model.attach(observer)
@@ -45,17 +48,16 @@ async def websocket_endpoint(websocket: WebSocket):
     path_model.attach(observer)
     path_model.set_path_controller(path_controller)
 
+    # Listen for incoming messages from the client and handle commands
     try: 
         while True: 
             raw = await websocket.receive_text() 
             msg = json.loads(raw) 
             print(f"[WS] Parsed JSON: {msg}")
         
-            # Route teleoperate messages 
             if "command" in msg: 
                 teleoperate.fromJSON(msg) 
 
-            # Route path messages
             if "isPathModuleActive" in msg:
                 await path_model.fromJSON(msg)
                 await robot_state.set_mode()
@@ -76,12 +78,14 @@ async def websocket_endpoint(websocket: WebSocket):
 
 # Pixelbot REST API
 repository = DataRepository() 
+
 # Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
 # Pixelbot path: "http://192.168.2.70:8000"
 child_api = ChildAPI("/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing", repository) 
 global_metrics_api = GlobalMetricsAPI(child_api)
 session_api = SessionAPI(child_api) 
 
+# CORS middleware to allow frontend to access REST API without CORS errors
 app.add_middleware( 
     CORSMiddleware, 
     allow_origins=["*"], 
@@ -90,6 +94,7 @@ app.add_middleware(
     allow_headers=["*"], 
 )
 
+# REST API endpoints for Pixelbot data retrieval
 @app.get("/pixelbot/summary")
 def get_pixelbot_summary(): 
     return global_metrics_api.send_global_metrics_summary()

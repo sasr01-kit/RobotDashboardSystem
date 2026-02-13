@@ -11,6 +11,7 @@ export default function TurtlebotLayout() {
             />
             <TurtlebotNavBar />
             <main className="turtlebot-content">
+                {/* Outlet renders the matched child route component (Status, Map, or Feedback page) */}
                 <Outlet />
             </main>
         </div>
