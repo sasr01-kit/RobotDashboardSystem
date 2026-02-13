@@ -2,14 +2,6 @@ import datetime
 from collections import defaultdict
 
 class Utils:
-    JANUARY = 1
-    DECEMBER = 12
-
-    @staticmethod
-    def calculate_average(values: list):
-        if not values:
-            return 0.0  
-        return sum(values) / len(values) 
 
     @staticmethod
     def count_sessions_this_month(sessions: list, month: int, year: int):
@@ -38,18 +30,11 @@ class Utils:
             {"month": month, "count": monthlyCount[month]}
             for month in sorted_months
         ]        
-    
-    @staticmethod
-    def get_session_streak(self, sessions: list):
-        pass
 
     @staticmethod
     def get_total_word_count(sessions):
         return sum(session.getTotalWordCount() for session in sessions)
     
-    @staticmethod
-    def get_avg_intervention_count_per_session(sessions):
-        return sum(session.getInterventionCount() for session in sessions) / len(sessions)
     
     @staticmethod
     def get_avg_word_count_growth_rate(sessions, this_year):
@@ -60,12 +45,6 @@ class Utils:
         }
         for session in sessions if session.session_date.year == this_year]
         return word_growth_rate
-    
-    
-    @staticmethod
-    def word_count_for_month(sessions, month, year):
-        return sum(session.getTotalWordCount() for session in sessions
-               if session.session_date.month == month and session.session_date.year == year)
     
     @staticmethod
     def avg_word_count(sessions):
@@ -80,11 +59,7 @@ class Utils:
         }
         for session in sessions if session.session_date.year == this_year]
         return speech_time_growth_rate
-    
-    @staticmethod
-    def speech_time_for_month(sessions, month, year):
-        return sum(session.getTotalSpeechTime() for session in sessions
-               if session.session_date.month == month and session.session_date.year == year)
+
 
     # red line on the chart for intimacy score
     @staticmethod
@@ -176,15 +151,5 @@ class Utils:
 
         growth_rate = (current_month_sessions - previous_month_sessions) / previous_month_sessions * 100
         return round(growth_rate)
-    
-    @staticmethod
-    def calculate_difference(current, previous):
-        return (current - previous)
-    
-    @staticmethod
-    def calculate_growth(current, previous):
-        if previous == 0:
-            return float('inf') if current > 0 else 0
-        return ((current - previous) / previous) * 100
 
         

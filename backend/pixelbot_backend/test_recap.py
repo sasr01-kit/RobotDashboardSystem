@@ -5,7 +5,7 @@ from pixelbot_backend.pixelbot_controller.GlobalMetricsAPI import GlobalMetricsA
 repository = DataRepository() 
 api = ChildAPI("C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing", repository)
 
-globalAPI = GlobalMetricsAPI(api)  # child_api not needed for this test
-recap = globalAPI.send_child_recap("07d046d5fac12b3f82daf5035b9aae86db5adc8275ebfbf05ec83005a4a8ba3e")
+globalAPI = GlobalMetricsAPI(api)  
+recap = globalAPI.send_child_recap("2360809f47514450b4d4437dd9a857b0")
 
 print(recap)
