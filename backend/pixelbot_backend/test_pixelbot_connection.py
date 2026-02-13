@@ -12,7 +12,7 @@ for child in children:
         print()
         
 # Use only if you're reading the files from your laptop.
-#dl = DataLoader("C:\Users\kelly\Desktop\Uni\PSE\pse_data_example\saved_drawing")
+dl = DataLoader("/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing")
 children = dl.load_all_children()
 for child in children:
     print(child.get_id())

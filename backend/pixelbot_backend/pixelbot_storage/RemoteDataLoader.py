@@ -8,7 +8,6 @@ import requests
 import io, csv
 import os, re
 import datetime
-import hashlib
 import json
 
 class RemoteDataLoader:
@@ -49,9 +48,8 @@ class RemoteDataLoader:
 
         for session_id in session_ids:
             session = self.load_session(child_name, session_id)
-            sessions.append(session)
-        child_id = self.short_hash(child_name, 8)    
-        return Child(child_id, child_name, sessions)
+            sessions.append(session)  
+        return Child(None, child_name, sessions)
 
 
     def load_session(self, child_name, session_id):
@@ -163,7 +161,3 @@ class RemoteDataLoader:
             })
         return summary_list
 
-
-    def short_hash(self, name, length=8):
-        full_hash = hashlib.sha256(name.encode()).hexdigest()
-        return full_hash[:length]

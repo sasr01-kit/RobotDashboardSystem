@@ -3,6 +3,7 @@ from pixelbot_backend.pixelbot_model.Session import Session
 import json
 import os
 from datetime import datetime
+import uuid
 
 "Repository to save and load Child and Session data as JSON files"
 
@@ -31,6 +32,30 @@ class DataRepository:
         # Log success message, optional, only for debugging
         print("[Repository] Successfully saved children data.")
     
+
+    def create_or_update_children(self, raw_children):
+        
+# load already saved children
+        existing_children = self.load_children()
+        existing_by_name = {c.name: c for c in existing_children}
+
+        children = []
+
+        for child in raw_children:
+            
+            if child.name in existing_by_name:
+                child.child_id = existing_by_name[child.name].child_id
+
+            if child.child_id is None:
+                id = uuid.uuid4().hex
+                child.child_id = id
+            
+            children.append(child)
+        self.save_children(children)
+        return children
+
+
+
     # load child from JSON
     def load_children(self):
         if not os.path.exists(self.DATA_FILE):

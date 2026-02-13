@@ -10,7 +10,7 @@ import os
 import csv
 import json
 import re
-import hashlib
+
 
 class DataLoader:
     DRAWING_FILE_NAME = "drawing.png"
@@ -41,8 +41,7 @@ class DataLoader:
             if os.path.isdir(session_path):
                 session = self.load_session(session_id, session_path)
                 sessions.append(session)
-                child_id = self.short_hash(child_name, length=8)
-        return Child(child_id=child_id, name=child_name, sessions=sessions)
+        return Child(child_id=None, name=child_name, sessions=sessions)
 
     def load_session(self, session_id, session_path):
         drawing_path = self.find_drawing_file(session_path)
@@ -139,10 +138,6 @@ class DataLoader:
                 reader = csv.DictReader(f)
                 return next(reader, {})
         return {}
-    
-    def short_hash(self, name, length=8):
-        full_hash = hashlib.sha256(name.encode()).hexdigest()
-        return full_hash[:length]
     
     def getDrawingDataObject(self, drawing_path):
         with open(drawing_path, "rb") as file:

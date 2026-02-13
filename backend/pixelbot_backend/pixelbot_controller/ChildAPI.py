@@ -14,19 +14,21 @@ class ChildAPI:
             # if pixelbot connections fails, JSON file with children data remains safe
             try:
                 # use RemoteDataLoader if using pixelbot connection
-                children = RemoteDataLoader(self.data_root).load_all_children()
+                raw_children = RemoteDataLoader(self.data_root).load_all_children()
+                children = self.repository.create_or_update_children(raw_children)
             except Exception as e:
                 print("Remote load failed:", e)
     
-            # save fresh data to repository
-            self.repository.save_children(children)
             return children
 
         # Use locally robot data
         elif os.path.exists(self.data_root):
-            children = DataLoader(self.data_root).load_all_children()
-            # save fresh data to repository
-            self.repository.save_children(children)
+            try:
+                raw_children = DataLoader(self.data_root).load_all_children()
+                children = self.repository.create_or_update_children(raw_children)
+            except Exception as e:
+                print("Remote load failed:", e)
+            
             return children
         
         # Fallback to stored data
@@ -36,13 +38,6 @@ class ChildAPI:
     def send_children(self):
         children = self.load_children_objects()
         return [child.to_dict() for child in children]
-
-    def send_child(self, child_id):
-        children = self.load_children_objects()
-        for child in children:
-            if child.child_id == child_id:
-                return child.to_dict()
-        return None
     
     
 

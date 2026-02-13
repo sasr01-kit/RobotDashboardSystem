@@ -134,13 +134,6 @@ def get_recap(child_id: str):
 def get_children(): 
     return child_api.send_children() 
 
-@app.get("/pixelbot/children/{child_id}") 
-def get_child(child_id: str): 
-    child = child_api.send_child(child_id) 
-    if child is None: 
-        raise HTTPException(status_code=404, detail="Child not found") 
-    return child 
-
 @app.get("/pixelbot/children/{child_id}/sessions/{session_id}") 
 def get_session(child_id: str, session_id: str): 
     session = session_api.send_session(child_id, session_id) 
