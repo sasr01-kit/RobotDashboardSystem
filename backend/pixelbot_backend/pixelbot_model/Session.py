@@ -14,8 +14,11 @@ class Session:
         self.drawing = drawing
         self.story_summary = story_summary
         self.transcript = transcript
+        # SpeechSelfDisclosureWidth object (speech metrics: word count, interventions, etc.)
         self.speech_width = speech_width
+        # SpeechSelfDisclosureDepth object (speech intimacy metrics)
         self.speech_depth = speech_depth
+        # DrawingSelfDisclosureWidth object (drawing metrics: strokes, colors, area)
         self.drawing_width = drawing_width
 
     def to_dict(self):
@@ -76,10 +79,12 @@ class Session:
    
     @staticmethod
     def from_dict(data):
+    
+        # Reconstruct a Session object from a dictionary (loaded from JSON)
         session_id = data["sessionId"]
         session_date_str = data["sessionDate"]
 
-        # Convert string date → datetime
+        # Convert date string to datetime object if present
         session_date = None
         if session_date_str:
             session_date = datetime.datetime.strptime(session_date_str, "%d-%m-%Y")
@@ -87,7 +92,8 @@ class Session:
         drawing = DrawingData.from_dict(data["drawing"])
         story_summary = data["storySummary"]
         transcript = data["transcript"]
-
+        
+        # Reconstruct metric objects using dictionary unpacking
         speech_width = SpeechSelfDisclosureWidth(**data["speechWidth"])
         speech_depth = SpeechSelfDisclosureDepth(**data["speechDepth"])
         drawing_width = DrawingSelfDisclosureWidth(**data["drawingWidth"])

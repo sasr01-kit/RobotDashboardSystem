@@ -10,6 +10,10 @@ import os, re
 import datetime
 import json
 
+"""
+RemoteDataLoader is responsible for loading child and session data from the Pixelbot robot via HTTP requests.
+It reconstructs model objects from remote files, enabling backend operation with live robot data.
+"""
 class RemoteDataLoader:
 
     GRAPHIC_FILE_FORMAT = ".png"
@@ -27,13 +31,17 @@ class RemoteDataLoader:
     EMPTY_STRING = ""
     
     def __init__(self, pixelbot_url):
-        # Remove trailiing slash to avoid double slashes in URLs
+        # Remove trailing slash to avoid double slashes in URLs
         self.pixelbot_url = pixelbot_url.rstrip(self.SLASH)
 
     def load_all_children(self):
         children = []
+        
+        # Fetch the list of child names from the pixelbot's /children endpoint
         resp = requests.get(f"{self.pixelbot_url}{self.CHILDREN_ENDPOINT}")
         children_names = resp.json()[self.JSON_KEY_CHILDREN]
+        
+        # For each child, load their sessions and build a Child object
         for child_name in children_names:
             child = self.load_child(child_name)
             children.append(child)
@@ -46,9 +54,12 @@ class RemoteDataLoader:
         resp = requests.get(f"{self.pixelbot_url}{self.SLASH}{child_name}{self.SESSIONS_ENDPOINT}")
         session_ids = resp.json()[self.JSON_KEY_SESSIONS]
 
+        # For each session, load the session data and build a Session object
         for session_id in session_ids:
             session = self.load_session(child_name, session_id)
             sessions.append(session)  
+        
+        # child_id is None since it will be implemented in the DataRepository class   
         return Child(None, child_name, sessions)
 
 
@@ -57,19 +68,26 @@ class RemoteDataLoader:
         drawing_file_url = self.get_drawing_file(child_name, session_id)
         session_date = self.extract_day_from_file_url(drawing_file_url)
         
+        # Download the drawing file and create DrawingData object
         resp = requests.get(drawing_file_url)
         drawing = DrawingData(resp.json()["base64"])
-
+        
+        # Load transcript text file and parse it into a structured list
         transcript_text = self.loadTxt(child_name, session_id, self.TRANSCRIPT_FILE_NAME)
         transcript = self.parse_transcript(transcript_text)
-
+        
+        # Load story summary text file and parse it into a structured list
         story_summary_text = self.loadTxt(child_name, session_id, self.STORY_SUMMARY_FILE_NAME)
         story_summary = self.parse_story_summary(story_summary_text)
 
+        
+        # Build URLs for CSV metric files and load their contents
         speech_depth_path = self.get_file_url(child_name, session_id, self.SPEECH_DEPTH_CSV)
         speech_width_path = self.get_file_url(child_name, session_id, self.SPEECH_WIDTH_CSV)
         drawing_width_path = self.get_file_url(child_name, session_id, self.DRAWING_WIDTH_CSV)
 
+        
+        # Parse CSVs into metric objects 
         speech_width = SpeechSelfDisclosureWidth(**self.loadCsv(speech_width_path))
         speech_depth = SpeechSelfDisclosureDepth(**self.loadCsv(speech_depth_path))
         drawing_width = DrawingSelfDisclosureWidth(**self.loadCsv(drawing_width_path))
@@ -94,10 +112,12 @@ class RemoteDataLoader:
         url = self.get_file_url(child_name, session_id, filename)
         resp = requests.get(url)
         if resp.status_code == 200:
+        # Return empty string if file not found or error
             return resp.text
         return self.EMPTY_STRING
 
-    def loadCsv(self, file_path):
+    def loadCsv(self, file_path):   
+        # Download a CSV file and parse the first row into a dictionary
         resp = requests.get(file_path)
         # If successful, read CSV into dictionary
         if resp.status_code == 200:
@@ -113,30 +133,36 @@ class RemoteDataLoader:
         url_session = f"{self.pixelbot_url}{self.FILE_ENDPOINT}{child_name}{self.SLASH}{session_id}"
         
         resp = requests.get(url_session)
+        # If not successful, return None
         if resp.status_code != 200:
             return None
 
         files = resp.json().get("files", [])
 
+        # Return the URL of the first .png file found
         for file in files:
             if file.endswith(self.GRAPHIC_FILE_FORMAT):
                 return f"{url_session}{self.SLASH}{file}"
         return None
         
     def extract_day_from_file_url(self, file_url):
+        # Extract the session date from the drawing file name (format: DD-MM-YYYY)
         file_name = os.path.basename(file_url)
         # remove extension (.png)
         base_name = os.path.splitext(file_name)[0]
 
         # Extract DD-MM-YYYY 
         match = re.search(r"(\d{2}-\d{2}-\d{4})", base_name)
-        #return date object
+
+        #if the file has  name matching the date format, return the date 
         if match:
             date = match.group(1)
+            # Convert string date to datetime object
             return datetime.datetime.strptime(date, "%d-%m-%Y")
         return None
     
-    def parse_transcript(self, text):
+    def parse_transcript(self, text): 
+        # Parse transcript lines into a list of dicts with speaker and message
         transcript_list = []
         for line in text.splitlines():
             if ": " in line:
@@ -148,7 +174,8 @@ class RemoteDataLoader:
         return transcript_list
 
 
-    def parse_story_summary(self, text):
+    def parse_story_summary(self, text):  
+        # Parse story summary JSON into a list of dicts with object name and description
         try:
             object_dict = json.loads(text)
         except json.JSONDecodeError:
