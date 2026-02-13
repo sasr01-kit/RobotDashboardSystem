@@ -3,7 +3,7 @@ import CalendarHeatMap from "../components/CalendarHeatMap";
 import { usePixelbotSummary } from "../hooks/usePixelbotSummary";
 
 export default function PixelbotSummaryView() {
-    const { summaryStats, isLoading } = usePixelbotSummary(); // Custom hook to fetch pixelbot summary data
+    const { summaryStats, isLoading } = usePixelbotSummary(); // Custom hook to fetch pixelbot summary data - SummaryStatsDTO
 
     function handlePrint(elementId) { // Print functionality
         if (elementId) {

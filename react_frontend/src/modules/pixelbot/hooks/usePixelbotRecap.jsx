@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export function usePixelbotRecap(childId) {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(null); // RecapDTO
   const [child, setChild] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);

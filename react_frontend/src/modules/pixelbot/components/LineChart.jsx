@@ -53,7 +53,7 @@ export default function LineChart({ data, lineColor = '#20A090', showGrid = true
     // Configure chart options
     const options = {
         chart: {
-            type: 'line',
+            type: 'line',   // Line chart type
             height: 200,
             backgroundColor: 'transparent'
         },
@@ -61,11 +61,11 @@ export default function LineChart({ data, lineColor = '#20A090', showGrid = true
             text: null
         },
         xAxis: {
-            categories: categories,
+            categories: categories, // X-axis categories
             title: {
                 text: xAxisLabel || null
             },
-            gridLineWidth: showGrid ? 1 : 0,
+            gridLineWidth: showGrid ? 1 : 0, // Show/hide grid lines
             labels: {
                 style: {
                     fontSize: '11px',
@@ -84,6 +84,7 @@ export default function LineChart({ data, lineColor = '#20A090', showGrid = true
                     color: '#666'
                 }
             },
+            // Add average line if value exists
             plotLines: averageLine ? [{
                 color: '#FF4444',
                 width: 2,
@@ -110,7 +111,7 @@ export default function LineChart({ data, lineColor = '#20A090', showGrid = true
         plotOptions: {
             line: {
                 marker: {
-                    enabled: true,
+                    enabled: true, // Show points on line
                     radius: 4
                 }
             }

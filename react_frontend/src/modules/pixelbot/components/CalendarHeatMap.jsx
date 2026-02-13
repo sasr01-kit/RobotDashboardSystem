@@ -15,33 +15,34 @@ export default function CalendarHeatMap({ id, data, colorScale, onPrint }) {
         });
     }, []);
 
-    
-// Helper: Add color/name/label based on percentage buckets
+
+    // Helper: Add color/name/label based on percentage buckets
     function enrichDataClasses(rawClasses) {
         if (!rawClasses) return [];
         return rawClasses.map((cls, index) => {
             const { from, to } = cls;
 
-            
-        // derive name by bucket position
-        const names = ["No usage", "Low", "Medium", "High", "Intense"];
-        const safeName = names[index] || `Level ${index+1}`;
 
-        // derive label directly from from–to
-        const label = from === to ? `${from}` : `${from}–${to}`;
+            // derive name by bucket position
+            const names = ["No usage", "Low", "Medium", "High", "Intense"];
+            const safeName = names[index] || `Level ${index + 1}`;
 
-        // derive color dynamically
-        const colors = ["#ebedf0","#c6e48b","#7bc96f","#239a3b","#196127"];
-        const color = colors[index] || "#196127";
+            // derive label directly from from–to
+            const label = from === to ? `${from}` : `${from}–${to}`;
 
-        return { ...cls, color, safeName, label };
-             });
-        }
+            // derive color dynamically
+            const colors = ["#ebedf0", "#c6e48b", "#7bc96f", "#239a3b", "#196127"];
+            const color = colors[index] || "#196127";
+
+            return { ...cls, color, safeName, label };
+        });
+    }
 
 
-    
+
+    // Memoize enriched color scale to prevent recalculation
     const enrichedColorScale = useMemo(() => ({
-        dataClasses: enrichDataClasses(colorScale?.dataClasses  || [])
+        dataClasses: enrichDataClasses(colorScale?.dataClasses || [])
     }), [colorScale]);
 
 
@@ -53,7 +54,7 @@ export default function CalendarHeatMap({ id, data, colorScale, onPrint }) {
             height: 200,
             marginTop: 10,
             marginBottom: 50,
-            marginLeft: 90,
+            marginLeft: 90, // Space for Y-axis labels
             marginRight: 20,
             backgroundColor: 'transparent'
         },
@@ -64,6 +65,7 @@ export default function CalendarHeatMap({ id, data, colorScale, onPrint }) {
             visible: true,
             labels: {
                 enabled: true,
+                // Custom formatter to show month names based on week index
                 formatter: function () {
                     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
                     const weekIndex = this.value;
@@ -105,9 +107,9 @@ export default function CalendarHeatMap({ id, data, colorScale, onPrint }) {
             tickInterval: 1
         },
         yAxis: {
-            categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], // Days of week
             title: null,
-            reversed: true,
+            reversed: true, // Show Monday at top
             labels: {
                 style: {
                     fontSize: '11px',
@@ -116,7 +118,7 @@ export default function CalendarHeatMap({ id, data, colorScale, onPrint }) {
             },
             gridLineWidth: 0
         },
-        
+
         colorAxis: {
             dataClasses: enrichedColorScale.dataClasses,
         },
@@ -125,6 +127,7 @@ export default function CalendarHeatMap({ id, data, colorScale, onPrint }) {
             enabled: false
         },
         tooltip: {
+            // Custom tooltip to show date and value
             formatter: function () {
                 const point = this.point;
                 const date = new Date(point.date);
@@ -142,7 +145,7 @@ export default function CalendarHeatMap({ id, data, colorScale, onPrint }) {
         },
         plotOptions: {
             heatmap: {
-                borderWidth: 2,
+                borderWidth: 2,     // Gap between cells
                 borderColor: '#fff',
                 dataLabels: {
                     enabled: false
@@ -183,12 +186,12 @@ export default function CalendarHeatMap({ id, data, colorScale, onPrint }) {
                 <div className="heatmap-legend">
                     {enrichedColorScale.dataClasses.map((dataClasses, index) => (
                         <div key={index} className="legend-item" title={dataClasses.safeName}>
-                             <span className="legend-label">{dataClasses.safeName}</span>
-                             <span className={`box box-${index}`} style={{ backgroundColor: dataClasses.color}}></span>
+                            <span className="legend-label">{dataClasses.safeName}</span>
+                            <span className={`box box-${index}`} style={{ backgroundColor: dataClasses.color }}></span>
                             <span>{dataClasses.label}</span>
                         </div>
                     ))}
-                
+
                 </div>
             </div>
         </div>

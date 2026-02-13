@@ -20,28 +20,28 @@ export default function BarChart({ data, color = '#20A090', xAxisLabel, yAxisLab
     // Highcharts configuration
     const options = {
         chart: {
-            type: 'column',
-            height: 200,
-            backgroundColor: 'transparent'
+            type: 'column', // Use column chart type
+            height: 200,    // Set chart height
+            backgroundColor: 'transparent' // Transparent background
         },
         title: {
             text: null
         },
         xAxis: {
-            categories: data.map(d => d.label.replace('Session ', 'S')),
+            categories: data.map(d => d.label.replace('Session ', 'S')), // Shorten labels
             title: {
-                text: xAxisLabel || null
+                text: xAxisLabel || null // Optional X-axis title
             },
             labels: {
                 style: {
-                    fontSize: '11px',
+                    fontSize: '11px', // Small font size
                     color: '#666'
                 }
             }
         },
         yAxis: {
             title: {
-                text: yAxisLabel || null
+                text: yAxisLabel || null // Optional Y-axis title
             },
             labels: {
                 style: {
@@ -49,6 +49,7 @@ export default function BarChart({ data, color = '#20A090', xAxisLabel, yAxisLab
                     color: '#666'
                 }
             },
+            // Add a dashed red line for the average if provided
             plotLines: averageLine ? [{
                 color: '#FF4444',
                 width: 2,
@@ -70,10 +71,10 @@ export default function BarChart({ data, color = '#20A090', xAxisLabel, yAxisLab
         },
         plotOptions: {
             column: {
-                color: greenShades[2], // Start with Medium Green
-                borderRadius: 4,
-                colorByPoint: true,
-                colors: greenShades
+                color: greenShades[2], // Default color (Medium Green)
+                borderRadius: 4,       // Rounded corners
+                colorByPoint: true,    // Different color for each point
+                colors: greenShades    // Use custom color palette
             }
         },
         series: [{

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export function usePixelbotSession(childId, sessionId) {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(null); // SessionDTO
   const [child, setChild] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);

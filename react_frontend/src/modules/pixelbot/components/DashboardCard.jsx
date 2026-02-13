@@ -2,6 +2,7 @@ import '../Pixelbot.css';
 import '../styles/DashboardCard.css';
 
 // A reusable dashboard card component with optional print functionality and icon support.
+// props: id (HTML id), title, subtitle, children (content), onPrint (callback), icon (element), className
 export default function DashboardCard({ id, title, subtitle, children, onPrint, icon, className = '' }) {
     return (
         <div id={id} className={`dashboard-card ${className}`}>
