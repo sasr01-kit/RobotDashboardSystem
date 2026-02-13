@@ -21,8 +21,13 @@ class Teleoperate:
             cb(self, None)   # synchronous callback
 
     def add_command(self, command: str):
-        self._commands.append(command)
-        self.notify()      
+        if command == "STOP":
+            self._commands.clear()
+            self._commands.append(command)
+        else:
+            self._commands.append(command)
+
+        self.notify()
 
     def get_command(self):
         if not self._commands:
