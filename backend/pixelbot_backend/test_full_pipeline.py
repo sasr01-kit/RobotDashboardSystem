@@ -8,7 +8,8 @@ from pixelbot_backend.pixelbot_storage.DataLoader import DataLoader
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository
 
 # ---- CONFIG ----
-DATA_ROOT = "/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing"
+DATA_ROOT = "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing"
+repo = DataRepository()
 OUTPUT_JSON = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "pixelbot_storage",
@@ -23,7 +24,8 @@ print("=== STARTING FULL PIPELINE TEST ===")
 # If you're connected to Pixelbot, you can use RemoteDataLoader instead.
 print("\n[1] Loading children using DataLoader...")
 loader = DataLoader(DATA_ROOT)
-children = loader.load_all_children()
+raw_children = loader.load_all_children()
+children = repo.update_children(raw_children)
 
 assert len(children) > 0, "ERROR: No children loaded! Check data_root."
 print(f"Loaded {len(children)} children.")
@@ -33,7 +35,6 @@ for child in children:
 
 # 2. Save using your DataRepository
 print("\n[2] Saving children to JSON using DataRepository...")
-repo = DataRepository()
 repo.save_children(children)
 
 assert os.path.exists(OUTPUT_JSON), "ERROR: children_data.json was not saved!"

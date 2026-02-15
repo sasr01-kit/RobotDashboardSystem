@@ -6,6 +6,6 @@ repository = DataRepository()
 api = ChildAPI("C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing", repository)
 
 globalAPI = GlobalMetricsAPI(api)  
-recap = globalAPI.send_child_recap("2360809f47514450b4d4437dd9a857b0")
+recap = globalAPI.send_child_recap("f26fd8a02e104ca0b2bff5244f4c27ef")
 
 print(recap)

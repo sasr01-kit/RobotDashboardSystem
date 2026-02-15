@@ -1,10 +1,10 @@
 import asyncio
 import random
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.middleware.cors import CORSMiddleware # avoid fetch errors in REST API
+# from fastapi.middleware.cors import CORSMiddleware # avoid fetch errors in REST API
 import json
 
-from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
+'''from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
 from turtlebot4_backend.turtlebot4_controller.StatusController import StatusController
 from turtlebot4_backend.turtlebot4_model.ConcreteObserver import ConcreteObserver
 from turtlebot4_backend.turtlebot4_model.Teleoperate import Teleoperate
@@ -12,7 +12,7 @@ from turtlebot4_backend.turtlebot4_controller.TeleopController import TeleopCont
 from turtlebot4_backend.turtlebot4_model.Map import Map
 from turtlebot4_backend.turtlebot4_controller.MapController import MapController
 from turtlebot4_backend.turtlebot4_model.Path import Path
-from turtlebot4_backend.turtlebot4_controller.PathController import PathController
+from turtlebot4_backend.turtlebot4_controller.PathController import PathController'''
 
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository 
 from pixelbot_backend.pixelbot_controller.ChildAPI import ChildAPI 
@@ -81,10 +81,11 @@ repository = DataRepository()
 # Ane's local data path: "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing"
 # Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
 # Pixelbot path: "http://192.168.2.70:8000"
-child_api = ChildAPI("/mnt/c/Users/kelly/Desktop/Uni/PSE/pse_data_example/saved_drawing", repository) 
+child_api = ChildAPI("C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing", repository) 
 global_metrics_api = GlobalMetricsAPI(child_api)
 session_api = SessionAPI(child_api) 
 
+from fastapi.middleware.cors import CORSMiddleware
 # CORS middleware to allow frontend to access REST API without CORS errors
 app.add_middleware( 
     CORSMiddleware, 

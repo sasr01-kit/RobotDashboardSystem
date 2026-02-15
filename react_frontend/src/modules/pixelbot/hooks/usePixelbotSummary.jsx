@@ -15,6 +15,7 @@ export function usePixelbotSummary() {
             setError(null);
             const response = await fetch(`http://localhost:8080/pixelbot/summary`); // FOR REAL IMPLEMENTATION CHANGE url TO API ENDPOINT
             const data = await response.json();
+            console.log("FULL RESPONSE FROM SERVER:", data);
             const summaryStatsDTO = {
                 totalSessions: data.totalSessionsThisMonth,
                 avgSessionsPerChild: data.sessionsPerChild,
