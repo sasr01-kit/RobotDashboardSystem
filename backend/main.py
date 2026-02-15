@@ -1,17 +1,14 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+import json
 
-# -----------------------------
-# Pixelbot imports (always safe)
-# -----------------------------
+# Pixelbot imports 
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository
 from pixelbot_backend.pixelbot_controller.ChildAPI import ChildAPI
 from pixelbot_backend.pixelbot_controller.SessionAPI import SessionAPI
 from pixelbot_backend.pixelbot_controller.GlobalMetricsAPI import GlobalMetricsAPI
 
-# -----------------------------
 # Try loading TurtleBot imports
-# -----------------------------
 TURTLEBOT_AVAILABLE = True
 try:
     from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
@@ -27,9 +24,8 @@ except Exception as e:
     print("[INFO] TurtleBot not available:", e)
     TURTLEBOT_AVAILABLE = False
 
-# -----------------------------
+
 # FastAPI app + CORS
-# -----------------------------
 app = FastAPI()
 
 app.add_middleware(
@@ -40,9 +36,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# -----------------------------
 # Pixelbot setup
-# -----------------------------
 repository = DataRepository()
 child_api = ChildAPI("C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing", repository)
 global_metrics_api = GlobalMetricsAPI(child_api)
@@ -67,10 +61,10 @@ def get_session(child_id: str, session_id: str):
         raise HTTPException(status_code=404, detail="Session not found")
     return session
 
-# -----------------------------
-# TurtleBot setup (optional)
-# -----------------------------
+
+# TurtleBot setup
 if TURTLEBOT_AVAILABLE:
+    connected_clients = set()
     teleoperate = Teleoperate()
     teleop_controller = TeleopController(teleoperate)
     map_model = Map()
@@ -86,12 +80,30 @@ if TURTLEBOT_AVAILABLE:
         observer = ConcreteObserver(websocket)
         robot_state.attach(observer)
         map_model.attach(observer)
+        map_controller._send_initial_map_png()
         path_model.attach(observer)
+        path_model.set_path_controller(path_controller)
 
         try:
             while True:
-                msg = await websocket.receive_json()
-                # handle turtlebot messages...
+                raw = await websocket.receive_text() 
+                msg = json.loads(raw) 
+                print(f"[WS] Parsed JSON: {msg}")
+
+                if "command" in msg: 
+                    teleoperate.fromJSON(msg) 
+
+                if "isPathModuleActive" in msg:
+                    await path_model.fromJSON(msg)
+                    await robot_state.set_mode()
+
+
+                if "dockStatus" in msg:
+                    await path_model.fromJSON(msg)
+                    await robot_state.set_docked()
+
+                if msg.get("type") == "GOAL_FEEDBACK":
+                    await path_model.apply_feedback(msg)
         except WebSocketDisconnect:
             robot_state.detach(observer)
             map_model.detach(observer)
