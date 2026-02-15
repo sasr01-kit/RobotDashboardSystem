@@ -21,13 +21,14 @@ try:
     from turtlebot4_backend.turtlebot4_model.Path import Path
     from turtlebot4_backend.turtlebot4_controller.PathController import PathController
 except Exception as e:
-    print("[INFO] TurtleBot not available:", e)
+    print("TurtleBot not available:", e)
     TURTLEBOT_AVAILABLE = False
 
 
-# FastAPI app + CORS
+# Main FastAPI application for the dashboard backend
 app = FastAPI()
 
+# CORS middleware allows frontend to access REST API without CORS errors
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -36,8 +37,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Pixelbot setup
+# Pixelbot setup. Initialize repository and APIs for handling child/session data.
 repository = DataRepository()
+
+# Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
+# Pixelbot path: "http://192.168.2.70:8000"
 child_api = ChildAPI("C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing", repository)
 global_metrics_api = GlobalMetricsAPI(child_api)
 session_api = SessionAPI(child_api)
@@ -62,9 +66,12 @@ def get_session(child_id: str, session_id: str):
     return session
 
 
-# TurtleBot setup
+# TurtleBot setup. Only initialize if Turtlebot imports were succesfully loaded.
 if TURTLEBOT_AVAILABLE:
+    # Store all connected WebSocket clients
     connected_clients = set()
+
+    # Initialize models and controllers
     teleoperate = Teleoperate()
     teleop_controller = TeleopController(teleoperate)
     map_model = Map()
@@ -74,9 +81,12 @@ if TURTLEBOT_AVAILABLE:
     robot_state = RobotState(path_model)
     status_controller = StatusController(robot_state)
 
+    # WebSocket endpoint for real-time communication with the turtlebot4 dashboard
     @app.websocket("/ws")
     async def websocket_endpoint(websocket: WebSocket):
         await websocket.accept()
+
+        # Create and attach observer for this client
         observer = ConcreteObserver(websocket)
         robot_state.attach(observer)
         map_model.attach(observer)
@@ -84,6 +94,7 @@ if TURTLEBOT_AVAILABLE:
         path_model.attach(observer)
         path_model.set_path_controller(path_controller)
 
+        # Listen for incoming messages from the client and handle commands
         try:
             while True:
                 raw = await websocket.receive_text() 
@@ -110,4 +121,4 @@ if TURTLEBOT_AVAILABLE:
             path_model.detach(observer)
 
 else:
-    print("[INFO] WebSocket /ws disabled because TurtleBot is not available.")
+    print("WebSocket /ws disabled because TurtleBot is not available.")
