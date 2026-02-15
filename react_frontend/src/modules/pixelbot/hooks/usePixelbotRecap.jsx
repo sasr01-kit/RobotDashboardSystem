@@ -23,6 +23,7 @@ export function usePixelbotRecap(childId) {
         if (!res.ok) throw new Error("Child recap not found");
 
         const data = await res.json();
+        console.log("FULL RESPONSE FROM SERVER:", data);
 
         // Calculate trend percentage from sessionFrequencyTrend (last 2 months)
         const sessionTrend = data.engagement?.sessionFrequencyTrend || [];
