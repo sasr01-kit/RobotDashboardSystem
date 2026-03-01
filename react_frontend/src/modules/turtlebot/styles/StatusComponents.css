@@ -35,6 +35,14 @@
     height: 50px;
 }
 
+.status-value.status-connected, .status-value.status-high-battery {
+    color: var(--success-green);
+}
+
+.status-value.status-disconnected, .status-value.status-low-battery {
+    color: var(--error-red);
+}
+
 /* Power Status Styles */
 .power-status { 
     display: flex; 
