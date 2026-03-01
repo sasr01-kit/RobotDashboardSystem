@@ -36,3 +36,18 @@ def save_path_history(path_model) -> Path:
     file_path = SNAPSHOT_DIR / f"path_history_{_safe_ts()}.json"
     file_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return file_path
+
+def load_latest_path_history() -> Dict[str, Any]:
+    # Find newest file by name and timestamp
+    files = sorted(SNAPSHOT_DIR.glob("path_history_*.json"))
+    if not files:
+        return {"pathHistory": [], "savedAt": None}
+
+    latest = files[-1]
+    data = json.loads(latest.read_text(encoding="utf-8"))
+
+    return {
+        "pathHistory": data.get("pathHistory", []),
+        "savedAt": data.get("savedAt"),
+        "filename": latest.name,
+    }
