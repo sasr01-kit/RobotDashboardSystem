@@ -21,6 +21,23 @@
   gap: 1.1rem;
 }
 
+.path-history-header {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+
+.save-path-history-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--kit-green);
+  color: var(--grid-white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
 /* Minimized Status Bar Styling */
 .minimized-status-bar {
   display: flex;

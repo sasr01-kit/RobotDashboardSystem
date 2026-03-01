@@ -1,6 +1,8 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
+from datetime import datetime, timezone
+
 
 # Pixelbot imports 
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository
@@ -20,6 +22,7 @@ try:
     from turtlebot4_backend.turtlebot4_controller.MapController import MapController
     from turtlebot4_backend.turtlebot4_model.Path import Path
     from turtlebot4_backend.turtlebot4_controller.PathController import PathController
+    from turtlebot4_backend.turtlebot4_storage.PathHistoryRepository import save_path_history
 except Exception as e:
     print("TurtleBot not available:", e)
     TURTLEBOT_AVAILABLE = False
@@ -115,6 +118,10 @@ if TURTLEBOT_AVAILABLE:
 
                 if msg.get("type") == "GOAL_FEEDBACK":
                     await path_model.apply_feedback(msg)
+
+                if msg.get("type") == "SAVE_PATH_HISTORY":
+                    file_path = save_path_history(path_model) 
+                    print(f"Path history saved to: {file_path}")
         except WebSocketDisconnect:
             robot_state.detach(observer)
             map_model.detach(observer)

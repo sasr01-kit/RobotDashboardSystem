@@ -60,3 +60,13 @@ export function useTurtlebotGoal() {
 
   return goalDTO;
 }
+
+// Additional hook to trigger saving the current path history on the backend
+export function useSavePathHistory() {
+  const { send } = useWebSocketContext();
+
+  return () => {
+    if (!send) return;
+    send({ type: "SAVE_PATH_HISTORY" });
+  };
+}
