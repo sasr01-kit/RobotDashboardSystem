@@ -8,18 +8,25 @@ from collections import Counter
 class GlobalMetricsAPI:
 
     def __init__(self, child_api):
+        # Store a reference to the ChildAPI for accessing children and their sessions
         self.child_api = child_api 
+        # Load all children and their sessions at initialization for quick access
         self.children = self.child_api.load_children_objects()  
 
     def send_global_metrics_summary(self):
+        # Get current date for filtering and calculations
         now = datetime.datetime.now()
         month = now.month
         year = now.year
         sessions = []
 
+        
+        # Collect all sessions from all children into a single list
         for child in self.children:
             sessions.extend(child.sessions)
 
+        
+        # Calculate various metrics using utility functions
         sessions_per_day = Utils.calculate_avg_sessions_per_day(sessions, year, now)
         sessions_growth_rate = Utils.calculate_sessions_growth_rate(sessions, month, year)
         sessions_this_month = Utils.count_sessions_this_month(sessions, month, year)
@@ -30,9 +37,9 @@ class GlobalMetricsAPI:
         return {
             # total sessions for this month
             "totalSessionsThisMonth": sessions_this_month,
-            # sessions per child for this month
+            # sessions per child 
             "sessionsPerChild": sessions_per_child_so_far, 
-            # sessions per child per day for this month
+            # sessions per day
             "sessionsPerDay": sessions_per_day,    
             # growth rate of sessions compared to last month
             "sessionsGrowthRate": sessions_growth_rate,
@@ -54,10 +61,11 @@ class GlobalMetricsAPI:
             raise ValueError(f"Child with id {child_id} not found")
 
         sessions = child.sessions
-
         now = datetime.datetime.now()
         year = now.year
 
+        
+        # Build a recap dictionary with all metrics needed for the recap page
         recap = {
             "name": child.name,
             "engagement": {
@@ -65,27 +73,19 @@ class GlobalMetricsAPI:
                 "totalSessions": len(sessions),
                 # Can be visualised as a line chart. It's a map for every month and the count of sessions taken each month
                 "sessionFrequencyTrend": Utils.get_session_frequency_monthly(sessions, year),
-                # "sessionStreakWeeks": Utils.get_session_streak(sessions),
             },
             "expressiveness": {
-                # It can be written under or above the chart
                 "totalWordCount": Utils.get_total_word_count(sessions),
-                # red line which shows the average for the bar chart
                 "averageWordCount": Utils.avg_word_count(sessions),
-                # a map of the word count for every session. Can be visualized as a bbar chart
                 "wordCountGrowthRate": Utils.get_avg_word_count_growth_rate(sessions, year),
-                # a map of the speech time for every session.
                 "speechTimeGrowthRate": Utils.get_speech_time_growth_rate(sessions, year),
             },
             "opennes": {
-                # red line which shows the average for the line chart
                 "averageIntimacyScore": Utils.get_avg_intimacy_score(sessions),
-                # a map for every session and its intimacy value. Can be visualized as a line chart.
                 "intimacyTrend": Utils.get_intimacy_trend(sessions, year),
             },
             "drawing": {
                 "drawings": child.get_drawings(),
-                # all these three metrics can be put under the drawing section in the same box
                 "averageStrokeCount": Utils.get_avg_stroke_count(sessions),
                 "averageNumberColors": Utils.get_avg_colors_used(sessions),
                 "averageFilledArea": Utils.get_avg_filled_area(sessions),
@@ -113,6 +113,7 @@ class GlobalMetricsAPI:
                 session_date = session.session_date.strftime("%d-%m-%Y")
                 date_map[session_date] += 1
 
+        # Fill in all days of the year, even if there were no sessions
         start = datetime.date(year, 1, 1)
         end = datetime.date(year, 12, 31)
         delta = datetime.timedelta(days=1)
@@ -126,6 +127,7 @@ class GlobalMetricsAPI:
         return dict(date_map)
 
     def get_most_common_objects(self, sessions, top_n=5):
+        # Count occurrences of each object name in all story summaries
         counter = Counter()
 
         for session in sessions:
@@ -135,26 +137,30 @@ class GlobalMetricsAPI:
                 if name:
                     counter[name] += 1
 
+        # Return the top_n most common objects as (name, count) tuples
         return counter.most_common(top_n)
     
     def get_heatmap_ranges(self, dailySessionCounts):
+        # Calculate color scale buckets for the heatmap based on busiest day
         max_per_day = max(dailySessionCounts.values())
         bucket = max_per_day / 4
 
         
+        # Special case: if max is 1 or less, use only two buckets
         if max_per_day <= 1:
             return [
                 {"from": 0, "to": 0},
                 {"from": 1, "to": 1},
             ]
 
+        
+        # Calculate bucket boundaries for color scale
         b1 = max(1, math.floor(bucket))
         b2 = max(b1 + 1, math.floor(bucket * 2))
         b3 = max(b2 + 1, math.floor(bucket * 3))
         b4 = max(b3 + 1, max_per_day)
 
-
-        
+        # Return list of bucket ranges for frontend color mapping
         return [
                 {"from": 0, "to": 0},
                 {"from": 1, "to": b1},

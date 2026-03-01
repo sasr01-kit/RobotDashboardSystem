@@ -13,13 +13,6 @@ class Child:
             "sessions": [session.to_dict() for session in self.sessions]
         }    
     
-    def get_recap(self):
-        return {
-            "totalSessions": len(self.sessions),
-            "totalWordCount": self.get_total_word_count(),
-            "avgIntimacyScore": self.get_avg_Intimacy_score() 
-        }
-    
     def get_id(self): 
         return self.child_id
 

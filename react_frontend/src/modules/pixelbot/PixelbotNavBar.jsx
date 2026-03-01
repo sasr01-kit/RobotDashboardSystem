@@ -10,7 +10,7 @@ export default function PixelbotNavBar() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const { children, isLoading } = usePixelbotChildren(); // Custom hook to fetch children and their sessions
+    const { children, isLoading } = usePixelbotChildren(); // Custom hook to fetch children and their sessions - ChildDTO
 
     const [isChildDropDownOpen, toggleChildMenu] = useState(false);
     const [selectedChildId, setSelectedChildId] = useState(null);

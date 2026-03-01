@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 
 export default function ChildSessionView() {
     const { childId, sessionId } = useParams();
-    const { children } = usePixelbotChildren(); // Fetch all children data with hook
+    const { children } = usePixelbotChildren(); // Fetch all children data with hook - ChildDTO
     const { session, isLoading } = usePixelbotSession(childId, sessionId); // Fetch specific session data with hook
 
     const child = children ? children.find(c => c.childId == childId) : null;

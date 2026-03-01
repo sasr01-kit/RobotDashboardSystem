@@ -2,6 +2,7 @@ import '../Pixelbot.css';
 import '../styles/MetricCard.css';
 
 // A reusable card component to display a metric with title, value, unit, icon, and trend information.
+// props: title, value, unit, icon, trendValue
 export default function MetricCard({ title, value, unit, icon, trendValue }) {
     return (
         <div className="metric-card">

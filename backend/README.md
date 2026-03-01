@@ -107,7 +107,7 @@ These steps are optional, but should be executed **before** starting the backend
 
 #### Setting up local test data (Pixelbot)
 
-In the backend, change the file paths in `main.py` (line 84) and optionally other test files. If the path is not correct or data is faulty, the Pixelbot will currently block the 8080 Websocket and prevent the connection (will be fixed later in quality assurance).
+In the backend, change the file paths in `main.py` (line 84) and optionally other test files. If the path is not correct or data is faulty, the Pixelbot will currently block the 8080 Websocket and prevent the connection (will be fixed later in quality assurance). If you want to connect the backend with the pixelbot, then use this path: http://192.168.2.70:8000.
 ```bash
 child_api = ChildAPI("/yourFilePath", repository)
 ```

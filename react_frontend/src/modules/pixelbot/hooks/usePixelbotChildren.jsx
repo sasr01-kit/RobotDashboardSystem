@@ -16,6 +16,7 @@ export function usePixelbotChildren() {
 
         const data = await res.json();
         
+        
         // Map the API response to the ChildDto structure for consistency
         const childDTO = data.map(child => ({ 
             childId: child.child_id, 
