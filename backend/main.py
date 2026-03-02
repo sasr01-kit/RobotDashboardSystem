@@ -56,9 +56,6 @@ def get_summary():
 def get_children():
     return child_api.send_children()
 
-@app.get("/pixelbot/children")
-def get_children():
-    return child_api.send_children()
 
 @app.get("/pixelbot/children/{child_id}/recap")
 def get_recap(child_id: str):
