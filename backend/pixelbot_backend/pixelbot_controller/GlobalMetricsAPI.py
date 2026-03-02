@@ -7,13 +7,10 @@ from collections import Counter
 
 class GlobalMetricsAPI:
 
-    def __init__(self, child_api):
-        # Store a reference to the ChildAPI for accessing children and their sessions
-        self.child_api = child_api 
-        # Load all children and their sessions at initialization for quick access
-        self.children = self.child_api.load_children_objects()  
+    def __init__(self):
+        pass
 
-    def send_global_metrics_summary(self):
+    def send_global_metrics_summary(self, children):
         # Get current date for filtering and calculations
         now = datetime.datetime.now()
         month = now.month
@@ -22,7 +19,7 @@ class GlobalMetricsAPI:
 
         
         # Collect all sessions from all children into a single list
-        for child in self.children:
+        for child in children:
             sessions.extend(child.sessions)
 
         
@@ -30,7 +27,7 @@ class GlobalMetricsAPI:
         sessions_per_day = Utils.calculate_avg_sessions_per_day(sessions, year, now)
         sessions_growth_rate = Utils.calculate_sessions_growth_rate(sessions, month, year)
         sessions_this_month = Utils.count_sessions_this_month(sessions, month, year)
-        sessions_per_child_so_far = Utils.calculate_avg_sessions_per_child_so_far(self.children, sessions, now)
+        sessions_per_child_so_far = Utils.calculate_avg_sessions_per_child_so_far(children, sessions, now)
         daily_session_counts = self.getDailySessionHeatmap(sessions, year)
         heatmap_ranges = self.get_heatmap_ranges(daily_session_counts)
 
@@ -49,13 +46,13 @@ class GlobalMetricsAPI:
             "colorScale": { "dataClasses": heatmap_ranges },
         }
     
-    def get_child_obj(self, child_id):
-        for child in self.children:
+    def get_child_obj(self, child_id, children):
+        for child in children:
             if child.child_id == child_id:
                 return child
     
-    def send_child_recap(self, child_id):
-        child = self.get_child_obj(child_id)
+    def send_child_recap(self, child_id, children):
+        child = self.get_child_obj(child_id, children)
         
         if child is None:
             raise ValueError(f"Child with id {child_id} not found")
@@ -78,6 +75,7 @@ class GlobalMetricsAPI:
                 "totalWordCount": Utils.get_total_word_count(sessions),
                 "averageWordCount": Utils.avg_word_count(sessions),
                 "wordCountGrowthRate": Utils.get_avg_word_count_growth_rate(sessions, year),
+                "averageSpeechTime": Utils.get_avg_speech_time(sessions),
                 "speechTimeGrowthRate": Utils.get_speech_time_growth_rate(sessions, year),
             },
             "opennes": {

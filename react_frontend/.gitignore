@@ -48,3 +48,7 @@ coverage-*
 # Misc
 *.tgz
 *.log
+
+# children files
+backend/pixelbot_backend/pixelbot_storage/children_data.json
+backend/pixelbot_backend/pixelbot_storage/children_meta.json

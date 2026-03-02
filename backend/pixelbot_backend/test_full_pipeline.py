@@ -6,8 +6,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from pixelbot_backend.pixelbot_storage.DataLoader import DataLoader
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository
+from pixelbot_backend.pixelbot_storage.RemoteDataLoader import RemoteDataLoader
 
 # ---- CONFIG ----
+# Set this to your local data folder or the pixelbot robot's URL: http://192.168.2.70:8000
 DATA_ROOT = "C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing"
 repo = DataRepository()
 OUTPUT_JSON = os.path.join(
@@ -23,7 +25,13 @@ print("=== STARTING FULL PIPELINE TEST ===")
 # 1. Load from disk using your DataLoader
 # If you're connected to Pixelbot, you can use RemoteDataLoader instead.
 print("\n[1] Loading children using DataLoader...")
-loader = DataLoader(DATA_ROOT)
+
+loader = ""
+if DATA_ROOT.startswith("http://"): 
+    loader = RemoteDataLoader(DATA_ROOT)
+elif os.path.exists(DATA_ROOT):
+    loader = DataLoader(DATA_ROOT)
+
 raw_children = loader.load_all_children()
 children = repo.update_children(raw_children)
 

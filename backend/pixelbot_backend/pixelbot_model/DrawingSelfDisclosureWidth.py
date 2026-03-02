@@ -21,25 +21,25 @@ class DrawingSelfDisclosureWidth:
             "amount_filled_area": self.amount_filled_area
         }
     
-    def getStrokeCount(self):
+    def get_stroke_count(self):
         return self.stroke_count        
     
-    def getTotalStrokeLength(self):
+    def get_total_stroke_length(self):
         return self.total_stroke_length 
     
-    def getAvgStrokeLength(self):
+    def get_avg_stroke_length(self):
         return self.average_stroke_length
     
-    def getStdStrokeLength(self):
+    def get_std_stroke_length(self):
         return self.std_stroke_length   
     
-    def getColorUsedCount(self):
+    def get_color_used_count(self):
         return self.color_used_count
     
-    def getPenSizeUsedCount(self):
+    def get_pen_size_used_count(self):
         return self.pen_size_used_count
     
-    def getAmountFilledArea(self):
+    def get_amount_filled_area(self):
         return self.amount_filled_area
     
     @staticmethod

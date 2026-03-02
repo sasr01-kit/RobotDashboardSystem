@@ -47,6 +47,7 @@ export function usePixelbotRecap(childId) {
           // Word count data for bar chart
           wordCountData: (data.expressiveness?.wordCountGrowthRate || []).map(item => ({
             label: item.sessionId,
+            sessionDate: new Date(item.sessionDate).toLocaleDateString("en-GB", {day: "2-digit",month: "short",year: "numeric"}), 
             value: item.wordCount
           })),
           
@@ -72,6 +73,7 @@ export function usePixelbotRecap(childId) {
             
             totalWordCount: data.expressiveness?.totalWordCount || 0,
             averageWordCount: data.expressiveness?.averageWordCount || 0,
+            averageSpeechTime: data.expressiveness?.averageSpeechTime / 60 || 0, // Convert to minutes
             
             averageIntimacyScore: data.opennes?.averageIntimacyScore || 0,
             

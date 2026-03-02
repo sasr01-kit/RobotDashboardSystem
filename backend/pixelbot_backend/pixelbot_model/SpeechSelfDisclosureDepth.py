@@ -10,10 +10,10 @@ class SpeechSelfDisclosureDepth:
             "std_intimacy_score": self.std_intimacy_score
         }
     
-    def getAvgIntimacyScore(self):
+    def get_avg_intimacy_score(self):
         return self.average_intimacy_score
     
-    def getStdIntimacyScore(self):
+    def get_std_intimacy_score(self):
         return self.std_intimacy_score
     
     @staticmethod

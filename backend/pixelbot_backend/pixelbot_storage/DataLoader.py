@@ -11,8 +11,6 @@ import csv
 import json
 import re
 
-
-
 class DataLoader:
     DRAWING_FILE_NAME = "drawing.png"
     TRANSCRIPT_FILE_NAME = "transcript.txt"

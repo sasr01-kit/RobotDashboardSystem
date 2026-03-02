@@ -73,11 +73,11 @@ class RemoteDataLoader:
         drawing = DrawingData(resp.json()["base64"])
         
         # Load transcript text file and parse it into a structured list
-        transcript_text = self.loadTxt(child_name, session_id, self.TRANSCRIPT_FILE_NAME)
+        transcript_text = self.load_txt(child_name, session_id, self.TRANSCRIPT_FILE_NAME)
         transcript = self.parse_transcript(transcript_text)
         
         # Load story summary text file and parse it into a structured list
-        story_summary_text = self.loadTxt(child_name, session_id, self.STORY_SUMMARY_FILE_NAME)
+        story_summary_text = self.load_txt(child_name, session_id, self.STORY_SUMMARY_FILE_NAME)
         story_summary = self.parse_story_summary(story_summary_text)
 
         
@@ -88,9 +88,9 @@ class RemoteDataLoader:
 
         
         # Parse CSVs into metric objects 
-        speech_width = SpeechSelfDisclosureWidth(**self.loadCsv(speech_width_path))
-        speech_depth = SpeechSelfDisclosureDepth(**self.loadCsv(speech_depth_path))
-        drawing_width = DrawingSelfDisclosureWidth(**self.loadCsv(drawing_width_path))
+        speech_width = SpeechSelfDisclosureWidth(**self.load_csv(speech_width_path))
+        speech_depth = SpeechSelfDisclosureDepth(**self.load_csv(speech_depth_path))
+        drawing_width = DrawingSelfDisclosureWidth(**self.load_csv(drawing_width_path))
 
         return Session(
             session_id,
@@ -103,20 +103,20 @@ class RemoteDataLoader:
             drawing_width
         )
 
-    def get_file_url(self, child_name, session_id, filename):
+    def get_file_url(self, child_name, session_id, file_name):
         # Returns the URL to the file on Pixelbot with the structure:
-        # pixelbot_url/file/child_name/session_id/filename
-        return f"{self.pixelbot_url}{self.FILE_ENDPOINT}{child_name}{self.SLASH}{session_id}{self.SLASH}{filename}"
+        # pixelbot_url/file/child_name/session_id/file_name
+        return f"{self.pixelbot_url}{self.FILE_ENDPOINT}{child_name}{self.SLASH}{session_id}{self.SLASH}{file_name}"
 
-    def loadTxt(self, child_name, session_id, filename):
-        url = self.get_file_url(child_name, session_id, filename)
+    def load_txt(self, child_name, session_id, file_name):
+        url = self.get_file_url(child_name, session_id, file_name)
         resp = requests.get(url)
         if resp.status_code == 200:
         # Return empty string if file not found or error
             return resp.text
         return self.EMPTY_STRING
 
-    def loadCsv(self, file_path):   
+    def load_csv(self, file_path):   
         # Download a CSV file and parse the first row into a dictionary
         resp = requests.get(file_path)
         # If successful, read CSV into dictionary

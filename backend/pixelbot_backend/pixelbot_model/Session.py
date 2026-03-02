@@ -32,49 +32,49 @@ class Session:
             "speechDepth": self.speech_depth.to_dict(),
             "drawingWidth": self.drawing_width.to_dict()
         }
-    def getTotalWordCount(self):
-        return int(self.speech_width.getTotalWordCount())
+    def get_total_word_count(self):
+        return int(self.speech_width.get_total_word_count())
     
-    def getAvgIntimacyScore(self):
-        return float(self.speech_depth.getAvgIntimacyScore())
+    def get_avg_intimacy_score(self):
+        return float(self.speech_depth.get_avg_intimacy_score())
     
-    def getInterventionCount(self):
-        return self.speech_width.intervention_count
+    def get_intervention_count(self):
+        return self.speech_width.get_intervention_count()
     
-    def getTotalSpeechTime(self):
-        return float(self.speech_width.getTotalSpeechTime())
+    def get_total_speech_time(self):
+        return float(self.speech_width.get_total_speech_time())
     
-    def getStrokeCountDrawing(self):
-        return int(self.drawing_width.getStrokeCount())
+    def get_stroke_count_drawing(self):
+        return int(self.drawing_width.get_stroke_count())
     
-    def getColorsUsedCountDrawing(self):
-        return int(self.drawing_width.getColorUsedCount())
+    def get_colors_used_count_drawing(self):
+        return int(self.drawing_width.get_color_used_count())
     
-    def getFilledAreaDrawing(self):
-        return float(self.drawing_width.getAmountFilledArea())
+    def get_filled_area_drawing(self):
+        return float(self.drawing_width.get_amount_filled_area())
     
-    def getSessionId(self):
+    def get_session_id(self):
         return self.session_id
     
-    def getSessionDate(self):
+    def get_session_date(self):
         return self.session_date
     
-    def getDrawing(self):
+    def get_drawing(self):
         return self.drawing
     
-    def getStorySummary(self):
+    def get_story_summary(self):
         return self.story_summary
     
-    def getTranscript(self):
+    def get_transcript(self):
         return self.transcript  
     
-    def getSpeechWidth(self):
+    def get_speech_width(self):
         return self.speech_width
     
-    def getSpeechDepth(self):
+    def get_speech_depth(self):
         return self.speech_depth
     
-    def getDrawingWidth(self):
+    def get_drawing_width(self):
         return self.drawing_width
    
     @staticmethod

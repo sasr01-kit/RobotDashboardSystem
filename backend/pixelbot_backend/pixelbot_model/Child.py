@@ -42,11 +42,11 @@ class Child:
         return len(self.sessions)
     
     def get_total_word_count(self):
-        return sum(int(session.getTotalWordCount()) for session in self.sessions)
+        return sum(int(session.get_total_word_count()) for session in self.sessions)
 
     
-    def get_avg_Intimacy_score(self):
-        total_score = sum(session.getAvgIntimacyScore() for session in self.sessions)
+    def get_avg_intimacy_score(self):
+        total_score = sum(session.get_avg_intimacy_score() for session in self.sessions)
         return total_score / len(self.sessions)
 
     @staticmethod

@@ -56,6 +56,7 @@ class DataRepository:
         
         # Save the updated children list to disk    
         self.save_children(children)
+        print(f"Updated repository with {len(children)} children.")
         return children
 
 

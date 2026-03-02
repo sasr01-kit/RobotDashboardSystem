@@ -2,29 +2,25 @@
 
 class SessionAPI:
 
-    def __init__(self, child_api):
-        # Store a reference to the ChildAPI (used to access children and their sessions)
-        self.child_api = child_api
-        
-        # Load all children and their sessions at initialization for quick access
-        self.children = self.child_api.load_children_objects()
+    def __init__(self):
+        pass
 
-    def send_session(self, child_id, session_id):
-        for child in self.children:
+    def send_session(self, child_id, session_id, children):
+        for child in children:
             if child.child_id == child_id:
                 for session in child.sessions:
                     
         # Return the session data as a dictionary (for JSON response)
-                    if session.session_id == session_id:
+                    if session.get_session_id() == session_id:
                         return session.to_dict()
 
         return None
     
     
-    def send_all_sessions(self):
+    def send_all_sessions(self, children):
         all_sessions = []
 
-        for child in self.children:
+        for child in children:
             for session in child.sessions:
                 session_dict = session.to_dict()
                 # add child ID to session data

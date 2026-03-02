@@ -78,7 +78,7 @@ export default function BarChart({ data, color = '#20A090', xAxisLabel, yAxisLab
         },
         series: [{
             name: yAxisLabel || 'Value',
-            data: data.map(d => d.value)
+            data: data.map(d => ({y: d.value, sessionDate: d.sessionDate, name: `(${d.sessionDate})`}))
         }],
         credits: {
             enabled: false
