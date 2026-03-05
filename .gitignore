@@ -27,10 +27,11 @@ venv/
 .venv/
 
 # ================================
-# VS Code
+# VS Code and Cursor
 # ================================
 .vscode/
 *.code-workspace
+.cursor/
 
 # ================================
 # OS / Editor junk
