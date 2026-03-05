@@ -31,4 +31,13 @@ describe('usePixelbotSummary', () => {
     expect(result.current.summaryStats.dailySessionCounts).toBeDefined()
     expect(result.current.summaryStats.colorScale).toEqual([])
   })
+
+  it('T26: fetches only from backend (localhost:8080), no external URLs', async () => {
+    renderHook(() => usePixelbotSummary())
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalled()
+    })
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('http://localhost:8080/pixelbot/'))
+  })
 })
