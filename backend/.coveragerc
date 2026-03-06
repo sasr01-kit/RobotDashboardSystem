@@ -1,0 +1,11 @@
+[run]
+omit =
+    */test/*
+    */turtlebot4_model/Subject.py
+    */turtlebot4_model/Observer.py
+
+[report]
+omit =
+    */test/*
+    */turtlebot4_model/Subject.py
+    */turtlebot4_model/Observer.py
