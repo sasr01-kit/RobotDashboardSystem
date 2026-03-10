@@ -23,6 +23,7 @@ venv/
 # VS Code
 .vscode/
 *.code-workspace
+.cursor/
 
 # OS / Editor junk
 .DS_Store
