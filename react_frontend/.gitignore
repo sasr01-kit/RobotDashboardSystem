@@ -38,9 +38,6 @@ lerna-debug.log*
 *.sln
 *.sw?
 
-# Local save files
-backend/turtlebot4_backend/turtlebot4_storage/path_history_snapshots
-
 # OS files
 Thumbs.db
 
