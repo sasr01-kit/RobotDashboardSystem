@@ -1,7 +1,7 @@
 import {motion} from "framer-motion";
 
 // Reusable component to display a general status block, used for showing various status indicators like battery, wifi, etc.
-export default function GeneralStatusBlock({ icon, label, status, statusColor }) {
+export default function GeneralStatusBlock({ icon, label, status, statusClass }) {
     // Handles cases where status might be missing or not available yet, displaying "N/A" instead
     const isMissing = status === null || status === undefined || status === "null%" || status === ""; 
     const displayValue = isMissing ? "N/A" : status;
@@ -11,7 +11,7 @@ export default function GeneralStatusBlock({ icon, label, status, statusColor })
         <div className="status-icon">{icon}</div> 
         <div className="status-info"> 
             <div className="status-label">{label}</div> 
-            <div className="status-value" style={{ color: statusColor }}>{displayValue}</div> 
+            <div className={`status-value ${statusClass}`}>{displayValue}</div> 
             </div> 
     </motion.div> 
     ); 

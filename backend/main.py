@@ -1,6 +1,8 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
+from datetime import datetime, timezone
+
 
 # Pixelbot imports 
 from pixelbot_backend.pixelbot_storage.DataRepository import DataRepository
@@ -20,6 +22,10 @@ try:
     from turtlebot4_backend.turtlebot4_controller.MapController import MapController
     from turtlebot4_backend.turtlebot4_model.Path import Path
     from turtlebot4_backend.turtlebot4_controller.PathController import PathController
+    from turtlebot4_backend.turtlebot4_storage.PathHistoryRepository import save_path_history
+    from turtlebot4_backend.turtlebot4_storage.PathHistoryRepository import load_latest_path_history
+    from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
+
 except Exception as e:
     print("TurtleBot not available:", e)
     TURTLEBOT_AVAILABLE = False
@@ -115,6 +121,30 @@ if TURTLEBOT_AVAILABLE:
 
                 if msg.get("type") == "GOAL_FEEDBACK":
                     await path_model.apply_feedback(msg)
+
+                if msg.get("type") == "SAVE_PATH_HISTORY":
+                    file_path = save_path_history(path_model) 
+                    print(f"Path history saved to: {file_path}")
+
+                if msg.get("type") == "LOAD_LATEST_PATH_HISTORY":
+                    latest = load_latest_path_history()
+
+                    # Convert JSON dicts -> PathLogEntry objects (so backend state matches UI)
+                    entries = []
+                    for e in latest["pathHistory"]:
+                        ts = e.get("timestamp")
+                        entries.append(PathLogEntry(
+                            label=e.get("label", ""),
+                            id=e.get("id", ""),
+                            goal_type=e.get("goalType", ""),
+                            timestamp=datetime.fromisoformat(ts) if ts else None,
+                            fuzzy_output=e.get("fuzzyOutput", ""),
+                            user_feedback=e.get("userFeedback", ""),
+                        ))
+
+                    await path_model.set_path_history(entries)
+                if msg.get("type") == "CLEAR_PATH_HISTORY":
+                    await path_model.set_path_history([]) 
         except WebSocketDisconnect:
             robot_state.detach(observer)
             map_model.detach(observer)

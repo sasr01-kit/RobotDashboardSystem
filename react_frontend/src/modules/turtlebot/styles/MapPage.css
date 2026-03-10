@@ -21,6 +21,81 @@
   gap: 1.1rem;
 }
 
+.path-history-header {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+
+.save-path-history-button, .load-latest-path-history-button, .clear-path-history-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--kit-green);
+  color: var(--grid-white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+/* Clear confirmation modal */
+.confirm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
+
+.confirm-modal {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  width: min(460px, 92vw);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+}
+
+.confirm-modal-title {
+  font-size: 1.5rem;
+  color: var(--kit-blue)
+}
+
+.confirm-modal-text {
+  font-size: 1rem;
+}
+
+.confirm-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.confirm-modal-cancel {
+  font-size: 1rem;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.2);
+  background: #fff;
+  cursor: pointer;
+}
+
+.confirm-modal-clear {
+  font-size: 1rem;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  background: var(--error-red);
+  color: white;
+  cursor: pointer;
+}
+
+.clear-path-history-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Minimized Status Bar Styling */
 .minimized-status-bar {
   display: flex;
