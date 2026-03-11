@@ -22,7 +22,7 @@ export default function TurtlebotNavBar() {
                     className={`tab-button ${activeTab === tabName ? 'active' : ''}
                         ${mode === 'Teleoperating' && (tabName === 'Map' || tabName === 'Feedback') ? 'disabled' : ''}`}
                     onClick={() => switchTab(tabName)}
-                    disabled={mode === 'Teleoperating' && (tabName === 'Map' || tabName === 'Feedback')}
+                    aria-disabled={mode === 'Teleoperating' && (tabName === 'Map' || tabName === 'Feedback')}
                     >
                     {tabName}      
                 </button>

@@ -14,24 +14,25 @@ export default function ChildSessionView() {
     const name = child ? child.name : '';
 
     function handlePrint(elementId) { // Print function
-        if (elementId) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.classList.add('print-visible');
-                document.body.classList.add('printing-single-widget');
+        const element = document.getElementById(elementId);
 
-                const cleanup = () => {
-                    element.classList.remove('print-visible');
-                    document.body.classList.remove('printing-single-widget');
-                    window.removeEventListener('afterprint', cleanup);
-                };
+        if (element) {
+            element.classList.add('print-visible');
+            document.body.classList.add('printing-single-widget');
 
-                window.addEventListener('afterprint', cleanup);
-                window.print();
-            }
-        } else {
+            // Cleanup function to remove print-specific classes after printing
+            const cleanup = () => {
+                element.classList.remove('print-visible');
+                document.body.classList.remove('printing-single-widget');
+                window.removeEventListener('afterprint', cleanup);
+            };
+
+            window.addEventListener('afterprint', cleanup);
             window.print();
+            return;
         }
+
+        window.print();
     }
 
     if (isLoading || !session) {

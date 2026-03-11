@@ -6,24 +6,23 @@ export default function PixelbotSummaryView() {
     const { summaryStats, isLoading } = usePixelbotSummary(); // Custom hook to fetch pixelbot summary data - SummaryStatsDTO
 
     function handlePrint(elementId) { // Print functionality
-        if (elementId) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.classList.add('print-visible');
-                document.body.classList.add('printing-single-widget');
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.classList.add('print-visible');
+            document.body.classList.add('printing-single-widget');
 
-                const cleanup = () => {
-                    element.classList.remove('print-visible');
-                    document.body.classList.remove('printing-single-widget');
-                    window.removeEventListener('afterprint', cleanup);
-                };
+            const cleanup = () => {
+                element.classList.remove('print-visible');
+                document.body.classList.remove('printing-single-widget');
+                window.removeEventListener('afterprint', cleanup);
+            };
 
-                window.addEventListener('afterprint', cleanup);
-                window.print();
-            }
-        } else {
+            window.addEventListener('afterprint', cleanup);
             window.print();
+            return;
         }
+
+        window.print();
     }
 
     if (isLoading || !summaryStats) {

@@ -55,7 +55,7 @@ const PathExecutionBlock = () => {
         <motion.button
           className={`execution-button ${isExecuting ? "stop" : "start"}`}
           onClick={handleClick}
-          disabled={isPending}
+          aria-disabled={isPending}
           whileHover={!isPending ? { scale: 1.05 } : {}}
           whileTap={!isPending ? { scale: 0.95 } : {}}
         >
