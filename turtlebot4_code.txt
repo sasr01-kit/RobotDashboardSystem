@@ -1,0 +1,3377 @@
+
+
+=== backend/turtlebot4_backend/__init__.py ===
+
+
+=== backend/turtlebot4_backend/turtlebot4_controller/MapController.py ===
+import asyncio
+from typing import Any, Dict, List
+from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
+from turtlebot4_backend.turtlebot4_model.Map import Map
+from turtlebot4_backend.turtlebot4_model.MapData import MapData
+from turtlebot4_backend.turtlebot4_model.Human import Human
+
+class MapController:
+    """
+    Subscribes to /map, /humans, and /odom via RosbridgeConnection.
+    Sends MAP_DATA once and POSE_DATA continuously.
+    """
+
+    def __init__(
+        self,
+        map_model: Map,
+        rosbridge_host: str = "localhost",
+        rosbridge_port: int = 9090
+    ) -> None:
+        """
+        Initialize rosbridge subscriptions and prepare async dispatch.
+
+        This wires ROS topic callbacks to the async map model so the UI can
+        receive static map data once and live pose updates continuously.
+
+        Params:
+            map_model: Map model that publishes updates to observers.
+            rosbridge_host: Hostname for the rosbridge websocket server.
+            rosbridge_port: Port for the rosbridge websocket server.
+
+        Return:
+            None.
+        """
+
+        self._map_model = map_model
+        self._map_received = False
+
+        # ROS callbacks run synchronously, but the WebSocket
+        # updates are asynchronous and require 'await'. The event loop is used to safely
+        # schedule async tasks from inside these synchronous ROS callbacks.
+        self._loop = asyncio.get_event_loop()
+
+        # Connect to rosbridge
+        self._ros = RosbridgeConnection(rosbridge_host, rosbridge_port)
+        self._ros.connect()
+        print("[MapController] Connected to rosbridge")
+
+        # Subscribe to topics
+        # /map: static map data 
+        self._ros.subscribe("/map", "nav_msgs/msg/OccupancyGrid", self._map_callback)
+        print("[MapController] Subscribed to /map")
+
+        # /humans: dynamic human poses 
+        self._ros.subscribe("/humans", "geometry_msgs/msg/PoseArray", self._humans_callback)
+        print("[MapController] Subscribed to /humans")
+
+        # /odom: dynamic robot pose 
+        self._ros.subscribe("/odom", "nav_msgs/msg/Odometry", self._robot_pose_callback)
+        print("[MapController] Subscribed to /odom")
+
+
+    def _send_initial_map_png(self):
+        """
+        Send MAP_DATA once if a cached PNG is already available.
+
+        This avoids waiting for /map messages during startup so the frontend can
+        render a map as soon as possible when prior data exists.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        if self._map_model._mapDataPNG:
+            print("[MapController] Sending initial MAP_DATA on startup")
+
+            async def send_initial():
+                await self._map_model.notify_observers({
+                    "type": "MAP_DATA",
+                    "mapData": {
+                        "resolution": self._map_model._mapData.get_resolution(),
+                        "width": self._map_model._mapData.get_width(),
+                        "height": self._map_model._mapData.get_height(),
+                        "occupancyGridPNG": self._map_model._mapDataPNG
+                    }
+                })
+
+            self._loop.call_soon_threadsafe(lambda: asyncio.create_task(send_initial()))
+
+    def _map_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Handle the static /map message and publish MAP_DATA once.
+
+        The map is static, so we process it only the first time to reduce
+        bandwidth and avoid redundant frontend work.
+
+        Params:
+            message: Rosbridge JSON payload for nav_msgs/msg/OccupancyGrid.
+
+        Return:
+            None.
+        """
+        if self._map_received:
+            return
+
+        print("[MapController] Static map received")
+
+        info = message.get("info", {})
+        resolution = info.get("resolution", 0.05)
+        width_cells = info.get("width", 0)
+        height_cells = info.get("height", 0)
+
+        width_m = width_cells * resolution
+        height_m = height_cells * resolution
+
+        occupancy_grid = list(message.get("data", []))
+
+        map_data = MapData(
+            resolution=resolution,
+            width=width_m,
+            height=height_m,
+            occupancyGrid=occupancy_grid
+        )
+
+        # Schedule async update to map model
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._map_model.set_mapData(map_data))
+        )
+
+        self._map_received = True
+        print("[MapController] MAP_DATA sent")
+
+    def _humans_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Handle /humans updates and publish POSE_DATA for detected humans.
+
+        Human positions are dynamic, so each update is forwarded to keep the UI
+        in sync with the latest tracked poses.
+
+        Params:
+            message: Rosbridge JSON payload for geometry_msgs/msg/PoseArray.
+
+        Return:
+            None.
+        """
+        poses = message.get("poses", [])
+        humans: List[Human] = []
+
+        for idx, pose in enumerate(poses):
+            pos = pose.get("position", {})
+            humans.append(
+                Human(
+                    human_id=f"human_{idx+1}",
+                    position={
+                        "x": pos.get("x", 0.0),
+                        "y": pos.get("y", 0.0),
+                        "z": pos.get("z", 0.0)
+                    },
+                    proxemic_distances=None
+                )
+            )
+
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._map_model.set_detectedHumans(humans))
+        )
+
+        print(f"[MapController] POSE_DATA: {len(humans)} humans updated")
+
+    def _robot_pose_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Handle /odom updates and publish the robot pose.
+
+        The robot pose changes continuously, so each update is pushed to the UI
+        to keep navigation and visualization accurate.
+
+        Params:
+            message: Rosbridge JSON payload for nav_msgs/msg/Odometry.
+
+        Return:
+            None.
+        """
+        pose = message.get("pose", {}).get("pose", {})
+        if not pose:
+            return
+
+        pos = pose.get("position", {})
+        ori = pose.get("orientation", {})
+
+        robot_pose = {
+            "position": {
+                "x": pos.get("x", 0.0),
+                "y": pos.get("y", 0.0),
+                "z": pos.get("z", 0.0)
+            },
+            "orientation": {
+                "x": ori.get("x", 0.0),
+                "y": ori.get("y", 0.0),
+                "z": ori.get("z", 0.0),
+                "w": ori.get("w", 1.0)
+            }
+        }
+
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._map_model.set_robotPose(robot_pose))
+        )
+
+        print(f"[MapController] POSE_DATA: robot pose updated")
+
+    def shutdown(self) -> None:
+        """
+        Close rosbridge connections and release resources.
+
+        This ensures sockets are closed cleanly and the controller stops
+        receiving callbacks when the application exits.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        try:
+            self._ros.terminate()
+        except Exception:
+            pass
+        print("[MapController] Shutdown complete")
+
+
+=== backend/turtlebot4_backend/turtlebot4_controller/PathController.py ===
+import asyncio
+import json
+import uuid
+import time
+from datetime import datetime
+from typing import Any, Dict
+from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
+from turtlebot4_backend.turtlebot4_model.Map import Map
+from turtlebot4_backend.turtlebot4_model.Path import Path  
+from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
+from turtlebot4_backend.turtlebot4_model.DirectionCommand import DirectionCommand
+
+class PathController:
+    """
+    Subscribes to path-related topics via RosbridgeConnection.
+    Bridges ROS messages to async model updates for the UI.
+    """
+
+    def __init__(
+        self,
+        path_model: Path,
+        map_model: Map,
+        rosbridge_host: str = "localhost",
+        rosbridge_port: int = 9090
+    ) -> None:
+        """
+        Set up ROS subscriptions and async dispatch to models.
+
+        This connects to rosbridge and wires incoming topic data to the
+        path/map models so the frontend can stay up to date.
+
+        Params:
+            path_model: Path model that stores logs and path state.
+            map_model: Map model used to publish goals and poses.
+            rosbridge_host: Hostname for the rosbridge websocket server.
+            rosbridge_port: Port for the rosbridge websocket server.
+
+        Return:
+            None.
+        """
+        self._path_model = path_model 
+        self._map_model = map_model  
+
+        # Event loop used to safely schedule async model updates.
+        self._loop = asyncio.get_event_loop()
+        self._connected = False  # Tracks rosbridge connection state.
+        self._subscribed_topics = []  # Track subscriptions for clean shutdowns.
+
+        # Rosbridge websocket connection for topic IO.
+        self._ros = RosbridgeConnection(rosbridge_host, rosbridge_port)
+        self._ros.connect()
+        self._connected = True
+        print("[PathController] Connected to rosbridge")
+
+        # Subscriptions
+        # /odom: robot pose 
+        self._ros.subscribe("/odom", "nav_msgs/msg/Odometry", self._pose_callback)
+        print("[PathController] Subscribed to /odom")
+
+        # /rule_output: rule logs 
+        # Note: naming convention of the topic name may vary. The client must confirm the 
+        # name of the topic adverised by their specific turtlebot, and replace with the correct name.
+        # /rule_output acts as a placeholder in order to work with the publishers created in our mock data. 
+        self._ros.subscribe("/rule_output", "std_msgs/msg/String", self._rule_callback)
+        print("[PathController] Subscribed to /rule_output")
+
+        # /gary/goal_pose: global goal 
+        self._ros.subscribe("/gary/goal_pose", "geometry_msgs/msg/PoseStamped", self._global_goal_callback)
+        print("[PathController] Subscribed to /gary/goal_pose")
+
+        # /dock_status: docking status
+        self._ros.subscribe("/dock_status", "irobot_create_msgs/msg/DockStatus", self._dock_status_callback)
+        print("[PathController] Subscribed to /dock_status")
+
+    def _pose_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Update the robot pose in the map model.
+
+        This keeps the UI aligned with the robot's live position while the
+        path module is active.
+
+        Params:
+            message: Rosbridge JSON payload for nav_msgs/msg/Odometry.
+
+        Return:
+            None.
+        """
+        if not self._path_model.get_is_path_module_active():
+             return
+
+        pose = message.get("pose", {}).get("pose", {})
+        if not pose:
+            return
+
+        pos = pose.get("position", {})
+        ori = pose.get("orientation", {})
+
+        robot_pose = {
+            "position": {
+                "x": pos.get("x", 0.0),
+                "y": pos.get("y", 0.0),
+                "z": pos.get("z", 0.0)
+            },
+            "orientation": {
+                "x": ori.get("x", 0.0),
+                "y": ori.get("y", 0.0),
+                "z": ori.get("z", 0.0),
+                "w": ori.get("w", 1.0)
+            }
+        }
+
+        # Schedule async update on MapModel.
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._map_model.set_robotPose(robot_pose))
+        )
+
+        print("[PathController] Robot pose updated via MapModel")
+
+    def _rule_callback(self, msg: Dict) -> None:
+        """
+        Process rule output messages and update goals and logs.
+
+        Rule outputs provide planning intent, so we translate them into
+        intermediate goals, global goals, and a log entry for review.
+
+        Params:
+            msg: Rosbridge JSON payload for std_msgs/msg/String.
+
+        Return:
+            None.
+        """
+        if not self._path_model.get_is_path_module_active():
+            return
+
+        raw = msg.get("data")
+
+        # If input is already a dict (e.g. from mock/test), use it directly.
+        if isinstance(raw, dict):
+            data = raw
+
+        # If input is a JSON string, parse it.
+        elif isinstance(raw, str):
+            try:
+                data = json.loads(raw)
+            except Exception:
+                print("[PathController] Invalid rule JSON:", raw)
+                return
+
+        else:
+            print("[PathController] Unexpected rule message format:", raw)
+            return
+
+
+        goal_type = data.get("goal_type", "")
+        position = data.get("position", {})
+        rule_str = data.get("rule", "")
+
+        # 1. Intermediate waypoint.
+        if goal_type == "intermediate":
+            waypoint = {
+                "position": {
+                    "x": position.get("x", 0.0),
+                    "y": position.get("y", 0.0),
+                    "z": 0.0
+                },
+                "orientation": {"x": 0, "y": 0, "z": 0, "w": 1}
+            }
+
+            updated = self._map_model._intermediateWaypoints + [waypoint]
+
+            self._loop.call_soon_threadsafe(
+                lambda: asyncio.create_task(self._map_model.set_intermediateWaypoints(updated))
+            )
+
+        # 2. Global goal.
+        if goal_type == "global":
+            goal = {
+                "position": {
+                    "x": position.get("x", 0.0),
+                    "y": position.get("y", 0.0),
+                    "z": 0.0
+                },
+                "orientation": {"x": 0, "y": 0, "z": 0, "w": 1}
+            }
+
+            self._loop.call_soon_threadsafe(
+                lambda: asyncio.create_task(self._map_model.set_globalGoal(goal))
+            )
+
+        # 3. Log rule entry.
+        entry = PathLogEntry(
+            label="Goal Entry",
+            id=f"goal_{len(self._path_model.get_path_history()) + 1}",
+            goal_type=goal_type,
+            timestamp=datetime.now(),
+            fuzzy_output=rule_str,
+            user_feedback=""
+        )
+
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._path_model.add_log_entry(entry))
+        )
+
+        print(f"[PathController] Logged rule: {rule_str}, type={goal_type}")
+
+    def _global_goal_callback(self, message: Dict[str, Any]) -> None:
+        """
+        Update the global goal marker from /gary/goal_pose.
+
+        Note: the exact name of the topic must be changed based on the precise name of the topic 
+        used by the client. The '/gary/goal_pose' is meant to act as a placeholder in order for 
+        these subscribers to work with the mock data. The notation of '/gary/goal_pose' was used 
+        to make the users aware of how the topic naming could potentially look. Therefore it is 
+        meant to strictly act as an example, since the topic name will vary based on the 
+        naming conventions for each turtlebot4, and the topics that they advertise. 
+
+        This method keeps the UI goal marker aligned with the planner's active target
+        while the path module is active.
+
+        Params:
+            message: Rosbridge JSON payload for geometry_msgs/msg/PoseStamped.
+
+        Return:
+            None.
+        """
+        if not self._path_model.get_is_path_module_active():
+            return
+
+        pose = message.get("pose", {})
+        pos = pose.get("position", {})
+
+        goal = {
+            "position": {
+                "x": pos.get("x", 0.0),
+                "y": pos.get("y", 0.0),
+                "z": pos.get("z", 0.0)
+            },
+            "orientation": pose.get("orientation", {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+            })
+        }
+
+        # Schedule async update on MapModel.
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._map_model.set_globalGoal(goal))
+        )
+
+        print("[PathController] Global goal updated via MapModel")
+    
+    def dock(self) -> None:
+        if not self._connected:
+            print("[PathController] Not connected to rosbridge.")
+            return
+
+        try:
+            self._ros.send_action_goal(
+                action_name='/dock',
+                action_type='irobot_create_msgs/action/Dock',
+                goal_message={},   # Dock goal is empty
+                result_callback=lambda r: print("[Dock Result]", r),
+                feedback_callback=lambda f: print("[Dock Feedback]", f)
+            )
+            print("[PathController] Dock action sent.")
+        except Exception as e:
+            print(f"[PathController] Dock failed: {e}")
+            
+    def undock(self) -> None:
+        if not self._connected:
+            print("[PathController] Not connected to rosbridge.")
+            return
+
+        try:
+            self._ros.send_action_goal(
+                action_name='/undock',
+                action_type='irobot_create_msgs/action/Undock',
+                goal_message={},
+                result_callback=lambda r: print("[Undock Result]", r),
+                feedback_callback=lambda f: print("[Undock Feedback]", f)
+            )
+            print("[PathController] Undock action sent.")
+        except Exception as e:
+            print(f"[PathController] Undock failed: {e}")
+
+    def cancelNavigation(self) -> None:
+        """
+        Send a stop command to halt robot motion.
+
+        This provides an immediate safety stop by publishing a zero-velocity
+        command to the robot.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        self._ros.publish(
+            "/cmd_vel",
+            DirectionCommand.STOP.get_message(),
+            msg_type=
+            "geometry_msgs/msg/Twist",
+           
+        )
+        print("[PathController] Published STOP command to /cmd_vel")
+
+    def get_records(self):
+        """
+        Fetch the current path history.
+
+        This provides the UI with the accumulated log entries for review.
+
+        Params:
+            None.
+
+        Return:
+            List of PathLogEntry items stored in the path model.
+        """
+        return self._path_model.get_path_history()
+   
+    def stop(self):
+        """
+        Stop subscriptions and close the rosbridge connection.
+
+        This releases resources and prevents further callbacks during shutdown.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        self._connected = False
+
+        # Unsubscribe all topics
+        for topic in self._subscribed_topics:
+            try:
+                topic.unsubscribe()
+            except Exception:
+                pass
+        self._subscribed_topics = []
+
+        # Terminate rosbridge connection
+        self._ros.terminate()
+        print("[PathController] Stopped and disconnected from rosbridge")
+
+
+=== backend/turtlebot4_backend/turtlebot4_controller/RosbridgeConnection.py ===
+import time
+import threading
+import roslibpy
+from typing import Callable, Dict, Optional
+
+class RosbridgeConnection:
+    """
+    Simple RosbridgeConnection wrapper around roslibpy.Ros for clarity and reuse.
+
+    - Keeps connection state (isConnected)
+    - Provides simple subscribe/publish/call_service helpers
+    """
+    def __init__(self, host: str = 'localhost', port: int = 9090):
+        """
+        Initialize connection settings and internal caches.
+
+        This sets up the object with host/port and empty caches so later calls
+        can reuse topics/services and manage connection state safely.
+
+        Params:
+            host: Hostname for the rosbridge websocket server.
+            port: Port for the rosbridge websocket server.
+
+        Return:
+            None.
+        """
+        # Connection parameters.
+        self.host = host
+        self.port = port
+
+        # roslibpy client instance (None until connect()).
+        self.client: Optional[roslibpy.Ros] = None
+        self.isConnected: bool = False
+
+        # Keep created Topic objects so they can be reused/unsubscribed later.
+        self._topics: Dict[str, roslibpy.Topic] = {}
+
+        # Keep created Service objects if needed.
+        self._services: Dict[str, roslibpy.Service] = {}
+
+    def connect(self, timeout: float = 5.0) -> None:
+        """
+        Connect to rosbridge and wait until the socket is ready.
+
+        This ensures the websocket is usable before any subscribe/publish call
+        and fails fast if the server is unreachable.
+
+        Params:
+            timeout: Seconds to wait before raising an error.
+
+        Return:
+            None.
+        """
+        if self.client:
+            return  # already created
+
+        self.client = roslibpy.Ros(host=self.host, port=self.port)
+        self.client.run()
+
+        # Wait until roslibpy reports connected or timeout
+        start = time.time()
+        while not getattr(self.client, 'is_connected', False):
+            if time.time() - start > timeout:
+                raise RuntimeError(f'Could not connect to rosbridge at {self.host}:{self.port}')
+            time.sleep(0.05)
+
+        self.isConnected = True
+
+    def subscribe(self, topic_name: str, msg_type: str, callback: Callable[[dict], None]) -> roslibpy.Topic:
+        """
+        Subscribe to a ROS topic and return the Topic object.
+
+        This registers a callback for incoming messages and caches the topic
+        so future calls can reuse it.
+
+        Params:
+            topic_name: ROS2 topic name (e.g. '/battery_state').
+            msg_type: ROS2 message type string (e.g. 'sensor_msgs/msg/BatteryState').
+            callback: Function invoked with the decoded message dict.
+
+        Return:
+            The roslibpy.Topic instance used for the subscription.
+        """
+        if not self.client or not self.isConnected:
+            raise RuntimeError('Not connected. Call connect() first.')
+
+        # Reuse existing Topic if previously created
+        if topic_name in self._topics:
+            topic = self._topics[topic_name]
+        else:
+            topic = roslibpy.Topic(self.client, topic_name, msg_type)
+            self._topics[topic_name] = topic
+
+        topic.subscribe(callback)
+        return topic
+
+    def unsubscribe(self, topic_name: str, callback: Optional[Callable] = None) -> None:
+        """
+        Unsubscribe from a topic or from a specific callback.
+
+        This frees resources and stops message delivery when a subscription is
+        no longer needed.
+
+        Params:
+            topic_name: ROS2 topic name to unsubscribe from.
+            callback: Optional callback to remove; if omitted, unsubscribes all.
+
+        Return:
+            None.
+        """
+        topic = self._topics.get(topic_name)
+        if not topic:
+            return
+        if callback:
+            try:
+                topic.unsubscribe(callback)
+            except Exception:
+                pass
+        else:
+            try:
+                topic.unsubscribe()
+            except Exception:
+                pass
+
+    def publish(self, topic_name: str, message: dict, msg_type: Optional[str] = None) -> None:
+        """
+        Publish a message dict to a ROS topic.
+
+        This sends outbound data to ROS and creates the topic on first use if
+        needed.
+
+        Params:
+            topic_name: ROS2 topic name to publish to.
+            message: Plain dict matching the ROS message structure.
+            msg_type: ROS2 message type required on first publish to a topic.
+
+        Return:
+            None.
+        """
+        if not self.client or not self.isConnected:
+            raise RuntimeError('Not connected. Call connect() first.')
+
+        topic = self._topics.get(topic_name)
+        if topic is None:
+            if msg_type is None:
+                raise ValueError('msg_type is required for first publish to a new topic')
+            topic = roslibpy.Topic(self.client, topic_name, msg_type)
+            self._topics[topic_name] = topic
+
+        topic.publish(roslibpy.Message(message))
+
+    def call_service(self, service_name: str, service_type: str, request: dict, timeout: float = 5.0) -> dict:
+        """
+        Call a ROS service and wait for a response.
+
+        This wraps the async-style service call and blocks until a response
+        arrives or the timeout is reached.
+
+        Params:
+            service_name: ROS service name to call.
+            service_type: ROS service type string.
+            request: Request payload as a plain dict.
+            timeout: Seconds to wait before raising an error.
+
+        Return:
+            Response payload as a dict.
+        """
+        if not self.client or not self.isConnected:
+            raise RuntimeError('Not connected. Call connect() first.')
+
+        # Reuse or create service object
+        service = self._services.get(service_name)
+        if service is None:
+            service = roslibpy.Service(self.client, service_name, service_type)
+            self._services[service_name] = service
+
+        service_request = roslibpy.ServiceRequest(request)
+
+        result_container = {}
+        done = threading.Event()
+        error_container = {}
+
+        def _on_response(resp):
+            result_container['response'] = resp
+            done.set()
+
+        def _on_error(err):
+            error_container['error'] = err
+            done.set()
+
+        # Call and wait
+        service.call(service_request, callback=_on_response, error_callback=_on_error)
+        if not done.wait(timeout):
+            raise TimeoutError(f'Service {service_name} did not respond within {timeout} seconds')
+
+        if 'error' in error_container:
+            raise RuntimeError(f'Service call error: {error_container["error"]}')
+
+        return result_container.get('response', {})
+
+    def terminate(self) -> None:
+        """
+        Clean up topics and services and close the websocket client.
+
+        This ensures subscriptions are removed and the underlying connection
+        is shut down cleanly.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        # Unsubscribe and clear topics
+        for name, topic in list(self._topics.items()):
+            try:
+                topic.unsubscribe()
+            except Exception:
+                pass
+        self._topics.clear()
+
+        # Close services
+        self._services.clear()
+
+        # Terminate client
+        if self.client:
+            try:
+                self.client.terminate()
+            except Exception:
+                pass
+            self.client = None
+        self.isConnected = False
+
+=== backend/turtlebot4_backend/turtlebot4_controller/StatusController.py ===
+import asyncio
+import threading
+import time
+from typing import Callable, List, Awaitable, Dict
+
+from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
+from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
+from turtlebot4_backend.turtlebot4_model.Subject import Subject
+
+class StatusController:
+    """
+    Subscribes to robot status topics via RosbridgeConnection and updates RobotState.
+    Also provides a listener API for WebSocket handlers to receive status updates.
+    """
+    def __init__(
+        self,
+        robot_state: RobotState,
+        ros_host: str = 'localhost',
+        ros_port: int = 9090,
+        loop: asyncio.AbstractEventLoop | None = None
+    ):
+        """
+        Initialize status tracking and start subscriptions.
+
+        This sets up rosbridge access, keeps shared state, and begins listening
+        for status updates so the UI can react immediately.
+
+        Params:
+            robot_state: Shared state model updated by incoming status messages.
+            ros_host: Hostname for the rosbridge websocket server.
+            ros_port: Port for the rosbridge websocket server.
+            loop: Optional asyncio loop for scheduling async notifications.
+
+        Return:
+            None.
+        """
+        self.robot_state = robot_state
+        self._ros = RosbridgeConnection(host=ros_host, port=ros_port)
+
+        # This loop is used to schedule async notifications to websocket listeners:
+        self._loop = loop or asyncio.get_event_loop()
+        self._listeners: List[Callable[[Dict], Awaitable[None]]] = []
+        self.subscribeToStatus()
+
+    def subscribeToStatus(self) -> None:
+        """
+        Connect to rosbridge and subscribe to status topics.
+
+        This runs connection/subscription in a background thread so the caller
+        is not blocked during startup.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+
+        def _connect_and_subscribe():
+            try:
+                self._ros.connect()
+            except Exception:
+                async def _mark_off_and_notify():
+                    await self.robot_state.set_is_on(False)
+                    await self._notify_listeners()
+
+                self._loop.call_soon_threadsafe(
+                    lambda: asyncio.create_task(_mark_off_and_notify())
+                )
+                return
+
+            async def _mark_on_and_notify():
+                # Connection implies robot and rosbridge are online.
+                # Other fields update as their messages arrive.
+                await self.robot_state.set_is_on(True)
+                await self._notify_listeners()
+
+            self._loop.call_soon_threadsafe(
+                lambda: asyncio.create_task(_mark_on_and_notify())
+            )
+
+            # Subscribe to status topics
+            for name, typ, cb in [
+                ('/battery_state', 'sensor_msgs/msg/BatteryState', self._battery_cb),
+                ('/wifi_state', 'std_msgs/msg/Bool', self._wifi_cb),
+                ('/pi_state', 'std_msgs/msg/Bool', self._pi_cb),
+                ('/comms_state', 'std_msgs/msg/Bool', self._comms_cb),
+            ]:
+                try:
+                    self._ros.subscribe(name, typ, cb)
+                except Exception:
+                    pass
+
+        threading.Thread(target=_connect_and_subscribe, daemon=True).start()
+
+    # These callbacks are invoked by the (synchronous) ROS client in its own thread.
+    # We therefore schedule the async updater on the asyncio loop in a thread-safe way.
+    def _battery_cb(self, msg: dict) -> None:
+        """
+        Bridge battery messages into the async updater.
+
+        The ROS client calls this synchronously, so we schedule the async
+        handler on the event loop.
+
+        Params:
+            msg: Decoded ROS message dict for battery state.
+
+        Return:
+            None.
+        """
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self.updateBattery(msg))
+        )
+
+    def _wifi_cb(self, msg: dict) -> None:
+        """
+        Bridge wifi messages into the async updater.
+
+        This schedules the async handler so it runs on the event loop.
+
+        Params:
+            msg: Decoded ROS message dict for wifi state.
+
+        Return:
+            None.
+        """
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self.updateWifi(msg))
+        )
+
+    def _pi_cb(self, msg: dict) -> None:
+        """
+        Bridge Raspberry Pi messages into the async updater.
+
+        This schedules the async handler so it runs on the event loop.
+
+        Params:
+            msg: Decoded ROS message dict for Pi connection state.
+
+        Return:
+            None.
+        """
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self.updatePiConnection(msg))
+        )
+
+    def _comms_cb(self, msg: dict) -> None:
+        """
+        Bridge comms messages into the async updater.
+
+        This schedules the async handler so it runs on the event loop.
+
+        Params:
+            msg: Decoded ROS message dict for communications state.
+
+        Return:
+            None.
+        """
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self.updateCommsConnection(msg))
+        )
+
+    # Async updaters that modify RobotState and notify listeners upon proper value changes 
+    async def updateBattery(self, msg: dict) -> None:
+        """
+        Update the battery percentage in RobotState.
+
+        This normalizes input to 0-100 and notifies listeners when a valid
+        value is received.
+
+        Params:
+            msg: Decoded ROS message dict for battery state.
+
+        Return:
+            None.
+        """
+        batteryPercentage = None
+        if isinstance(msg, dict) and 'percentage' in msg and msg['percentage'] is not None:
+            try:
+                batteryPercentage = float(msg['percentage'])
+            except (ValueError, TypeError):
+                pass
+
+        # msg may contain 'percentage' in [0,1] or [0,100]; normalize for future proofing.
+        if batteryPercentage is not None:
+            if 0.0 <= batteryPercentage <= 1.0:
+                batteryPercentage *= 100.0
+            batteryPercentage = max(0.0, min(100.0, batteryPercentage))
+            await self.robot_state.set_battery_percentage(round(batteryPercentage, 1))
+            await self._notify_listeners()
+
+    async def updateWifi(self, msg: dict) -> None:
+        """
+        Update wifi connectivity state in RobotState.
+
+        This extracts a boolean and notifies listeners when a valid value is
+        received.
+
+        Params:
+            msg: Decoded ROS message dict for wifi state.
+
+        Return:
+            None.
+        """
+        val = self._extract_bool_from_msg(msg)
+        if val is not None:
+            await self.robot_state.set_is_wifi_connected(val)
+            await self._notify_listeners()
+
+    async def updatePiConnection(self, msg: dict) -> None:
+        """
+        Update Raspberry Pi connectivity state in RobotState.
+
+        This extracts a boolean and notifies listeners when a valid value is
+        received.
+
+        Params:
+            msg: Decoded ROS message dict for Pi connection state.
+
+        Return:
+            None.
+        """
+        val = self._extract_bool_from_msg(msg)
+        if val is not None:
+            await self.robot_state.set_is_raspberry_pi_connected(val)
+            await self._notify_listeners()
+
+    async def updateCommsConnection(self, msg: dict) -> None:
+        """
+        Update communications connectivity state in RobotState.
+
+        This extracts a boolean and notifies listeners when a valid value is
+        received.
+
+        Params:
+            msg: Decoded ROS message dict for communications state.
+
+        Return:
+            None.
+        """
+        val = self._extract_bool_from_msg(msg)
+        if val is not None:
+            await self.robot_state.set_is_comms_connected(val)
+            await self._notify_listeners()
+
+    # helper to pull boolean out of std_msgs/Bool-like or dict {'data': True}
+    def _extract_bool_from_msg(self, msg: dict) -> bool | None:
+        """
+        Extract a boolean value from common ROS message shapes.
+
+        This handles bools directly and dicts that wrap the value under keys
+        like 'data' or 'value'.
+
+        Params:
+            msg: Decoded ROS message dict or primitive value.
+
+        Return:
+            True/False when a value is present, otherwise None.
+        """
+        if msg is None:
+            return None
+        if isinstance(msg, bool):
+            return msg
+        if isinstance(msg, dict):
+            if 'data' in msg:
+                return bool(msg['data'])
+            if 'value' in msg:
+                return bool(msg['value'])
+        return None
+
+    # Listener API for WebSocket handlers: attach an async callback(msg_dict)
+    def attach_listener(self, cb: Callable[[Dict], Awaitable[None]]) -> Callable[[], None]:
+        """
+        Register a websocket listener for status updates.
+
+        This lets UI handlers receive RobotState changes as they happen and
+        returns a function to detach the listener later.
+
+        Params:
+            cb: Async callback that accepts a status dict.
+
+        Return:
+            A function that removes the callback when called.
+        """
+        self._listeners.append(cb)
+
+        def detach():
+            try:
+                self._listeners.remove(cb)
+            except ValueError:
+                pass
+
+        return detach
+
+    async def _notify_listeners(self) -> None:
+        """
+        Notify all registered listeners with the latest RobotState.
+
+        This pushes state updates to each listener and ignores per-listener
+        errors to avoid blocking others.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        for listener in list(self._listeners):
+            try:
+                await listener(self.robot_state.toJSON())
+            except Exception:
+                pass
+
+    def stop(self) -> None:
+        """
+        Terminate the rosbridge connection.
+
+        This stops incoming status messages and releases websocket resources.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        try:
+            self._ros.terminate()
+        except Exception:
+            pass
+
+=== backend/turtlebot4_backend/turtlebot4_controller/TeleopController.py ===
+#!/usr/bin/env python3
+import time
+import threading
+import asyncio
+import roslibpy
+
+from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
+from turtlebot4_backend.turtlebot4_model.Teleoperate import Teleoperate
+from turtlebot4_backend.turtlebot4_model.DirectionCommand import DirectionCommand
+
+class TeleopController:
+    """
+    Subscribes to Teleoperate model updates and publishes drive commands to ROSBridge.
+    """
+    def __init__( 
+        self, 
+        teleop: Teleoperate, 
+        ros_host: str = 'localhost', 
+        ros_port: int = 9090, 
+        loop: asyncio.AbstractEventLoop | None = None 
+    ):
+        """
+        Initialize teleoperation forwarding and connect to rosbridge.
+
+        This links the Teleoperate model to ROS so UI-driven commands can be
+        published as velocity messages.
+
+        Params:
+            teleop: Source of user drive commands.
+            ros_host: Hostname for the rosbridge websocket server.
+            ros_port: Port for the rosbridge websocket server.
+            loop: Optional asyncio loop for scheduling async work.
+
+        Return:
+            None.
+        """
+        self.teleop = teleop  # Shared model that emits drive commands.
+        self._ros = RosbridgeConnection(host=ros_host, port=ros_port)  # ROS bridge client.
+        self._loop = loop or asyncio.get_event_loop()  # Loop for async publishing.
+        self._ros.connect()
+
+        # Wait for teleop updates and publish to ROSBridge when they occur.
+        teleop.attach(self._on_teleop_update)
+
+        print("[TeleopController] Connecting to ROSBridge...")
+
+        # Wait until connected
+        for _ in range(50):  # ~5 seconds
+            if self._ros.isConnected:
+                break
+            time.sleep(0.1)
+
+        if not self._ros.isConnected:
+            print("[TeleopController] ERROR: Could not connect to ROSBridge")
+            return
+
+        print("[TeleopController] Connected to ROSBridge")
+        # Advertise the topic with an empty message to ensure it exists before we try to publish real commands
+        self._ros.publish('/cmd_vel', {}, msg_type='geometry_msgs/msg/Twist')  
+        print("[TeleopController] /cmd_vel advertised")
+
+    # Teleoperate model calls this synchronously → schedule async work
+    def _on_teleop_update(self, source, data):
+        """
+        Schedule publishing when a teleop update arrives.
+
+        The model callback is synchronous, so we jump to the event loop to
+        safely run async publishing.
+
+        Params:
+            source: Publisher of the update (unused).
+            data: Update payload (unused; command is read from the model).
+
+        Return:
+            None.
+        """
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._publish_drive_command())
+        )
+
+    async def _publish_drive_command(self):
+        """
+        Publish the latest drive command to /cmd_vel.
+
+        This turns the latest teleop command into a ROS Twist message so the
+        robot moves in the requested direction.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        cmd = self.teleop.get_command()
+        if not cmd:
+            return
+
+        try:
+            # Convert string → enum (e.g. "FORWARD" → DirectionCommand.FORWARD)
+            direction_cmd = DirectionCommand[cmd]
+
+            # Get the Twist dict from the enum
+            msg = direction_cmd.get_message()
+
+            print(f"[TeleopController] Command detected: {cmd}")
+            print("[TeleopController] Publishing:", msg)
+
+            # Publish via rosbridge
+            self._ros.publish(
+                "/cmd_vel",
+                msg,
+                msg_type="geometry_msgs/msg/Twist"
+            )
+
+            print("[TeleopController] Published to /cmd_vel")
+
+        except KeyError:
+            print(f"[TeleopController] Unknown command: {cmd}")
+
+        except Exception as e:
+            print(f"[TeleopController] ERROR publishing: {e}")# Get the next command from teleop
+    
+
+
+    def stop(self):
+        """
+        Stop publishing and close the rosbridge connection.
+
+        This releases resources and prevents further command publishing.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        try:
+            self._ros.unadvertise('/cmd_vel')
+        except Exception:
+            pass
+
+        try:
+            self._ros.terminate()
+        except Exception:
+            pass
+
+        print("[TeleopController] Teleop stopped")
+
+
+=== backend/turtlebot4_backend/turtlebot4_model/ConcreteObserver.py ===
+from fastapi import WebSocket
+from turtlebot4_backend.turtlebot4_model.Observer import Observer
+
+
+class ConcreteObserver(Observer):
+    """
+    Observer implementation that forwards updates to a WebSocket client.
+
+    This bridges the observer pattern to live UI connections so state changes
+    can be pushed to the frontend.
+    """
+
+    def __init__(self, websocket_client: WebSocket) -> None:
+        """
+        Initialize the observer with a websocket target.
+
+        This stores the client so updates can be delivered as JSON messages.
+
+        Params:
+            websocket_client: Target WebSocket used to deliver updates.
+
+        Return:
+            None.
+        """
+        self._client = websocket_client  # WebSocket used to push updates.
+
+    async def update(self, source, data) -> None:
+        """
+        Send an update payload to the connected WebSocket client.
+
+        This pushes model changes to the frontend in real time.
+
+        Params:
+            source: Update emitter (unused by this observer).
+            data: JSON-serializable payload to send.
+
+        Return:
+            None.
+        """
+        await self._client.send_json(data)
+
+
+=== backend/turtlebot4_backend/turtlebot4_model/DirectionCommand.py ===
+from enum import Enum
+from typing import Dict
+import copy
+
+class DirectionCommand(Enum):
+    """Robot movement commands with configurable speeds."""
+    
+    # Default speeds defined by turtlebot4 specifications or can be adjusted as needed
+    LINEAR_SPEED = 0.5
+    ANGULAR_SPEED = 1.0
+    
+    FORWARD = {
+        'linear': {'x': LINEAR_SPEED, 'y': 0.0, 'z': 0.0},
+        'angular': {'x': 0.0, 'y': 0.0, 'z': 0.0}
+    }
+    
+    BACKWARD = {
+        'linear': {'x': -LINEAR_SPEED, 'y': 0.0, 'z': 0.0},
+        'angular': {'x': 0.0, 'y': 0.0, 'z': 0.0}
+    }
+    
+    LEFT = {
+        'linear': {'x': LINEAR_SPEED, 'y': 0.0, 'z': 0.0},
+        'angular': {'x': 0.0, 'y': 0.0, 'z': -ANGULAR_SPEED}
+    }
+    
+    RIGHT = {
+        'linear': {'x': LINEAR_SPEED, 'y': 0.0, 'z': 0.0},
+        'angular': {'x': 0.0, 'y': 0.0, 'z': ANGULAR_SPEED}
+    }
+    
+    ROTATE_LEFT = {
+        'linear': {'x': 0.0, 'y': 0.0, 'z': 0.0},
+        'angular': {'x': 0.0, 'y': 0.0, 'z': -ANGULAR_SPEED}
+    }
+    
+    ROTATE_RIGHT = {
+        'linear': {'x': 0.0, 'y': 0.0, 'z': 0.0},
+        'angular': {'x': 0.0, 'y': 0.0, 'z': ANGULAR_SPEED}
+    }
+    
+    STOP = {
+        'linear': {'x': 0.0, 'y': 0.0, 'z': 0.0},
+        'angular': {'x': 0.0, 'y': 0.0, 'z': 0.0}
+    }
+
+    def get_message(self) -> Dict:
+        """Return a deep copy of the command message.
+
+        Params:
+            self: Enum member containing the command.
+
+        Returns:
+            Dict: Deep-copied command.
+        """
+        return copy.deepcopy(self.value)
+    
+    @staticmethod
+    def create_custom(linear_x: float = 0.0, angular_z: float = 0.0) -> Dict:
+        """Create a custom velocity message.
+
+        Params:
+            linear_x: Linear velocity along the x-axis.
+            angular_z: Angular velocity around the z-axis.
+
+        Returns:
+            Dict: Custom command payload.
+        """
+        return {
+            'linear': {'x': linear_x, 'y': 0.0, 'z': 0.0},
+            'angular': {'x': 0.0, 'y': 0.0, 'z': angular_z}
+        }
+
+=== backend/turtlebot4_backend/turtlebot4_model/FeedbackLogEntry.py ===
+class FeedbackLogEntry:
+    """Store a single feedback log entry for a completed path segment."""
+
+    def __init__(
+        self,
+        duration: str = "",
+        start_point: str = "",
+        end_point: str = "",
+        feedback: str = "",
+    ) -> None:
+        """Initialize a feedback log entry.
+
+        Params:
+            self: FeedbackLogEntry instance.
+            duration: Duration or timestamp for the path segment.
+            start_point: Start location label.
+            end_point: End location label.
+            feedback: User feedback text.
+
+        Returns:
+            None.
+        """
+        self._duration = duration
+        self._start_point = start_point
+        self._end_point = end_point
+        self._feedback = feedback
+
+    # Getters
+    def get_duration(self) -> str:
+        """Return the stored duration value.
+
+        Params:
+            self: FeedbackLogEntry instance.
+
+        Returns:
+            str: Duration or timestamp for the path segment.
+        """
+        return self._duration
+
+    def get_start_point(self) -> str:
+        """Return the stored start point label.
+
+        Params:
+            self: FeedbackLogEntry instance.
+
+        Returns:
+            str: Start location label.
+        """
+        return self._start_point
+
+    def get_end_point(self) -> str:
+        """Return the stored end point label.
+
+        Params:
+            self: FeedbackLogEntry instance.
+
+        Returns:
+            str: End location label.
+        """
+        return self._end_point
+
+    def get_feedback(self) -> str:
+        """Return the stored feedback text.
+
+        Params:
+            self: FeedbackLogEntry instance.
+
+        Returns:
+            str: User feedback text.
+        """
+        return self._feedback
+
+    # Setters
+    def set_duration(self, value: str) -> None:
+        """Set the duration value.
+
+        Params:
+            self: FeedbackLogEntry instance.
+            value: Duration or timestamp for the path segment.
+
+        Returns:
+            None.
+        """
+        self._duration = value
+
+    def set_start_point(self, value: str) -> None:
+        """Set the start point label.
+
+        Params:
+            self: FeedbackLogEntry instance.
+            value: Start location label.
+
+        Returns:
+            None.
+        """
+        self._start_point = value
+
+    def set_end_point(self, value: str) -> None:
+        """Set the end point label.
+
+        Params:
+            self: FeedbackLogEntry instance.
+            value: End location label.
+
+        Returns:
+            None.
+        """
+        self._end_point = value
+
+    def set_feedback(self, value: str) -> None:
+        """Set the feedback text.
+
+        Params:
+            self: FeedbackLogEntry instance.
+            value: User feedback text.
+
+        Returns:
+            None.
+        """
+        self._feedback = value
+
+
+=== backend/turtlebot4_backend/turtlebot4_model/Feedback.py ===
+from typing import List, Dict, Any
+
+from PathLogEntry import PathLogEntry
+from FeedbackLogEntry import FeedbackLogEntry
+
+class Feedback:
+    """Track navigation feedback metrics and history entries."""
+
+    def __init__(self) -> None:
+        """Initialize feedback storage and counters.
+
+        Params:
+            self: Feedback instance.
+
+        Returns:
+            None.
+        """
+        self._path_history: List[PathLogEntry] = []
+        self._total_good_ratings: int = 0
+        self._total_bad_ratings: int = 0
+        self._feedback_history: List[FeedbackLogEntry] = []
+
+    # Getters
+    def get_path_history(self) -> List[PathLogEntry]:
+        """Return the stored path history.
+
+        Params:
+            self: Feedback instance.
+
+        Returns:
+            List[PathLogEntry]: Path log entries associated with this feedback.
+        """
+        return self._path_history
+
+    def get_total_good_ratings(self) -> int:
+        """Return the total count of good ratings.
+
+        Params:
+            self: Feedback instance.
+
+        Returns:
+            int: Total number of good ratings.
+        """
+        return self._total_good_ratings
+
+    def get_total_bad_ratings(self) -> int:
+        """Return the total count of bad ratings.
+
+        Params:
+            self: Feedback instance.
+
+        Returns:
+            int: Total number of bad ratings.
+        """
+        return self._total_bad_ratings
+
+    def get_feedback_history(self) -> List[FeedbackLogEntry]:
+        """Return the feedback log history.
+
+        Params:
+            self: Feedback instance.
+
+        Returns:
+            List[FeedbackLogEntry]: Logged feedback entries.
+        """
+        return self._feedback_history
+
+    # Setters
+    def set_path_history(self, history: List[PathLogEntry]) -> None:
+        """Replace the stored path history.
+
+        Params:
+            self: Feedback instance.
+            history: New path log entries to store.
+
+        Returns:
+            None.
+        """
+        self._path_history = history
+
+    def set_total_good_ratings(self, value: int) -> None:
+        """Set the total count of good ratings.
+
+        Params:
+            self: Feedback instance.
+            value: New total of good ratings.
+
+        Returns:
+            None.
+        """
+        self._total_good_ratings = value
+
+    def set_total_bad_ratings(self, value: int) -> None:
+        """Set the total count of bad ratings.
+
+        Params:
+            self: Feedback instance.
+            value: New total of bad ratings.
+
+        Returns:
+            None.
+        """
+        self._total_bad_ratings = value
+
+    def set_feedback_history(self, history: List[FeedbackLogEntry]) -> None:
+        """Replace the feedback log history.
+
+        Params:
+            self: Feedback instance.
+            history: New feedback log entries to store.
+
+        Returns:
+            None.
+        """
+        self._feedback_history = history
+
+    def calculate_feedback_ratio(self, path_history: List[PathLogEntry]) -> float:
+        """Calculate the percentage of good feedback with the currently saved user feedback.
+
+        Params:
+            self: Feedback instance.
+            path_history: Path log entries to analyze.
+
+        Returns:
+            float: Ratio of good feedback over total feedback entries.
+        """
+        if not path_history:
+            return 0.0
+
+        good = 0
+        total = 0
+
+        for entry in path_history:
+            feedback = entry.get_user_feedback()
+            if feedback is not None:
+                total += 1
+                if feedback.lower() == "good":
+                    good += 1
+
+        if total == 0:
+            return 0.0
+
+        self._total_good_ratings = good
+        self._total_bad_ratings = total - good
+
+        return good / total
+
+    def update_feedback_log(self, path_history: List[PathLogEntry]) -> None:
+        """Create feedback log entries for new user feedback.
+
+        Params:
+            self: Feedback instance.
+            path_history: Path log entries to process.
+
+        Returns:
+            None.
+        """
+        self._path_history = path_history
+
+        for entry in path_history:
+            feedback = entry.get_user_feedback()
+            if feedback is None:
+                continue
+
+            # Check if this entry has already been logged
+            already_logged = any(
+                log.get_start_point() == entry.get_id()
+                for log in self._feedback_history
+            )
+
+            if not already_logged:
+                log = FeedbackLogEntry(
+                    duration=str(entry.get_timestamp()),
+                    start_point=entry.get_label(),
+                    end_point=entry.get_goal_type(),
+                    feedback=feedback,
+                )
+                self._feedback_history.append(log)
+
+    def toJSON(self) -> Dict[str, Any]:
+        """Serialize the feedback state to a JSON-compatible dict.
+
+        Params:
+            self: Feedback instance.
+
+        Returns:
+            Dict[str, Any]: JSON-compatible feedback.
+        """
+        return {
+            "totalGoodRatings": self._total_good_ratings,
+            "totalBadRatings": self._total_bad_ratings,
+            "feedbackRatio": (
+                self._total_good_ratings /
+                (self._total_good_ratings + self._total_bad_ratings)
+                if (self._total_good_ratings + self._total_bad_ratings) > 0
+                else 0.0
+            ),
+            "feedbackHistory": [
+                {
+                    "duration": f.get_duration(),
+                    "startPoint": f.get_start_point(),
+                    "endPoint": f.get_end_point(),
+                    "feedback": f.get_feedback(),
+                }
+                for f in self._feedback_history
+            ],
+        }
+
+    def fromJSON(self, msg: Dict[str, Any]) -> None:
+        """Update path entries from user feedback received from frontend.
+
+        Params:
+            self: Feedback instance.
+            msg: JSON containing feedback updates.
+
+        Returns:
+            None.
+        """
+        entry_id = msg.get("id")
+        feedback = msg.get("feedback")
+
+        if entry_id is None:
+            return
+
+        for entry in self._path_history:
+            if entry.get_id() == entry_id:
+                entry.set_user_feedback(feedback)
+                break
+
+
+=== backend/turtlebot4_backend/turtlebot4_model/Human.py ===
+from typing import Dict, Any
+
+class Human:
+    """Represent a detected human and related proxemic distances."""
+
+    def __init__(
+        self,
+        human_id: str = "",
+        position=None,
+        proxemic_distances: Dict[str, Any] | None = None,
+    ) -> None:
+        """Initialize a human instance.
+
+        Params:
+            self: Human instance.
+            human_id: Unique identifier for the detected human.
+            position: Mapping with x, y, z coordinates.
+            proxemic_distances: Optional proxemic distance data.
+
+        Returns:
+            None.
+        """
+        self._id = human_id
+        self._position = position or {"x": 0.0, "y": 0.0, "z": 0.0}
+
+        # If no proxemic distances provided, use standard zones defined by Edward T. Hall
+        self._proxemic_distances = proxemic_distances or {
+            "intimate": 0.45,  
+            "personal": 1.2,
+            "social": 3.6,
+            "public": 7.6
+        }
+
+    # Getters
+    def get_id(self) -> str:
+        """Return the human identifier.
+
+        Params:
+            self: Human instance.
+
+        Returns:
+            str: Human identifier.
+        """
+        return self._id
+
+    def get_position(self):
+        """Return the current position mapping.
+
+        Params:
+            self: Human instance.
+
+        Returns:
+            Dict[str, Any]: Position with x, y, z coordinates.
+        """
+        return self._position
+
+    def get_proxemic_distances(self) -> Dict[str, Any]:
+        """Return the proxemic distance configuration.
+
+        Params:
+            self: Human instance.
+
+        Returns:
+            Dict[str, Any]: Proxemic distance values by zone.
+        """
+        return self._proxemic_distances
+
+    # Setters
+    def set_id(self, value: str) -> None:
+        """Set the human identifier.
+
+        Params:
+            self: Human instance.
+            value: Human identifier.
+
+        Returns:
+            None.
+        """
+        self._id = value
+
+    def set_position(self, value) -> None:
+        """Set the position mapping.
+
+        Params:
+            self: Human instance.
+            value: Position with x, y, z coordinates.
+
+        Returns:
+            None.
+        """
+        self._position = value
+
+    def set_proxemic_distances(self, value: Dict[str, Any]) -> None:
+        """Set the proxemic distance configuration.
+
+        Params:
+            self: Human instance.
+            value: Proxemic distance values by zone.
+
+        Returns:
+            None.
+        """
+        self._proxemic_distances = value
+
+    # JSON serialization for frontend
+    def toJSON(self) -> Dict[str, Any]:
+        """Serialize the human instance for frontend consumption.
+
+        Params:
+            self: Human instance.
+
+        Returns:
+            Dict[str, Any]: JSON-compatible human payload.
+        """
+        return {
+            "id": self._id,
+            "position": {
+                "x": self._position.get("x", 0.0),
+                "y": self._position.get("y", 0.0),
+                "z": self._position.get("z", 0.0),
+            },
+            "proxemicDistances": self._proxemic_distances
+        }
+
+
+=== backend/turtlebot4_backend/turtlebot4_model/__init__.py ===
+
+
+=== backend/turtlebot4_backend/turtlebot4_model/MapData.py ===
+from typing import List, Dict, Any
+
+class MapData:
+    """
+    Represents the static base layer of the map.
+    Contains map resolution, dimensions, and occupancy grid.
+    """
+
+    def __init__(
+        self,
+        resolution: float = 0.0,
+        width: float = 0.0,
+        height: float = 0.0,
+        occupancyGrid: List[int] = None
+    ) -> None:
+        """
+        Initialize static map metadata and occupancy grid.
+
+        This stores map dimensions and grid values so other components can
+        render or reason about the environment.
+
+        Params:
+            resolution: Meters per cell in the occupancy grid.
+            width: Map width in meters.
+            height: Map height in meters.
+            occupancyGrid: Flattened grid values (0-100 or -1) by cell.
+
+        Return:
+            None.
+        """
+        self._resolution = resolution
+        self._width = width
+        self._height = height
+        self._occupancyGrid = occupancyGrid if occupancyGrid is not None else []
+
+    # Getters
+    def get_resolution(self) -> float:
+        """
+        Get the map resolution.
+
+        This returns the resolution of the map in meters per cell.
+
+        Params:
+            None.
+
+        Return:
+            Resolution in meters per cell.
+        """
+        return self._resolution
+
+    def get_width(self) -> float:
+        """
+        Get the map width.
+
+        This returns the width in meters for layout and scaling.
+
+        Params:
+            None.
+
+        Return:
+            Map width in meters.
+        """
+        return self._width
+
+    def get_height(self) -> float:
+        """
+        Get the map height.
+
+        This returns the height in meters for layout and scaling.
+
+        Params:
+            None.
+
+        Return:
+            Map height in meters.
+        """
+        return self._height
+
+    def get_occupancyGrid(self) -> List[int]:
+        """
+        Get the occupancy grid values.
+
+        This returns the flattened list of cell values for rendering or logic.
+
+        Params:
+            None.
+
+        Return:
+            List of occupancy values.
+        """
+        return self._occupancyGrid
+
+    #  Setters
+    def set_resolution(self, value: float) -> None:
+        """
+        Set the map resolution.
+
+        This updates meters per cell to match new map metadata.
+
+        Params:
+            value: New resolution in meters per cell.
+
+        Return:
+            None.
+        """
+        self._resolution = value
+
+    def set_width(self, value: float) -> None:
+        """
+        Set the map width.
+
+        This updates the width in meters for layout and scaling.
+
+        Params:
+            value: New width in meters.
+
+        Return:
+            None.
+        """
+        self._width = value
+
+    def set_height(self, value: float) -> None:
+        """
+        Set the map height.
+
+        This updates the height in meters for layout and scaling.
+
+        Params:
+            value: New height in meters.
+
+        Return:
+            None.
+        """
+        self._height = value
+
+    def set_occupancyGrid(self, value: List[int]) -> None:
+        """
+        Set the occupancy grid values.
+
+        This replaces the flattened grid with updated cell data.
+
+        Params:
+            value: List of occupancy values.
+
+        Return:
+            None.
+        """
+        self._occupancyGrid = value
+
+    def toJSON(self) -> Dict[str, Any]:
+        """
+        Convert the map data into a JSON-ready dictionary.
+
+        This prepares the data for sending to the frontend or external APIs.
+
+        Params:
+            None.
+
+        Return:
+            Dictionary with resolution, width, height, and occupancy grid.
+        """
+        return {
+            "resolution": self._resolution,
+            "width": self._width,
+            "height": self._height,
+            "occupancyGrid": self._occupancyGrid
+        }
+
+
+=== backend/turtlebot4_backend/turtlebot4_model/Map.py ===
+import os
+import base64
+import numpy as np
+import matplotlib.pyplot as plt
+from typing import Dict, Any
+from turtlebot4_backend.turtlebot4_model.Subject import Subject
+from turtlebot4_backend.turtlebot4_model.MapData import MapData
+from geometry_msgs.msg import PoseStamped
+
+class Map(Subject):
+    """Manage map data, pose updates, and observer notifications."""
+
+    # Save directory for generated map PNGs.
+    SAVE_DIR = os.path.expanduser("~/ros2_ws/src/RobotDashboardSystem")
+
+    def __init__(self, mapData=None, robotPose=None, globalGoal=None, intermediateWaypoints=None):
+        """Initialize the map model and optional state.
+
+        Params:
+            self: Map instance.
+            mapData: Initial map data model.
+            robotPose: Initial robot pose.
+            globalGoal: Initial global goal pose.
+            intermediateWaypoints: Initial list of waypoint poses.
+
+        Returns:
+            None.
+        """
+        super().__init__()
+        self._mapData = mapData if mapData else MapData()
+        self._mapDataPNG = None
+        self._robotPose = robotPose
+        self._globalGoal = globalGoal
+        self._intermediateWaypoints = intermediateWaypoints or []
+
+        if mapData:
+            self._convert_mapdata_to_png()
+
+    def _convert_mapdata_to_png(self) -> None:
+        """Convert map data into a PNG and store it as base64.
+        Base64 is a text-safe encoding for binary data, so the PNG can be
+        included in JSON payloads without raw bytes.
+
+        Params:
+            self: Map instance.
+
+        Returns:
+            None.
+        """
+        mapData = self._mapData
+        width = int(mapData.get_width() / mapData.get_resolution())
+        height = int(mapData.get_height() / mapData.get_resolution())
+
+        grid = np.array(mapData.get_occupancyGrid(), dtype=np.int8)
+        if len(grid) != width * height:
+            print("Warning: occupancy grid size mismatch.")
+            grid = np.resize(grid, (height * width))
+
+        grid = grid.reshape((height, width))
+
+        visual_grid = grid.copy()
+        visual_grid[visual_grid == -1] = 50
+
+        png_path = os.path.join(self.SAVE_DIR, 'warehouse_map.png')
+        plt.figure(figsize=(8, 8))
+        plt.imshow(visual_grid, cmap='gray_r', origin='lower')
+        plt.colorbar(label='Occupancy Value')
+        plt.title('Warehouse Occupancy Grid Heatmap')
+        plt.savefig(png_path)
+        plt.close()
+
+        with open(png_path, "rb") as f:
+            self._mapDataPNG = base64.b64encode(f.read()).decode("utf-8")
+
+    async def set_mapData(self, value: MapData) -> None:
+        """Update map data, regenerate PNG, and notify observers.
+
+        Params:
+            self: Map instance.
+            value: New map data.
+
+        Returns:
+            None.
+        """
+        self._mapData = value
+        self._convert_mapdata_to_png()
+
+        await self.notify_observers({
+            "type": "MAP_DATA",
+            "mapData": {
+                "resolution": self._mapData.get_resolution(),
+                "width": self._mapData.get_width(),
+                "height": self._mapData.get_height(),
+                "occupancyGridPNG": self._mapDataPNG
+            }
+        })
+
+    # DYNAMIC POSE UPDATE
+    async def set_robotPose(self, value: PoseStamped) -> None:
+        """Update the robot pose and notify observers.
+
+        Params:
+            self: Map instance.
+            value: New robot pose.
+
+        Returns:
+            None.
+        """
+        self._robotPose = value
+        await self._send_pose_update()
+
+    async def set_globalGoal(self, value: PoseStamped) -> None:
+        """Update the global goal and notify observers.
+
+        Params:
+            self: Map instance.
+            value: New global goal pose.
+
+        Returns:
+            None.
+        """
+        self._globalGoal = value
+        await self._send_pose_update()
+
+    async def set_intermediateWaypoints(self, value) -> None:
+        """Update intermediate waypoints and notify observers.
+
+        Params:
+            self: Map instance.
+            value: New list of waypoint poses.
+
+        Returns:
+            None.
+        """
+        self._intermediateWaypoints = value
+        await self._send_pose_update()
+
+    async def set_detectedHumans(self, humans) -> None:
+        """Update detected humans and notify observers.
+
+        Params:
+            self: Map instance.
+            humans: Collection of detected human objects.
+
+        Returns:
+            None.
+        """
+        self._detectedHumans = humans
+        await self._send_pose_update()
+
+    # Helper to send POSE_DATA
+    async def _send_pose_update(self):
+        """Send the latest pose-related data to observers.
+
+        Params:
+            self: Map instance.
+
+        Returns:
+            None.
+        """
+        await self.notify_observers({
+            "type": "POSE_DATA",
+            "robotPose": self._pose_to_dict(self._robotPose),
+            "globalGoal": self._pose_to_dict(self._globalGoal),
+            "intermediateWaypoints": [self._pose_to_dict(p) for p in self._intermediateWaypoints],
+            "humans": [h.toJSON() for h in getattr(self, "_detectedHumans", [])]
+        })
+
+    def _pose_to_dict(self, pose):
+        """Convert a pose to a JSON-compatible dict.
+
+        Params:
+            self: Map instance.
+            pose: Pose mapping or PoseStamped instance.
+
+        Returns:
+            Dict[str, Any] | None: Converted pose data, or None if not set.
+        """
+        if pose is None:
+            return None
+
+        # Pose can be a dict (simulator) or a PoseStamped (real robot)
+        if isinstance(pose, dict):
+            return {
+                "position": {
+                    "x": pose.get("position", {}).get("x", 0.0),
+                    "y": pose.get("position", {}).get("y", 0.0),
+                    "z": pose.get("position", {}).get("z", 0.0),
+                },
+                "orientation": {
+                    "x": pose.get("orientation", {}).get("x", 0.0),
+                    "y": pose.get("orientation", {}).get("y", 0.0),
+                    "z": pose.get("orientation", {}).get("z", 0.0),
+                    "w": pose.get("orientation", {}).get("w", 1.0),
+                }
+            }
+
+        return {
+            "position": {
+                "x": pose.pose.position.x,
+                "y": pose.pose.position.y,
+                "z": pose.pose.position.z
+            },
+            "orientation": {
+                "x": pose.pose.orientation.x,
+                "y": pose.pose.orientation.y,
+                "z": pose.pose.orientation.z,
+                "w": pose.pose.orientation.w
+            }
+        }
+
+
+
+=== backend/turtlebot4_backend/turtlebot4_model/Observer.py ===
+from abc import ABC, abstractmethod
+
+
+class Observer(ABC):
+    """
+    Interface for objects that receive updates from a subject.
+
+    This standardizes how models broadcast changes so different listeners can
+    react without knowing the subject's internal details.
+    """
+
+    @abstractmethod
+    async def update(self, source, data: dict) -> None:
+        """
+        Handle an update emitted by a subject.
+
+        This is called whenever the subject wants to broadcast new data to its
+        observers.
+
+        Params:
+            source: The subject that generated the update.
+            data: JSON-serializable payload describing the update.
+
+        Return:
+            None.
+        """
+        pass
+
+=== backend/turtlebot4_backend/turtlebot4_model/PathLogEntry.py ===
+from datetime import datetime
+from typing import Optional
+
+class PathLogEntry:
+    """
+    Represents a single navigation goal entry in the path history.
+
+    This stores goal metadata and feedback so the UI can display the
+    navigation timeline and user assessments.
+    """
+    def __init__(
+        self,
+        label: str = "",
+        id: str = "",
+        goal_type: str = "",
+        timestamp: Optional[datetime] = None, 
+        fuzzy_output: str = "",
+        user_feedback: str = "",
+    ) -> None:
+        """
+        Initialize a path log entry.
+
+        This captures the label, goal type, timestamp, and feedback for a
+        single navigation decision.
+
+        Params:
+            label: Human-readable label for the entry.
+            id: Unique identifier for the goal entry.
+            goal_type: Type of goal (e.g., global or intermediate).
+            timestamp: When the entry was created; None means unknown.
+            fuzzy_output: Rule or planner output text for the entry.
+            user_feedback: User-provided feedback (e.g., good/bad).
+
+        Return:
+            None.
+        """
+        self._label = label
+        self._id = id
+        self._goal_type = goal_type
+        self._timestamp = timestamp  # remains None if not provided
+        self._fuzzy_output = fuzzy_output
+        self._user_feedback = user_feedback
+
+    # Getters
+    def get_label(self) -> str:
+        """
+        Get the display label for this entry.
+
+        This is shown in the UI to describe the goal or rule entry.
+
+        Params:
+            None.
+
+        Return:
+            Label string.
+        """
+        return self._label
+
+    def get_id(self) -> str:
+        """
+        Get the unique identifier for this entry.
+
+        This is used to match feedback or updates to the correct record.
+
+        Params:
+            None.
+
+        Return:
+            Entry identifier string.
+        """
+        return self._id
+
+    def get_goal_type(self) -> str:
+        """
+        Get the goal type for this entry.
+
+        This indicates whether the goal is global or intermediate.
+
+        Params:
+            None.
+
+        Return:
+            Goal type string.
+        """
+        return self._goal_type
+
+    def get_timestamp(self) -> Optional[datetime]:
+        """
+        Get the timestamp for this entry.
+
+        This is used to compute durations between goals and to sort history.
+
+        Params:
+            None.
+
+        Return:
+            Datetime when created, or None if unknown.
+        """
+        return self._timestamp
+
+    def get_fuzzy_output(self) -> str:
+        """
+        Get the fuzzy or rule output associated with this entry.
+
+        This captures the reasoning or rule that produced the goal.
+
+        Params:
+            None.
+
+        Return:
+            Fuzzy output string.
+        """
+        return self._fuzzy_output
+
+    def get_user_feedback(self) -> str:
+        """
+        Get the user feedback for this entry.
+
+        This indicates whether the user judged the goal as good or bad.
+
+        Params:
+            None.
+
+        Return:
+            Feedback string.
+        """
+        return self._user_feedback
+
+    # Setters
+    def set_label(self, value: str) -> None:
+        """
+        Set the display label for this entry.
+
+        This updates how the entry appears in the UI.
+
+        Params:
+            value: New label string.
+
+        Return:
+            None.
+        """
+        self._label = value
+
+    def set_id(self, value: str) -> None:
+        """
+        Set the unique identifier for this entry.
+
+        This updates the ID used to match feedback and edits.
+
+        Params:
+            value: New identifier string.
+
+        Return:
+            None.
+        """
+        self._id = value
+
+    def set_goal_type(self, value: str) -> None:
+        """
+        Set the goal type for this entry.
+
+        This updates the category of the goal for reporting.
+
+        Params:
+            value: New goal type string.
+
+        Return:
+            None.
+        """
+        self._goal_type = value
+
+    def set_timestamp(self, value: Optional[datetime]) -> None:
+        """
+        Set the timestamp for this entry.
+
+        This records when the goal entry was created or updated.
+
+        Params:
+            value: New datetime or None.
+
+        Return:
+            None.
+        """
+        self._timestamp = value
+
+    def set_fuzzy_output(self, value: str) -> None:
+        """
+        Set the fuzzy or rule output for this entry.
+
+        This updates the recorded reasoning text for the goal.
+
+        Params:
+            value: New fuzzy output string.
+
+        Return:
+            None.
+        """
+        self._fuzzy_output = value
+
+    def set_user_feedback(self, value: str) -> None:
+        """
+        Set the user feedback for this entry.
+
+        This updates whether the user rated the goal as good or bad.
+
+        Params:
+            value: New feedback string.
+
+        Return:
+            None.
+        """
+        self._user_feedback = value
+
+
+=== backend/turtlebot4_backend/turtlebot4_model/Path.py ===
+from typing import List, Dict, Any
+from turtlebot4_backend.turtlebot4_model.Subject import Subject
+from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
+
+class Path(Subject):
+    """
+    Stores path state, history, and feedback for the navigation module.
+
+    This model notifies observers when its state changes so the frontend can
+    stay in sync with navigation activity and user feedback.
+    """
+    def __init__(
+        self,
+        path_history: List[PathLogEntry] | None = None,
+        is_path_module_active: bool = False,
+        is_docked: bool = False,
+    ) -> None:
+        """
+        Initialize path state and observer support.
+
+        This sets starting values for the path module and prepares the model
+        to publish updates to observers.
+
+        Params:
+            path_history: Optional initial list of PathLogEntry records.
+            is_path_module_active: Whether the path module starts enabled.
+            is_docked: Whether the robot starts in a docked state.
+
+        Return:
+            None.
+        """
+        super().__init__()
+        self._path_history: List[PathLogEntry] = path_history if path_history is not None else []
+        self._is_path_module_active: bool = is_path_module_active
+        self._is_docked: bool = is_docked
+        self._path_controller = None 
+
+    # Getters
+    def get_path_history(self) -> List[PathLogEntry]:
+        """
+        Return the stored path log entries.
+
+        This exposes the history for UI display and analytics.
+
+        Params:
+            None.
+
+        Return:
+            List of PathLogEntry items.
+        """
+        return self._path_history
+
+    def get_is_path_module_active(self) -> bool:
+        """
+        Return whether the path module is active.
+
+        This indicates if navigation features should be running.
+
+        Params:
+            None.
+
+        Return:
+            True if active, otherwise False.
+        """
+        return self._is_path_module_active
+
+    def get_is_docked(self) -> bool:
+        """
+        Return whether the robot is docked.
+
+        This status is used by the UI and by dock/undock logic.
+
+        Params:
+            None.
+
+        Return:
+            True if docked, otherwise False.
+        """
+        return self._is_docked
+
+    # Setters
+    async def set_path_history(self, value: List[PathLogEntry]) -> None:
+        """
+        Replace the entire path history.
+
+        This is used when the history is loaded or reset and notifies
+        observers so the UI updates immediately.
+
+        Params:
+            value: New list of PathLogEntry items.
+
+        Return:
+            None.
+        """
+        self._path_history = value
+        await self.notify_observers({ 
+                "type": "PATH_UPDATE", 
+                **self.toJSON() 
+        })
+
+    async def set_is_path_module_active(self, value: bool) -> None:
+        """
+        Enable or disable the path module.
+
+        This toggles navigation behavior and notifies observers when the
+        status changes.
+
+        Params:
+            value: True to enable, False to disable.
+
+        Return:
+            None.
+        """
+        if self._is_path_module_active != value:
+            self._is_path_module_active = value
+            await self.notify_observers({ 
+                "type": "PATH_UPDATE", 
+                **self.toJSON() 
+            })
+
+    async def set_is_docked(self, value: bool) -> None:
+        """
+        Update the docked state and notify observers.
+
+        This keeps the UI in sync with docking status.
+
+        Params:
+            value: True if docked, False otherwise.
+
+        Return:
+            None.
+        """
+        if self._is_docked != value:
+            self._is_docked = value
+            await self.notify_observers({ 
+                "type": "PATH_UPDATE", 
+                **self.toJSON() 
+            })
+
+    def set_path_controller(self, controller) -> None:
+        """
+        Store a controller reference for command callbacks.
+
+        This allows the model to trigger dock/undock or cancel actions when
+        UI messages request them.
+
+        Params:
+            controller: PathController instance used to issue commands.
+
+        Return:
+            None.
+        """
+        self._path_controller = controller
+
+    async def add_log_entry(self, entry: PathLogEntry) -> None:
+        """
+        Append a new log entry and notify observers.
+
+        This is used when new goals or rule outputs are generated.
+
+        Params:
+            entry: PathLogEntry to add to history.
+
+        Return:
+            None.
+        """
+        self._path_history.append(entry)
+        await self.notify_observers({ 
+            "type": "PATH_UPDATE", 
+            **self.toJSON() 
+        })
+
+    async def update_log_entry(self, index: int, entry: PathLogEntry) -> None:
+        """
+        Replace a specific log entry and notify observers.
+
+        This updates a single history item, commonly after feedback changes.
+
+        Params:
+            index: Position of the entry to replace.
+            entry: New PathLogEntry to store at the index.
+
+        Return:
+            None.
+        """
+        if 0 <= index < len(self._path_history):
+            self._path_history[index] = entry
+            await self.notify_observers({ 
+                "type": "PATH_UPDATE", 
+                **self.toJSON() 
+            })
+    
+    # Handles user feedback updates from the frontend, matching them to the correct PathLogEntry 
+    # and updating the feedback summary.
+    async def apply_feedback(self, msg: Dict[str, Any]) -> None:
+        """
+        Apply user feedback to the matching goal entry.
+
+        This matches feedback to a log entry, updates it, and emits summary
+        data so the UI can show progress and quality metrics.
+
+        Params:
+            msg: Dict containing a goalId and feedback value.
+
+        Return:
+            None.
+        """
+        goal_id = msg.get("goalId")
+        feedback = msg.get("feedback")
+
+        if not goal_id or feedback is None:
+            print("[Path] Invalid feedback message:", msg)
+            return
+
+        # Find the entry
+        for i, entry in enumerate(self._path_history):
+            if entry.get_id() == goal_id:
+                entry.set_user_feedback(feedback)
+
+                # Update entry and notify frontend
+                await self.update_log_entry(i, entry)
+                print(f"[Path] Feedback updated for {goal_id}: {feedback}")
+
+                end_point = entry.get_goal_type()
+
+                # Start point = previous entry (if exists)
+                if i > 0:
+                    prev = self._path_history[i - 1]
+                    start_point = prev.get_goal_type()
+
+                    # Duration = difference between timestamps
+                    if prev.get_timestamp() and entry.get_timestamp():
+                        duration = (entry.get_timestamp() - prev.get_timestamp()).total_seconds()
+                    else:
+                        duration = 0
+                else:
+                    start_point = "START"
+                    duration = 0
+
+                # Notify frontend of new feedback entry
+                await self.notify_observers({
+                    "type": "FEEDBACK_ENTRY",
+                    "startPoint": start_point,
+                    "endPoint": end_point,
+                    "duration": duration,
+                    "feedback": feedback
+                })
+
+                # Send summary of good/bad ratios for all feedback received so far
+                await self._send_feedback_summary()
+                return
+
+        print(f"[Path] No matching goal entry found for feedback: {goal_id}")
+
+    async def _send_feedback_summary(self):
+        """
+        Compute and send aggregate feedback ratios.
+
+        This summarizes good/bad feedback to help the UI show overall trends.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        total = len(self._path_history)
+        if total == 0:
+            good_ratio = bad_ratio = 0
+        else:
+            good = sum(1 for e in self._path_history if e.get_user_feedback() == "good")
+            bad = sum(1 for e in self._path_history if e.get_user_feedback() == "bad")
+            good_ratio = good / total
+            bad_ratio = bad / total
+
+        await self.notify_observers({
+            "type": "FEEDBACK_SUMMARY",
+            "goodRatio": good_ratio,
+            "badRatio": bad_ratio
+        })
+
+    def toJSON(self) -> Dict[str, Any]:
+        """
+        Convert the Path state into a JSON-serializable structure.
+
+        This formats internal fields so observers and the frontend can
+        consume the path state safely.
+
+        Params:
+            None.
+
+        Return:
+            Dictionary containing path module state and history.
+        """
+        print()
+        return {
+            "isPathModuleActive": self._is_path_module_active,
+            "isDocked": self._is_docked,
+            "pathHistory": [
+                {
+                    "label": e.get_label(),
+                    "id": e.get_id(),
+                    "goalType": e.get_goal_type(),
+                    "timestamp": e.get_timestamp().isoformat() if e.get_timestamp() else None,
+                    "fuzzyOutput": e.get_fuzzy_output(),
+                    "userFeedback": e.get_user_feedback(),
+                }
+                for e in self._path_history
+            ],
+        }
+
+    async def fromJSON(self, msg: Dict[str, Any]) -> None:
+        """
+        Update the Path state based on a frontend message.
+
+        This interprets UI commands to toggle path mode and docking state,
+        then triggers any required controller actions. Specifically handles:
+        - Path module activation/deactivation
+        - Dock/undock commands
+
+        Params:
+            msg: Dict containing state changes from the frontend.
+
+        Return:
+            None.
+        """
+        # Handle path module activation state
+        new_path_active = bool(msg.get("isPathModuleActive", self._is_path_module_active))
+        old_path_active = self._is_path_module_active
+
+        if self._is_path_module_active != new_path_active:
+            self._is_path_module_active = new_path_active
+            await self.notify_observers({ 
+                "type": "PATH_UPDATE", 
+                **self.toJSON() 
+            })
+            
+            # If changing from True to False, cancel navigation
+            if old_path_active == True and new_path_active == False:
+                if self._path_controller is not None:
+                    self._path_controller.cancelNavigation()
+                    print("[Path] Navigation cancelled - module deactivated")
+
+        # Handle dock status changes
+        if "dockStatus" in msg:
+            new_dock_status = bool(msg.get("dockStatus"))
+            old_dock_status = self._is_docked
+
+            if old_dock_status != new_dock_status:
+                self._is_docked = new_dock_status
+                await self.notify_observers({ 
+                    "type": "PATH_UPDATE", 
+                    **self.toJSON() 
+                })
+
+                # Trigger dock/undock command based on state change
+                if self._path_controller is not None:
+                    if new_dock_status == True:
+                        # User wants to dock
+                        self._path_controller.dock()
+                        print("[Path] Dock command triggered")
+                    else:
+                        # User wants to undock
+                        self._path_controller.undock()
+                        print("[Path] Undock command triggered")
+                else:
+                    print("[Path] Warning: PathController not set, cannot execute dock/undock command")
+
+=== backend/turtlebot4_backend/turtlebot4_model/RobotState.py ===
+
+from typing import Dict, Any
+from turtlebot4_backend.turtlebot4_model.Subject import Subject
+from turtlebot4_backend.turtlebot4_model.Path import Path
+
+class RobotState(Subject):
+    """
+    Stores live status fields for the robot and exposes them to observers.
+
+    This model centralizes state so the UI can render battery, connectivity,
+    mode, and dock status consistently.
+    """
+
+    def __init__(
+        self,
+        path_model: Path,
+        is_on: bool = False,
+        battery_percentage: float = None,
+        is_wifi_connected: bool = None,
+        is_comms_connected: bool = None,
+        is_raspberry_pi_connected: bool = None,
+    ) -> None:
+        """
+        Initialize robot status fields and observer support.
+
+        This sets initial status values and links to the path model so
+        derived fields like mode and docked state can be computed.
+
+        Params:
+            path_model: Path model used to derive mode and docked status.
+            is_on: Initial power state of the robot.
+            battery_percentage: Initial battery percent, or None if unknown.
+            is_wifi_connected: Initial wifi connection state, or None if unknown.
+            is_comms_connected: Initial communications link state, or None if unknown.
+            is_raspberry_pi_connected: Initial Raspberry Pi link state, or None if unknown.
+
+        Return:
+            None.
+        """
+        super().__init__()
+        self._is_on = is_on
+        self._battery_percentage = battery_percentage
+        self._is_wifi_connected = is_wifi_connected
+        self._is_comms_connected = is_comms_connected
+        self._is_raspberry_pi_connected = is_raspberry_pi_connected
+        self._path_model = path_model
+
+    # Getters
+    def get_is_on(self) -> bool:
+        """
+        Return the current power state.
+
+        This indicates whether the robot is reported as on.
+
+        Params:
+            None.
+
+        Return:
+            True if on, otherwise False.
+        """
+        return self._is_on
+
+    def get_battery_percentage(self) -> float | None:
+        """
+        Return the current battery percentage.
+
+        This provides the battery level in the 0-100 range when known.
+
+        Params:
+            None.
+
+        Return:
+            Battery percentage or None if unknown.
+        """
+        return self._battery_percentage
+
+    def get_is_wifi_connected(self) -> bool | None:
+        """
+        Return the wifi connection state.
+
+        This indicates whether the robot is connected to wifi.
+
+        Params:
+            None.
+
+        Return:
+            True/False if known, otherwise None.
+        """
+        return self._is_wifi_connected
+
+    def get_is_comms_connected(self) -> bool | None:
+        """
+        Return the communications link state.
+
+        This indicates whether the robot's comms link is healthy.
+
+        Params:
+            None.
+
+        Return:
+            True/False if known, otherwise None.
+        """
+        return self._is_comms_connected
+
+    def get_is_raspberry_pi_connected(self) -> bool | None:
+        """
+        Return the Raspberry Pi connection state.
+
+        This indicates whether the Pi is reachable.
+
+        Params:
+            None.
+
+        Return:
+            True/False if known, otherwise None.
+        """
+        return self._is_raspberry_pi_connected
+
+    # Setters 
+    async def set_is_on(self, value: bool) -> None:
+        """
+        Update the power state and notify observers.
+
+        This keeps the UI in sync when the robot powers on or off.
+
+        Params:
+            value: New power state.
+
+        Return:
+            None.
+        """
+        if self._is_on != value:
+            self._is_on = value
+            await self.notify_observers({ 
+                "type": "STATUS_UPDATE", 
+                **self.toJSON() 
+            })
+
+    async def set_battery_percentage(self, value: float | None) -> None:
+        """
+        Update the battery percentage and notify observers.
+
+        This clamps values into a safe range before publishing updates.
+
+        Params:
+            value: New battery percentage or None if unknown.
+
+        Return:
+            None.
+        """
+        if value is not None:
+            value = max(0.0, min(100.0, value))  # clamp to [0, 100]
+        if self._battery_percentage != value:
+            self._battery_percentage = value
+            await self.notify_observers({ 
+                "type": "STATUS_UPDATE", 
+                **self.toJSON() 
+            })
+
+    async def set_is_wifi_connected(self, value: bool | None) -> None:
+        """
+        Update wifi connection state and notify observers.
+
+        This reports connectivity changes to the UI.
+
+        Params:
+            value: New wifi state or None if unknown.
+
+        Return:
+            None.
+        """
+        if self._is_wifi_connected != value:
+            self._is_wifi_connected = value
+            await self.notify_observers({ 
+                "type": "STATUS_UPDATE", 
+                **self.toJSON() 
+            })
+
+    async def set_is_comms_connected(self, value: bool | None) -> None:
+        """
+        Update comms link state and notify observers.
+
+        This reports comms changes to the UI.
+
+        Params:
+            value: New comms state or None if unknown.
+
+        Return:
+            None.
+        """
+        if self._is_comms_connected != value:
+            self._is_comms_connected = value
+            await self.notify_observers({ 
+                "type": "STATUS_UPDATE", 
+                **self.toJSON() 
+            })
+
+    async def set_is_raspberry_pi_connected(self, value: bool | None) -> None:
+        """
+        Update Raspberry Pi connection state and notify observers.
+
+        This reports Pi connectivity changes to the UI.
+
+        Params:
+            value: New Pi connection state or None if unknown.
+
+        Return:
+            None.
+        """
+        if self._is_raspberry_pi_connected != value:
+            self._is_raspberry_pi_connected = value
+            await self.notify_observers({ 
+                "type": "STATUS_UPDATE", 
+                **self.toJSON() 
+            })
+    
+    async def set_mode(self) -> None:
+        """
+        Notify observers that the derived mode may have changed.
+
+        Mode is based on the path module state, so no local field is set;
+        observers simply re-read the computed value.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        # Mode is derived from path module state, so we just notify observers to re-check the mode.
+        await self.notify_observers({ 
+            "type": "STATUS_UPDATE", 
+            **self.toJSON()
+        })
+
+    async def set_docked(self) -> None:
+        """
+        Notify observers that the derived docked state may have changed.
+
+        Docked status is based on the path module state, so no local field is
+        set; observers simply re-read the computed value.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        # Docked status is derived from path module state, so we just notify observers to re-check the docked status.
+        await self.notify_observers({ 
+            "type": "STATUS_UPDATE", 
+            **self.toJSON()    
+        })
+
+    def toJSON(self) -> Dict[str, Any]:
+        """
+        Convert the robot state into a JSON-ready structure.
+
+        This formats fields for frontend consumption and includes derived
+        mode and dock status.
+
+        Params:
+            None.
+
+        Return:
+            Dict ready to be serialized to JSON for the frontend.
+        """
+        return {
+            "isOn": self._is_on,
+            "batteryPercentage": self._battery_percentage,
+            "isWifiConnected": self._is_wifi_connected,
+            "isCommsConnected": self._is_comms_connected,
+            "isRaspberryPiConnected": self._is_raspberry_pi_connected,
+            "mode": (
+                "Running Path Module" if self._path_model and self._path_model.get_is_path_module_active()
+                else "Teleoperating"
+            ),
+            "isDocked": self._path_model.get_is_docked() if self._path_model else None
+        }
+
+=== backend/turtlebot4_backend/turtlebot4_model/Subject.py ===
+from abc import ABC
+from typing import List
+from turtlebot4_backend.turtlebot4_model.Observer import Observer
+
+
+class Subject(ABC):
+    """
+    Base class for models that broadcast updates to observers.
+
+    This implements the Subject role in the observer pattern so models can
+    notify UI listeners or other components when their state changes.
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize an empty observer list.
+
+        This prepares the subject to register observers before any updates
+        occur.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        self._observers: List[Observer] = []  # Observers to notify on updates.
+
+    def attach(self, o: Observer) -> None:
+        """
+        Register an observer to receive updates.
+
+        This adds a listener so it will be notified on future state changes.
+
+        Params:
+            o: Observer instance to attach.
+
+        Return:
+            None.
+        """
+        if o not in self._observers:
+            self._observers.append(o)
+
+    def detach(self, o: Observer) -> None:
+        """
+        Remove an observer from receiving updates.
+
+        This stops the listener from receiving further notifications.
+
+        Params:
+            o: Observer instance to detach.
+
+        Return:
+            None.
+        """
+        if o in self._observers:
+            self._observers.remove(o)
+
+    async def notify_observers(self, data: dict) -> None:
+        """
+        Notify all registered observers of a state change.
+
+        This delivers the update payload to each observer in order.
+
+        Params:
+            data: JSON-serializable update payload.
+
+        Return:
+            None.
+        """
+        for observer in list(self._observers):
+            await observer.update(self, data)
+
+
+=== backend/turtlebot4_backend/turtlebot4_model/Teleoperate.py ===
+from typing import List, Dict, Any
+
+class Teleoperate:
+    """
+    Stores teleoperation commands and notifies listeners.
+
+    This keeps a queue of drive commands from the UI and alerts controllers so
+    they can publish commands to the robot.
+    """
+    def __init__(self):
+        """
+        Initialize the command queue and observer list.
+
+        This prepares the model to accept commands and to notify controllers
+        whenever a new command arrives.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        self._commands = []
+        # Teleoperate needs to notify the controller when a new command is added, so it can publish to ROSBridge.
+        # Thus it needs its own list of observers (the controller) and a notify mechanism. 
+        self._observers = [] 
+
+    # Observer pattern methods for notifying controller of new commands
+    def attach(self, callback):
+        """
+        Register a callback to receive command notifications.
+
+        This allows controllers to react immediately when a new command is queued.
+
+        Params:
+            callback: Function invoked when a command is added.
+
+        Return:
+            None.
+        """
+        if callback not in self._observers:
+            self._observers.append(callback)
+
+    def detach(self, callback):
+        """
+        Remove a previously registered callback.
+
+        This stops a controller from receiving further notifications.
+
+        Params:
+            callback: Function to remove.
+
+        Return:
+            None.
+        """
+        if callback in self._observers:
+            self._observers.remove(callback)
+
+    def notify(self):
+        """
+        Notify all observers that a new command is available.
+
+        This triggers synchronous callbacks so controllers can publish promptly.
+
+        Params:
+            None.
+
+        Return:
+            None.
+        """
+        for cb in list(self._observers):
+            cb(self, None)   # synchronous callback
+
+    def add_command(self, command: str):
+        """
+        Add a new command to the queue and notify observers.
+
+        This queues commands in order; STOP clears the queue to prioritize a halt.
+
+        Params:
+            command: Drive command string (e.g., FORWARD, LEFT, STOP).
+
+        Return:
+            None.
+        """
+        if command == "STOP":
+            self._commands.clear() # ensures that once a stop command is appended, the entire queue is cleared, and the robot instantly comes to a halt.
+            self._commands.append(command)
+        else:
+            self._commands.append(command)
+
+        self.notify()
+
+    def get_command(self):
+        """
+        Pop the next command from the queue.
+
+        This allows controllers to fetch commands in FIFO order.
+
+        Params:
+            None.
+
+        Return:
+            The next command string, or None if no commands are queued.
+        """
+        if not self._commands:
+            return None
+        return self._commands.pop(0)
+
+    def fromJSON(self, msg):
+        """
+        Load a command from a JSON-style message.
+
+        This accepts a frontend payload and queues the command if present.
+
+        Params:
+            msg: Dict that may contain a "command" field.
+
+        Return:
+            None.
+        """
+        if "command" in msg:
+            self.add_command(msg["command"])
