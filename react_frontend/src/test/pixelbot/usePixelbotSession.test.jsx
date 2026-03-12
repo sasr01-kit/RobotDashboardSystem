@@ -1,8 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
-import { usePixelbotSession } from './usePixelbotSession'
-import { mockSessionResponse } from '../__mocks__/data'
+import { usePixelbotSession } from '../../modules/pixelbot/hooks/usePixelbotSession'
+import { mockSessionResponse } from '../../modules/pixelbot/__mocks__/data'
 
+// Tests for usePixelbotSession to ensure it fetches session data correctly, handles loading and error states,
+// and maps the response to the expected format
 describe('usePixelbotSession', () => {
   beforeEach(() => {
     vi.stubGlobal(
@@ -43,3 +45,33 @@ describe('usePixelbotSession', () => {
     expect(result.current.session).toBeNull()
   })
 })
+
+  it('sets error when fetch fails', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.reject(new Error('Network error'))))
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    const { result } = renderHook(() => usePixelbotSession('c1', 's1'))
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false)
+    })
+
+    expect(result.current.error).toBe('Failed to load data.')
+    expect(result.current.session).toBeNull()
+  })
+
+  it('sets error when response is not ok', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve({ ok: false, json: () => Promise.resolve({}) }))
+    )
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    const { result } = renderHook(() => usePixelbotSession('c1', 's1'))
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false)
+    })
+
+    expect(result.current.error).toBe('Failed to load data.')
+  })

@@ -12,24 +12,23 @@ export default function ChildRecapView() {
 
 
     function handlePrint(elementId) { // Print function
-        if (elementId) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.classList.add('print-visible');
-                document.body.classList.add('printing-single-widget');
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.classList.add('print-visible');
+            document.body.classList.add('printing-single-widget');
 
-                const cleanup = () => {
-                    element.classList.remove('print-visible');
-                    document.body.classList.remove('printing-single-widget');
-                    window.removeEventListener('afterprint', cleanup);
-                };
+            const cleanup = () => {
+                element.classList.remove('print-visible');
+                document.body.classList.remove('printing-single-widget');
+                window.removeEventListener('afterprint', cleanup);
+            };
 
-                window.addEventListener('afterprint', cleanup);
-                window.print();
-            }
-        } else {
+            window.addEventListener('afterprint', cleanup);
             window.print();
+            return;
         }
+
+        window.print();
     }
 
     if (isLoading || !child) {

@@ -42,7 +42,7 @@ export default function CalendarHeatMap({ id, data, colorScale, onPrint }) {
 
     // Memoize enriched color scale to prevent recalculation
     const enrichedColorScale = useMemo(() => ({
-        dataClasses: enrichDataClasses(colorScale?.dataClasses || [])
+        dataClasses: enrichDataClasses(colorScale?.dataClasses)
     }), [colorScale]);
 
 
