@@ -20,13 +20,15 @@ Run with:
     PYTHONPATH=backend pytest backend/turtlebot4_backend/test/test_controllers.py -v
 """
 
-import sys
 import asyncio
+import json
+import sys
 from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
 
-# Must be before any turtlebot4_backend imports
+# Must be before controller imports that transitively import ROS deps.
 sys.modules['geometry_msgs'] = MagicMock()
 sys.modules['geometry_msgs.msg'] = MagicMock()
 sys.modules['roslibpy'] = MagicMock()
@@ -34,6 +36,22 @@ sys.modules['fastapi'] = MagicMock()
 sys.modules['numpy'] = MagicMock()
 sys.modules['matplotlib'] = MagicMock()
 sys.modules['matplotlib.pyplot'] = MagicMock()
+
+from turtlebot4_backend.turtlebot4_controller.MapController import MapController
+from turtlebot4_backend.turtlebot4_controller.PathController import PathController
+from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
+from turtlebot4_backend.turtlebot4_controller.StatusController import StatusController
+from turtlebot4_backend.turtlebot4_controller.TeleopController import TeleopController
+from turtlebot4_backend.turtlebot4_model.ConcreteObserver import ConcreteObserver
+from turtlebot4_backend.turtlebot4_model.Feedback import Feedback
+from turtlebot4_backend.turtlebot4_model.FeedbackLogEntry import FeedbackLogEntry
+from turtlebot4_backend.turtlebot4_model.Human import Human
+from turtlebot4_backend.turtlebot4_model.Map import Map
+from turtlebot4_backend.turtlebot4_model.Observer import Observer
+from turtlebot4_backend.turtlebot4_model.Path import Path
+from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
+from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
+from turtlebot4_backend.turtlebot4_model.Teleoperate import Teleoperate
 
 
 # ─────────────────────────────────────────────
@@ -45,7 +63,6 @@ def run(coro):
 
 
 def make_mock_observer():
-    from turtlebot4_backend.turtlebot4_model.Observer import Observer
 
     class _Obs(Observer):
         def __init__(self):
@@ -57,18 +74,17 @@ def make_mock_observer():
 
 
 def make_path(active=False):
-    from turtlebot4_backend.turtlebot4_model.Path import Path
     return Path(is_path_module_active=active)
 
 
 def make_entry(id="goal_1", feedback="", timestamp=None, label="Test", goal_type="global"):
-    from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
+    
     return PathLogEntry(label=label, id=id, goal_type=goal_type,
                         timestamp=timestamp, fuzzy_output="rule", user_feedback=feedback)
 
 
 def make_map_model():
-    from turtlebot4_backend.turtlebot4_model.Map import Map
+    
     m = Map()
     m._convert_mapdata_to_png = MagicMock()
     m._mapDataPNG = "fakepng"
@@ -85,7 +101,6 @@ def make_map_controller(map_model):
         mock_ros = MagicMock()
         mock_ros.isConnected = True
         MockRos.return_value = mock_ros
-        from turtlebot4_backend.turtlebot4_controller.MapController import MapController
         ctrl = MapController(map_model=map_model)
     return ctrl, mock_ros
 
@@ -94,32 +109,27 @@ def make_path_controller(path_model, map_model):
         mock_ros = MagicMock()
         mock_ros.isConnected = True
         MockRos.return_value = mock_ros
-        from turtlebot4_backend.turtlebot4_controller.PathController import PathController
         PathController._dock_status_callback = lambda self, msg: None
         ctrl = PathController(path_model=path_model, map_model=map_model)
     return ctrl, mock_ros
 
 def make_teleop_controller():
-    from turtlebot4_backend.turtlebot4_model.Teleoperate import Teleoperate
     teleop = Teleoperate()
     loop = asyncio.get_event_loop()
     with patch("turtlebot4_backend.turtlebot4_controller.TeleopController.RosbridgeConnection") as MockRos:
         mock_ros = MagicMock()
         mock_ros.isConnected = True
         MockRos.return_value = mock_ros
-        from turtlebot4_backend.turtlebot4_controller.TeleopController import TeleopController
         ctrl = TeleopController(teleop=teleop, loop=loop)
     return ctrl, teleop, mock_ros
 
 
 def make_status_controller():
-    from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
     robot_state = RobotState(path_model=make_path())
     loop = asyncio.get_event_loop()
     with patch("turtlebot4_backend.turtlebot4_controller.StatusController.RosbridgeConnection") as MockRos, \
          patch("threading.Thread"):
         MockRos.return_value = MagicMock()
-        from turtlebot4_backend.turtlebot4_controller.StatusController import StatusController
         sc = StatusController(robot_state=robot_state, loop=loop)
     return sc, robot_state
 
@@ -188,7 +198,6 @@ class TestMapControllerHumansCallback:
         ctrl._loop.call_soon_threadsafe.assert_called_once()
 
     def test_human_ids_are_sequential(self):
-        from turtlebot4_backend.turtlebot4_model.Human import Human
         poses = [{"position": {"x": float(i), "y": 0.0, "z": 0.0}} for i in range(3)]
         humans = [Human(human_id=f"human_{i+1}",
                         position={"x": p["position"]["x"], "y": 0.0, "z": 0.0})
@@ -315,7 +324,6 @@ class TestPathControllerRuleCallback:
         assert ctrl._loop.call_soon_threadsafe.call_count >= 1
 
     def test_accepts_json_string(self):
-        import json
         ctrl = self._make()
         ctrl._rule_callback({"data": json.dumps({"goal_type": "intermediate", "position": {}, "rule": "R2"})})
         assert ctrl._loop.call_soon_threadsafe.call_count >= 1
@@ -722,11 +730,9 @@ class TestPathNewMethods:
 class TestFeedback:
 
     def _make(self):
-        from turtlebot4_backend.turtlebot4_model.Feedback import Feedback
         return Feedback()
 
     def _entry(self, id="g1", feedback="", timestamp=None, label="L", goal_type="global"):
-        from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
         return PathLogEntry(label=label, id=id, goal_type=goal_type,
                             timestamp=timestamp, user_feedback=feedback)
 
@@ -738,7 +744,6 @@ class TestFeedback:
         assert f.get_feedback_history() == []
 
     def test_setters(self):
-        from turtlebot4_backend.turtlebot4_model.FeedbackLogEntry import FeedbackLogEntry
         f = self._make()
         f.set_path_history([self._entry()])
         f.set_total_good_ratings(3)
@@ -770,7 +775,6 @@ class TestFeedback:
         assert f.get_total_bad_ratings() == 2
 
     def test_calculate_ratio_none_feedback_skipped(self):
-        from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
         assert self._make().calculate_feedback_ratio(
             [PathLogEntry(id="g1", user_feedback=None)]) == 0.0
 
@@ -785,7 +789,6 @@ class TestFeedback:
         assert log.get_end_point() == "global"
 
     def test_update_log_skips_none_feedback(self):
-        from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
         f = self._make()
         f.update_feedback_log([PathLogEntry(id="g1", user_feedback=None)])
         assert len(f.get_feedback_history()) == 0
@@ -829,7 +832,6 @@ class TestFeedback:
 class TestConcreteObserver:
 
     def _make(self):
-        from turtlebot4_backend.turtlebot4_model.ConcreteObserver import ConcreteObserver
         mock_ws = MagicMock()
         mock_ws.send_json = AsyncMock()
         return ConcreteObserver(mock_ws), mock_ws
@@ -862,7 +864,6 @@ class TestConcreteObserver:
 class TestRobotStateDerivedMethods:
 
     def _make(self, active=False):
-        from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
         return RobotState(path_model=make_path(active))
 
     def test_set_mode_notifies(self):
@@ -917,14 +918,11 @@ class TestStatusController:
     """
 
     def _make(self):
-        from turtlebot4_backend.turtlebot4_model.Path import Path
-        from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
         robot_state = RobotState(path_model=Path())
         loop = asyncio.get_event_loop()
         with patch("turtlebot4_backend.turtlebot4_controller.StatusController.RosbridgeConnection") as MockRos, \
              patch("threading.Thread"):
             MockRos.return_value = MagicMock()
-            from turtlebot4_backend.turtlebot4_controller.StatusController import StatusController
             sc = StatusController(robot_state=robot_state, loop=loop)
         return sc, robot_state
 
@@ -1124,8 +1122,6 @@ class TestStatusController:
     # ── _connect_and_subscribe success / failure paths ─────────────────────────
 
     def test_connect_success_sets_is_on_true(self):
-        from turtlebot4_backend.turtlebot4_model.Path import Path
-        from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
         robot_state = RobotState(path_model=Path())
         loop = asyncio.get_event_loop()
 
@@ -1142,7 +1138,6 @@ class TestStatusController:
                 return m
 
             MockThread.side_effect = capture_thread
-            from turtlebot4_backend.turtlebot4_controller.StatusController import StatusController
             sc = StatusController(robot_state=robot_state, loop=loop)
 
         # Run the thread target directly — simulates successful connection
@@ -1155,8 +1150,6 @@ class TestStatusController:
         assert robot_state.get_is_on() is True
 
     def test_connect_failure_sets_is_on_false(self):
-        from turtlebot4_backend.turtlebot4_model.Path import Path
-        from turtlebot4_backend.turtlebot4_model.RobotState import RobotState
         robot_state = RobotState(path_model=Path())
         run(robot_state.set_is_on(True))  # start as on
         loop = asyncio.get_event_loop()
@@ -1174,7 +1167,6 @@ class TestStatusController:
                 return m
 
             MockThread.side_effect = capture_thread
-            from turtlebot4_backend.turtlebot4_controller.StatusController import StatusController
             sc = StatusController(robot_state=robot_state, loop=loop)
 
         # Simulate connection failure
@@ -1208,7 +1200,6 @@ class TestRosbridgeConnection:
 
     def _make(self, connected=False):
         """Return a RosbridgeConnection with roslibpy fully mocked."""
-        from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
         rc = RosbridgeConnection(host='localhost', port=9090)
         if connected:
             rc.client = MagicMock()
@@ -1234,7 +1225,6 @@ class TestRosbridgeConnection:
         assert rc._services == {}
 
     def test_init_custom_host_port(self):
-        from turtlebot4_backend.turtlebot4_controller.RosbridgeConnection import RosbridgeConnection
         rc = RosbridgeConnection(host='192.168.1.1', port=1234)
         assert rc.host == '192.168.1.1'
         assert rc.port == 1234
