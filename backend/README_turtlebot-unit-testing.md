@@ -1,7 +1,6 @@
 # Running Unit Tests — TurtleBot4 Backend
  
-This guide walks you through everything you need to do after cloning the repository to run the unit tests locally. No ROS installation, no robot hardware, and no prior Python experience is required.
- 
+This guide walks you through everything you need to do after cloning the repository to run the unit tests locally.
 ---
  
 ## Prerequisites
