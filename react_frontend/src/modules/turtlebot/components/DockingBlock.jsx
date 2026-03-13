@@ -58,7 +58,7 @@ const DockingBlock = () => {
         <motion.button
           className={`execution-button ${isDocked ? "stop" : "start"}`}
           onClick={handleClick}
-          disabled={isPending}
+          aria-disabled={isPending}
           whileHover={!isPending ? { scale: 1.05 } : {}}
           whileTap={!isPending ? { scale: 0.95 } : {}}
         >

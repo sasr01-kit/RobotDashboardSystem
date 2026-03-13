@@ -1,5 +1,6 @@
 import asyncio
 import json
+import uuid
 import time
 from datetime import datetime
 from typing import Any, Dict
@@ -248,95 +249,40 @@ class PathController:
         )
 
         print("[PathController] Global goal updated via MapModel")
-
-    def _dock_status_callback(self, msg: Dict[str, Any]) -> None:
-        """
-        Track docking status reported by the robot.
-
-        This mirrors the robot's docking state into the path model so the UI
-        can show current status.
-
-        Params:
-            msg: Rosbridge JSON payload for irobot_create_msgs/msg/DockStatus.
-
-        Return:
-            None.
-        """
-        is_docked = bool(msg.get("is_docked", False))
-
-        # Reflect in PathModel.
-        self._loop.call_soon_threadsafe(
-            lambda: asyncio.create_task(self._path_model.set_is_docked(is_docked))
-        )
-
-        print(f"[PathController] Dock status updated from robot: is_docked={is_docked}")
     
-
     def dock(self) -> None:
-        """
-        Publish a simulated docked status.
-
-        This user-triggered command updates /dock_status to reflect a docked
-        state, which is useful for UI testing or manual control.
-
-        Params:
-            None.
-
-        Return:
-            None.
-        """
         if not self._connected:
-            print("[PathController] Not connected to rosbridge. Call connect() first.")
+            print("[PathController] Not connected to rosbridge.")
             return
-        
-        # Create status message indicating docked.
-        dock_status_msg = {
-            "is_docked": True,
-            "dock_visible": True,
-            "header": {
-                "stamp": {
-                    "sec": int(time.time()),
-                    "nanosec": int((time.time() % 1) * 1e9)
-                },
-                "frame_id": "base_link"
-            }
-        }
-        
-        self._ros.publish("/dock_status", dock_status_msg)
-        print("[PathController] Published dock status: docked=True")
 
+        try:
+            self._ros.send_action_goal(
+                action_name='/dock',
+                action_type='irobot_create_msgs/action/Dock',
+                goal_message={},   # Dock goal is empty
+                result_callback=lambda r: print("[Dock Result]", r),
+                feedback_callback=lambda f: print("[Dock Feedback]", f)
+            )
+            print("[PathController] Dock action sent.")
+        except Exception as e:
+            print(f"[PathController] Dock failed: {e}")
+            
     def undock(self) -> None:
-        """
-        Publish a simulated undocked status.
-
-        This user-triggered command updates /dock_status to reflect an undocked
-        state, which is useful for UI testing or manual control.
-
-        Params:
-            None.
-
-        Return:
-            None.
-        """
         if not self._connected:
-            print("[PathController] Not connected to rosbridge. Call connect() first.")
+            print("[PathController] Not connected to rosbridge.")
             return
-        
-        # Create status message indicating undocked.
-        dock_status_msg = {
-            "is_docked": False,
-            "dock_visible": False,
-            "header": {
-                "stamp": {
-                    "sec": int(time.time()),
-                    "nanosec": int((time.time() % 1) * 1e9)
-                },
-                "frame_id": "base_link"
-            }
-        }
-    
-        self._ros.publish("/dock_status", dock_status_msg)
-        print("[PathController] Published dock status: docked=False")
+
+        try:
+            self._ros.send_action_goal(
+                action_name='/undock',
+                action_type='irobot_create_msgs/action/Undock',
+                goal_message={},
+                result_callback=lambda r: print("[Undock Result]", r),
+                feedback_callback=lambda f: print("[Undock Feedback]", f)
+            )
+            print("[PathController] Undock action sent.")
+        except Exception as e:
+            print(f"[PathController] Undock failed: {e}")
 
     def cancelNavigation(self) -> None:
         """

@@ -20,11 +20,11 @@ import DockingBlock from "../components/DockingBlock.jsx";
 export default function TurtlebotStatusPage() {
     const { statusDTO, error } = useTurtlebotStatus();
 
-    const batteryColor = statusDTO?.batteryPercentage === null ? "#FF5A5F"
-                            : statusDTO.batteryPercentage < 50 ? "#FF5A5F" : "#5AAE61";
-    const wifiColor = statusDTO?.isWifiConnected ? '#5AAE61' : '#FF5A5F';
-    const piColor = statusDTO?.isRaspberryPiConnected ? '#5AAE61' : '#FF5A5F';
-    const commsColor = statusDTO?.isCommsConnected ? '#5AAE61' : '#FF5A5F';
+    const batteryStatus =
+    statusDTO?.batteryPercentage == null ? "status-disconnected" : statusDTO.batteryPercentage < 50 ? "status-low-battery" : "status-high-battery";
+    const wifiStatus = statusDTO?.isWifiConnected ? "status-connected" : "status-disconnected";
+    const piStatus = statusDTO?.isRaspberryPiConnected ? "status-connected" : "status-disconnected";
+    const commsStatus = statusDTO?.isCommsConnected ? "status-connected" : "status-disconnected";
 
     if (error) return <div className='error-page'>Error: {error}</div>;
    
@@ -40,7 +40,7 @@ export default function TurtlebotStatusPage() {
                                 />}
                     label="Battery"
                     status={statusDTO?.batteryPercentage + '%'}
-                    statusColor={batteryColor}
+                    statusClass={batteryStatus}
                 />
                 <GeneralStatusBlock icon={
                                 <img
@@ -50,7 +50,7 @@ export default function TurtlebotStatusPage() {
                                 />}
                     label="WiFi"
                     status={statusDTO?.isWifiConnected ? 'Connected' : null}
-                    statusColor={wifiColor}
+                    statusClass={wifiStatus}
                 />
                 <GeneralStatusBlock icon={<img
                                     src={raspberryPi}
@@ -59,7 +59,7 @@ export default function TurtlebotStatusPage() {
                                 />}
                     label="Raspberry Pi"
                     status={statusDTO?.isRaspberryPiConnected ? 'Online' : null}
-                    statusColor={piColor}
+                    statusClass={piStatus}
                 />
                 <GeneralStatusBlock icon={<img
                                     src={comms}
@@ -68,7 +68,7 @@ export default function TurtlebotStatusPage() {
                                 />}
                     label="Comms"
                     status={statusDTO?.isCommsConnected ? 'Connected' : null}
-                    statusColor={commsColor}
+                    statusClass={commsStatus}
                 />
             </div>
             <div className="teleop-and-commands-container">

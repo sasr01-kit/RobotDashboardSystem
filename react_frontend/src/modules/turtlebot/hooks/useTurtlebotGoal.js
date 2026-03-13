@@ -60,3 +60,14 @@ export function useTurtlebotGoal() {
 
   return goalDTO;
 }
+
+// Additional hook to manage path history storage on the backend
+export function usePathHistoryActions() {
+  const { send } = useWebSocketContext();
+
+  return {
+    save: () => send?.({ type: "SAVE_PATH_HISTORY" }),
+    loadLatest: () => send?.({ type: "LOAD_LATEST_PATH_HISTORY" }),
+    clear: () => send?.({ type: "CLEAR_PATH_HISTORY" }),
+  };
+}

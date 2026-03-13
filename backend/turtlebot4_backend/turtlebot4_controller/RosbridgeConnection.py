@@ -37,6 +37,9 @@ class RosbridgeConnection:
 
         # Keep created Service objects if needed.
         self._services: Dict[str, roslibpy.Service] = {}
+        
+        # Keep created ActionClient objects
+        self._actions: Dict[str, roslibpy.actionlib.ActionClient] = {}  
 
     def connect(self, timeout: float = 5.0) -> None:
         """
@@ -197,6 +200,67 @@ class RosbridgeConnection:
             raise RuntimeError(f'Service call error: {error_container["error"]}')
 
         return result_container.get('response', {})
+    
+    def send_action_goal(
+        self,
+        action_name: str,
+        action_type: str,
+        goal_message: dict,
+        result_callback: Optional[Callable[[dict], None]] = None,
+        feedback_callback: Optional[Callable[[dict], None]] = None,
+        timeout: float = 10.0
+    ) -> None:
+        """
+        Send a ROS2 action goal using roslibpy ActionClient.
+
+        This properly communicates with ROS2 action servers over rosbridge.
+
+        Params:
+            action_name: Name of the action (e.g. '/dock').
+            action_type: Full ROS2 action type string 
+                        (e.g. 'irobot_create_msgs/action/Dock').
+            goal_message: Goal payload dict (usually empty for Dock/Undock).
+            result_callback: Optional callback invoked on result.
+            feedback_callback: Optional callback invoked on feedback.
+            timeout: Seconds to wait for action server availability.
+
+        Return:
+            None.
+        """
+        if not self.client or not self.isConnected:
+            raise RuntimeError('Not connected. Call connect() first.')
+
+        # Reuse or create ActionClient
+        action_client = self._actions.get(action_name)
+        if action_client is None:
+            action_client = roslibpy.actionlib.ActionClient(
+                self.client,
+                action_name,
+                action_type
+            )
+            self._actions[action_name] = action_client
+
+        # Wait for server
+        if not action_client.wait_for_server(timeout=timeout):
+            raise TimeoutError(
+                f'Action server {action_name} not available after {timeout} seconds'
+            )
+
+        # Create goal
+        goal = roslibpy.actionlib.Goal(action_client, goal_message)
+
+        # Register callbacks
+        if feedback_callback:
+            goal.on('feedback', feedback_callback)
+
+        def _internal_result_callback(result):
+            if result_callback:
+                result_callback(result)
+
+        goal.on('result', _internal_result_callback)
+
+        # Send goal
+        goal.send()
 
     def terminate(self) -> None:
         """

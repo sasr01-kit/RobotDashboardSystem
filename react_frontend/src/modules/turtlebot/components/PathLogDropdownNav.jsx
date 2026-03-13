@@ -22,7 +22,6 @@ export const PathLogDropdownNav = ({ logs, onSelect }) => {
       >
         Path History <span className="triangle">▼</span>
       </div>
-
       {isOpen && (
         <ul className="dropdown-menu">
           {logs.map((log) => (

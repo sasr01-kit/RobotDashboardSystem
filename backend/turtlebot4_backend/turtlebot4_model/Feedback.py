@@ -1,7 +1,6 @@
 from typing import List, Dict, Any
-
-from PathLogEntry import PathLogEntry
-from FeedbackLogEntry import FeedbackLogEntry
+from turtlebot4_backend.turtlebot4_model.PathLogEntry import PathLogEntry
+from turtlebot4_backend.turtlebot4_model.FeedbackLogEntry import FeedbackLogEntry
 
 class Feedback:
     """Track navigation feedback metrics and history entries."""

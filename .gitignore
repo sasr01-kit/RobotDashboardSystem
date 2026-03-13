@@ -1,15 +1,11 @@
-# ================================
 # ROS 2 / colcon build artifacts
-# ================================
 build/
 install/
 log/
 tree.txt
 warehouse_map.png
 
-# ================================
 # Python artifacts
-# ================================
 __pycache__/
 *.pyc
 *.pyo
@@ -19,42 +15,34 @@ __pycache__/
 dist/
 pip-wheel-metadata/
 
-# ================================
 # Virtual environments
-# ================================
 venv/
 .env/
 .venv/
 
-# ================================
 # VS Code
-# ================================
 .vscode/
 *.code-workspace
+.cursor/
 
-# ================================
 # OS / Editor junk
-# ================================
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
 
-# ================================
 # ROS logs / temp
-# ================================
 *.log
 
-# ================================
 # CMake (future-proofing)
-# ================================
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
 
-# ================================
 # Children data files
-# ================================
 backend/pixelbot_backend/pixelbot_storage/children_data.json
 backend/pixelbot_backend/pixelbot_storage/children_meta.json
+
+# Turtlebot Path History Snapshots (local save files)
+backend/turtlebot4_backend/turtlebot4_storage/path_history_snapshots/*.json
