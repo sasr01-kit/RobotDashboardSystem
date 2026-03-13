@@ -15,9 +15,9 @@ The backend provides:
 
 - **Python 3.8+**
 - **FastAPI** and **Uvicorn**
-- **roslibpy**
-- **ROS 2 Humble** (for TurtleBot4 integration)
-- **rosbridge_server** (WebSocket bridge between ROS and the backend)
+- **roslibpy** (for TurtleBot4 integration only)
+- **ROS 2 Humble** (for TurtleBot4 integration only)
+- **rosbridge_server** (WebSocket bridge between ROS and the Turtlebot4 backend)
 
 ## Project Structure
 
@@ -29,10 +29,19 @@ backend/
 └── turtlebot4_backend/  # TurtleBot4 ROS integration
 ```
 
+## Setup needed
+
+If you're only using Pixelbot, follow the Pixelbot Setup section.
+If you're only using Turtlebot4, follow the Turtlebot4 Setup section.
+If you want to use both robots, follow both setup section.
+
+## TurtleBot4 Setup
+These steps are only needed if you are using TurtleBot4.
+
 For details specific to TurtleBot4, also see:
 - `backend/turtlebot4_backend/README.md`
 
-## Prerequisites
+### Prerequisites
 
 - **Python** 3.8 or newer
 - **pip** for dependency management
@@ -41,7 +50,7 @@ For details specific to TurtleBot4, also see:
 
 > Note: ROS 2 and rosbridge commands are typically executed on the robot or a ROS-enabled machine (e.g., Ubuntu). The FastAPI backend can run on the same machine or a different one, as long as it can reach the rosbridge server over the network.
 
-## ROS 2 Workspace (ros2_ws)
+### ROS 2 Workspace (ros2_ws)
 
 You should create a ROS 2 workspace on the ROS-enabled machine and place this repository inside the workspace `src` folder so ROS tools can find any packages or demo launch files included here.
 
@@ -70,7 +79,7 @@ Notes:
 - These commands are intended for a Linux/Ubuntu ROS environment; Windows users should follow ROS 2 on Windows instructions and adapt workspace commands accordingly.
 - After a successful build, any ROS packages in the workspace will be available to `ros2 launch` and `ros2 run`.
 
-## Installation
+### Installation
 
 From the repository root:
 
@@ -85,7 +94,7 @@ python -m venv venv # Install venv once
 pip install -r requirements.txt
 ```
 
-## Runtime Setup (Order Matters)
+### Runtime Setup (Order Matters)
 
 The following sequence mirrors `setup_commands.txt`. The order is important and should be followed as listed.
 
@@ -104,13 +113,6 @@ This starts the rosbridge WebSocket server that the backend uses to communicate 
 ### 2. Optional Pre-Setup Testing (Robot / ROS machine)
 
 These steps are optional, but should be executed **before** starting the backend/frontend if you want to verify the robot-side setup.
-
-#### Setting up local test data (Pixelbot)
-
-In the backend, change the file paths in `main.py` (line 84) and optionally other test files. If the path is not correct or data is faulty, the Pixelbot will currently block the 8080 Websocket and prevent the connection (will be fixed later in quality assurance). If you want to connect the backend with the pixelbot, then use this path: http://192.168.2.70:8000.
-```bash
-child_api = ChildAPI("/yourFilePath", repository)
-```
 
 #### Teleoperation / Navigation (TurtleBot4)
 
@@ -134,11 +136,35 @@ source install/setup.bash
 ros2 launch map_only_launch map_server_launch.py
 ```
 
-### 3. Backend (FastAPI) and Frontend
+## Pixelbot Setup
+### Installation (If not already done in the TurtleBot4 Section)
+From the repository root:
 
-After the ROS and optional pre-setup tests are running, start the backend and frontend.
+```bash
+cd ros2_ws/src/RobotDashboardSystem/backend
 
-#### Backend (FastAPI)
+# (Optional for Windows) Create and activate a virtual Linux environment in the terminal
+python -m venv venv # Install venv once
+.\venv\Scripts\Activate.ps1  # for Windows PowerShell
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 1. Configure the Robot URL
+
+In main.py, update the Pixelbot URL with the correct IP address and port of your robot (For more details see: `pixelbot-setup/README.md`).
+
+```bash
+child_api = ChildAPI("http://<PIXELBOT_IP>:<PORT>", repository)
+```
+Make sure your laptop and the Pixelbot are connected to the same network.
+
+## Start Backend (FastAPI) and Frontend
+
+After completing the ROS setup (only required for TurtleBot4) and any optional pre-setup tests start the backend and frontend.
+
+### Backend (FastAPI)
 
 From the repository root, in a terminal that has access to Python and the backend dependencies:
 
@@ -146,11 +172,13 @@ From the repository root, in a terminal that has access to Python and the backen
 cd ros2_ws/src/RobotDashboardSystem/backend
 
 # Start FastAPI (default: port 8080)
+# Only if you have TurtleBot4
 source /opt/ros/humble/setup.bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8080
+# For both robots
+uvicorn main:app --reload --host 0.0.0.0 --port 8080 
 ```
 
-#### Frontend (React)
+## Frontend (React)
 
 From another terminal:
 
@@ -166,7 +194,8 @@ npm run dev     # or: pnpm dev
 
 The React frontend expects the backend to be reachable on port `8080` by default.
 
-### 4. Post-Setup Testing
+## Post-Setup Testing 
+### TurtleBot4 Backend Test
 
 After everything is running, you can verify the system by using the following commands.
 
@@ -200,16 +229,19 @@ ros2 topic pub /comms_state std_msgs/msg/Bool "{data: true}"
 ros2 run map_only_launch pose_publisher
 ```
 
-#### Pixelbot Backend Test
+### Pixelbot Backend Test (Optional)
+You can verify the connection to the Pixelbot by running the integration tests. These require the robot to be reachable on the network.
 
-This step requires the Pixelbot test (mock) files to be available on the computer. Their location (path) can be defined in the CONFIG part of `test_full_pipeline`.
-From the `backend` directory or any environment where `pixelbot_backend` is importable run:
+From the `backend` directory run:
 
+Test connection/if robot is reachable:
 ```bash
-# General child data test
-python3 -m pixelbot_backend.test_full_pipeline
-# Connection test
-python3 -m pixelbot_backend.test_pixelbot_connection
+python3 -m pixelbot_backend.test_integration.test_robot_connection
+```
+
+Full pipeline test: (loads data, saves to temp folder, validates JSON)
+```bash
+python3 -m pixelbot_backend.test_integration.test_full_pipeline
 ```
 
 ## Port Conventions
@@ -218,6 +250,9 @@ python3 -m pixelbot_backend.test_pixelbot_connection
 - `8080`: FastAPI (frontend ↔ backend)
 - `9090`: TurtleBot4 (backend ↔ robot via rosbridge)
 
+The Pixelbot port may vary. For more details see:
+  `pixelbot-setup/README.md`
+  
 ## Troubleshooting
 
 - Ensure the ROS 2 environment is correctly sourced before running any `ros2` commands.
