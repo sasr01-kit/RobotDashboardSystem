@@ -46,9 +46,7 @@ app.add_middleware(
 # Pixelbot setup. Initialize repository and APIs for handling child/session data.
 repository = DataRepository()
 
-# C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing
-# Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
-# Pixelbot path: "http://192.168.2.70:8000" http://172.20.10.14:8000
+# To connect with Pixelbot robot, use the path with the Pixelbots IP address and port.
 child_api = ChildAPI("http://192.168.2.70:8000", repository)
 child_api.start()
 global_metrics_api = GlobalMetricsAPI()
