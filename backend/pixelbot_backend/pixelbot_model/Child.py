@@ -1,11 +1,13 @@
-import pixelbot_backend.pixelbot_model.Session as Session
+from pixelbot_backend.pixelbot_model.Session import Session
 
+'''Child represents a child user of the Pixelbot robot, containing their unique ID, name, and a list of their sessions.'''
 class Child:
     def __init__(self, child_id: str, name: str, sessions: list):
         self.child_id = child_id
         self.name = name
-        self.sessions = sessions  # List of Session objects
+        self.sessions = self.order_sessions_by_id(sessions)  # List of Session objects
 
+    '''Convert the Child object to a dictionary for JSON serialization.'''
     def to_dict(self):
         return {
             "child_id": self.child_id,
@@ -42,13 +44,16 @@ class Child:
         return len(self.sessions)
     
     def get_total_word_count(self):
-        return sum(int(session.getTotalWordCount()) for session in self.sessions)
-
+        return sum(int(session.get_total_word_count()) for session in self.sessions)
     
-    def get_avg_Intimacy_score(self):
-        total_score = sum(session.getAvgIntimacyScore() for session in self.sessions)
+    def get_avg_intimacy_score(self):
+        total_score = sum(session.get_avg_intimacy_score() for session in self.sessions)
         return total_score / len(self.sessions)
 
+    def order_sessions_by_id(self, sessions):
+        return sorted(sessions, key=lambda session: int(session.session_id.split("_")[1]))
+
+    ''''Reconstruct a Child object from a dictionary (loaded from JSON)'''
     @staticmethod
     def from_dict(data):
         sessions = [Session.from_dict(s) for s in data.get("sessions", [])]

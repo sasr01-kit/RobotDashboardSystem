@@ -1,4 +1,4 @@
-
+'''DrawingSelfDisclosureWidth represents the width of self-disclosure in the child's drawing during a session.'''
 class DrawingSelfDisclosureWidth:
     def __init__(self, stroke_count: int, total_stroke_length: float ,average_stroke_length: float, std_stroke_length: float,
                  color_used_count: int, pen_size_used_count: int, amount_filled_area: float):
@@ -10,6 +10,7 @@ class DrawingSelfDisclosureWidth:
         self.pen_size_used_count = pen_size_used_count
         self.amount_filled_area = amount_filled_area
 
+    '''Convert the DrawingSelfDisclosureWidth object to a dictionary for JSON serialization.'''
     def to_dict(self):
         return {
             "stroke_count": self.stroke_count,
@@ -21,27 +22,28 @@ class DrawingSelfDisclosureWidth:
             "amount_filled_area": self.amount_filled_area
         }
     
-    def getStrokeCount(self):
+    def get_stroke_count(self):
         return self.stroke_count        
     
-    def getTotalStrokeLength(self):
+    def get_total_stroke_length(self):
         return self.total_stroke_length 
     
-    def getAvgStrokeLength(self):
+    def get_avg_stroke_length(self):
         return self.average_stroke_length
     
-    def getStdStrokeLength(self):
+    def get_std_stroke_length(self):
         return self.std_stroke_length   
     
-    def getColorUsedCount(self):
+    def get_color_used_count(self):
         return self.color_used_count
     
-    def getPenSizeUsedCount(self):
+    def get_pen_size_used_count(self):
         return self.pen_size_used_count
     
-    def getAmountFilledArea(self):
+    def get_amount_filled_area(self):
         return self.amount_filled_area
     
+    '''Reconstruct a DrawingSelfDisclosureWidth object from a dictionary (loaded from JSON)'''
     @staticmethod
     def from_dict(data):
         return DrawingSelfDisclosureWidth(

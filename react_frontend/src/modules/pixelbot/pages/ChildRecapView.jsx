@@ -73,6 +73,7 @@ export default function ChildRecapView() {
                                 data={child.speechTimeData}
                                 xAxisLabel="Sessions"
                                 yAxisLabel="Minutes"
+                                averageLine={child.metricValues.averageSpeechTime}
                             />
                         </DashboardCard>
                     </div>

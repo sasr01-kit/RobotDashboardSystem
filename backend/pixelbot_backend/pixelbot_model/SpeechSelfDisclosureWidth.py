@@ -1,4 +1,4 @@
-
+'''SpeechSelfDisclosureWidth represents the width of self-disclosure in the child's speech during a session.'''
 class SpeechSelfDisclosureWidth:
     def __init__(self, intervention_count: int, total_word_count: int, average_word_count_per_intervention: float,
                  std_word_count_per_intervention: float, total_speech_time: float, average_speech_time_per_intervention: float,
@@ -11,6 +11,7 @@ class SpeechSelfDisclosureWidth:
         self.average_speech_time_per_intervention = average_speech_time_per_intervention
         self.std_speech_time_per_intervention = std_speech_time_per_intervention
 
+    '''Convert the SpeechSelfDisclosureWidth object to a dictionary for JSON serialization.'''
     def to_dict(self):
         return {
             "intervention_count": self.intervention_count,
@@ -22,27 +23,28 @@ class SpeechSelfDisclosureWidth:
             "std_speech_time_per_intervention": self.std_speech_time_per_intervention,
         }
     
-    def getInterventionCount(self):
+    def get_intervention_count(self):
         return self.intervention_count
     
-    def getTotalWordCount(self):
+    def get_total_word_count(self):
         return self.total_word_count
     
-    def getAvgWordCountPerIntervention(self):
+    def get_avg_word_count_per_intervention(self):
         return self.average_word_count_per_intervention
     
-    def getStdWordCountPerIntervention(self):
+    def get_std_word_count_per_intervention(self):
         return self.std_word_count_per_intervention
     
-    def getTotalSpeechTime(self):
+    def get_total_speech_time(self):
         return self.total_speech_time
     
-    def getAvgSpeechTimePerIntervention(self):
+    def get_avg_speech_time_per_intervention(self):
         return self.average_speech_time_per_intervention
     
-    def getStdSpeechTimePerIntervention(self):
+    def get_std_speech_time_per_intervention(self):
         return self.std_speech_time_per_intervention
     
+    '''Reconstruct a SpeechSelfDisclosureWidth object from a dictionary (loaded from JSON)'''
     @staticmethod
     def from_dict(data):
         return SpeechSelfDisclosureWidth(

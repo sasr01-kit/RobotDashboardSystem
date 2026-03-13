@@ -40,27 +40,33 @@ app.add_middleware(
 # Pixelbot setup. Initialize repository and APIs for handling child/session data.
 repository = DataRepository()
 
+# C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing
 # Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
-# Pixelbot path: "http://192.168.2.70:8000"
-child_api = ChildAPI("C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing", repository)
-global_metrics_api = GlobalMetricsAPI(child_api)
-session_api = SessionAPI(child_api)
+# Pixelbot path: "http://192.168.2.70:8000" http://172.20.10.14:8000
+child_api = ChildAPI("http://192.168.2.70:8000", repository)
+child_api.start()
+global_metrics_api = GlobalMetricsAPI()
+session_api = SessionAPI()
 
 @app.get("/pixelbot/summary")
 def get_summary():
-    return global_metrics_api.send_global_metrics_summary()
+    children = child_api.load_children_objects()
+    return global_metrics_api.send_global_metrics_summary(children)
 
 @app.get("/pixelbot/children")
 def get_children():
     return child_api.send_children()
 
+
 @app.get("/pixelbot/children/{child_id}/recap")
 def get_recap(child_id: str):
-    return global_metrics_api.send_child_recap(child_id)
+    children = child_api.load_children_objects()
+    return global_metrics_api.send_child_recap(child_id, children)
 
 @app.get("/pixelbot/children/{child_id}/sessions/{session_id}")
 def get_session(child_id: str, session_id: str):
-    session = session_api.send_session(child_id, session_id)
+    children = child_api.load_children_objects()
+    session = session_api.send_session(child_id, session_id, children)
     if session is None:
         raise HTTPException(status_code=404, detail="Session not found")
     return session

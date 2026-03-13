@@ -4,16 +4,16 @@ import datetime
 from collections import defaultdict
 from collections import Counter
 
-
+'''GlobalMetricsAPI provides methods to calculate and return global metrics across all children and sessions, 
+    as well as detailed recaps for individual children, using utility functions for the calculations.'''
 class GlobalMetricsAPI:
 
-    def __init__(self, child_api):
-        # Store a reference to the ChildAPI for accessing children and their sessions
-        self.child_api = child_api 
-        # Load all children and their sessions at initialization for quick access
-        self.children = self.child_api.load_children_objects()  
-
-    def send_global_metrics_summary(self):
+    def __init__(self):
+        pass
+    
+    '''Calculate and return a summary of global metrics across all children, including session counts, growth rates, 
+        and heatmap data for the dashboard overview page.'''
+    def send_global_metrics_summary(self, children):
         # Get current date for filtering and calculations
         now = datetime.datetime.now()
         month = now.month
@@ -22,7 +22,7 @@ class GlobalMetricsAPI:
 
         
         # Collect all sessions from all children into a single list
-        for child in self.children:
+        for child in children:
             sessions.extend(child.sessions)
 
         
@@ -30,7 +30,7 @@ class GlobalMetricsAPI:
         sessions_per_day = Utils.calculate_avg_sessions_per_day(sessions, year, now)
         sessions_growth_rate = Utils.calculate_sessions_growth_rate(sessions, month, year)
         sessions_this_month = Utils.count_sessions_this_month(sessions, month, year)
-        sessions_per_child_so_far = Utils.calculate_avg_sessions_per_child_so_far(self.children, sessions, now)
+        sessions_per_child_so_far = Utils.calculate_avg_sessions_per_child_so_far(children, sessions, now)
         daily_session_counts = self.getDailySessionHeatmap(sessions, year)
         heatmap_ranges = self.get_heatmap_ranges(daily_session_counts)
 
@@ -49,13 +49,16 @@ class GlobalMetricsAPI:
             "colorScale": { "dataClasses": heatmap_ranges },
         }
     
-    def get_child_obj(self, child_id):
-        for child in self.children:
+    '''Retrieve a specific child object by their ID from a list of child objects.'''
+    def get_child_obj(self, child_id, children):
+        for child in children:
             if child.child_id == child_id:
                 return child
     
-    def send_child_recap(self, child_id):
-        child = self.get_child_obj(child_id)
+    '''Calculate and return a detailed recap of metrics for a specific child, including engagement, expressiveness, 
+        openness, drawing, and story metrics.'''
+    def send_child_recap(self, child_id, children):
+        child = self.get_child_obj(child_id, children)
         
         if child is None:
             raise ValueError(f"Child with id {child_id} not found")
@@ -76,12 +79,13 @@ class GlobalMetricsAPI:
             },
             "expressiveness": {
                 "totalWordCount": Utils.get_total_word_count(sessions),
-                "averageWordCount": Utils.avg_word_count(sessions),
+                "averageWordCount": Utils.avg_word_count(sessions, year),
                 "wordCountGrowthRate": Utils.get_avg_word_count_growth_rate(sessions, year),
+                "averageSpeechTime": Utils.get_avg_speech_time(sessions, year),
                 "speechTimeGrowthRate": Utils.get_speech_time_growth_rate(sessions, year),
             },
             "opennes": {
-                "averageIntimacyScore": Utils.get_avg_intimacy_score(sessions),
+                "averageIntimacyScore": Utils.get_avg_intimacy_score(sessions, year),
                 "intimacyTrend": Utils.get_intimacy_trend(sessions, year),
             },
             "drawing": {
@@ -100,13 +104,9 @@ class GlobalMetricsAPI:
         return recap
 
 
-
+    '''Used for the heatMap: 
+        Converts a list of session objects into: { "02-01-2026": count, "03-01-2026": count } and formats dates as d-m-y for frontend. '''
     def getDailySessionHeatmap(self, sessions, year):
-        """
-        Converts a list of session objects into:
-        { "02-01-2026": count, "03-01-2026": count }
-        and formats dates as d-m-y for frontend."""
-
         date_map = defaultdict(int)
         for session in sessions:
             if session.session_date.year == year:
@@ -126,6 +126,7 @@ class GlobalMetricsAPI:
             current_date += delta        
         return dict(date_map)
 
+    '''Calculate the most common objects mentioned in the story summaries across all sessions, returning the top N objects and their counts.'''
     def get_most_common_objects(self, sessions, top_n=5):
         # Count occurrences of each object name in all story summaries
         counter = Counter()
@@ -140,6 +141,8 @@ class GlobalMetricsAPI:
         # Return the top_n most common objects as (name, count) tuples
         return counter.most_common(top_n)
     
+    ''''Calculate color scale ranges for the heatmap based on the maximum number of sessions in a single day, 
+        creating buckets for the frontend to use in coloring the heatmap.'''
     def get_heatmap_ranges(self, dailySessionCounts):
         # Calculate color scale buckets for the heatmap based on busiest day
         max_per_day = max(dailySessionCounts.values())
