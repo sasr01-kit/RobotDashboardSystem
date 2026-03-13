@@ -1,0 +1,1 @@
+collect_ignore_glob = ["pixelbot_backend/test_integration/*"]

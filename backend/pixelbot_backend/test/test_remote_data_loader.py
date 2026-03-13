@@ -382,7 +382,7 @@ class TestLoadSession:
         mock_get.side_effect = side_effect_full_session
         loader = RemoteDataLoader(BASE_URL)
         session = loader.load_session("Alice", "session_1")
-        assert session.get_avg_intimacy_score() == pytest.approx(2.5)
+        assert session.get_avg_intimacy_score() == 2.5
 
     @patch("pixelbot_backend.pixelbot_storage.RemoteDataLoader.requests.get")
     def test_stroke_count(self, mock_get):

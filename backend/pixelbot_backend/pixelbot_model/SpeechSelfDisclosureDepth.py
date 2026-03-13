@@ -12,10 +12,10 @@ class SpeechSelfDisclosureDepth:
         }
     
     def get_avg_intimacy_score(self):
-        return self.average_intimacy_score
+        return float(self.average_intimacy_score)
     
     def get_std_intimacy_score(self):
-        return self.std_intimacy_score
+        return float(self.std_intimacy_score)
     
     '''Reconstruct a SpeechSelfDisclosureDepth object from a dictionary (loaded from JSON)'''
     @staticmethod
