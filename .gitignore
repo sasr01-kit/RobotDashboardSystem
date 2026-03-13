@@ -52,3 +52,9 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+
+# ================================
+# Children data files
+# ================================
+backend/pixelbot_backend/pixelbot_storage/children_data.json
+backend/pixelbot_backend/pixelbot_storage/children_meta.json

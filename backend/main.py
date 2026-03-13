@@ -43,7 +43,8 @@ repository = DataRepository()
 # C:/Users/aneca/OneDrive/Uni/pse_data_example/saved_drawing
 # Use your local data path here. If using Pixelbot robot connection, use the path to the robot instead.
 # Pixelbot path: "http://192.168.2.70:8000" http://172.20.10.14:8000
-child_api = ChildAPI("http://172.20.10.14:8000", repository)
+child_api = ChildAPI("http://192.168.2.70:8000", repository)
+child_api.start()
 global_metrics_api = GlobalMetricsAPI()
 session_api = SessionAPI()
 

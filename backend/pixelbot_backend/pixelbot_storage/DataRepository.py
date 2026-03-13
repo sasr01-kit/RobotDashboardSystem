@@ -5,8 +5,7 @@ import os
 from datetime import datetime
 import uuid
 
-"Repository to save and load Child and Session data as JSON files"
-
+'''DataRepository is responsible for saving and loading Child and Session data to and from local JSON files.'''
 class DataRepository:
     def __init__(self):
         
@@ -16,7 +15,7 @@ class DataRepository:
         self.DATA_FILE = os.path.join(base_dir, "children_data.json") 
         self.META_FILE = os.path.join(base_dir, "children_meta.json")
 
-    # save child as JSON
+    ''' Save a list of Child objects to a JSON file, along with metadata about the last update time. '''
     def save_children(self, children_objects):
         # Convert Child objects to dictionaries
         children_dicts = [child.to_dict() for child in children_objects]
@@ -32,6 +31,7 @@ class DataRepository:
             json.dump(meta, f, indent=4) 
     
 
+    ''' Update the repository with new children data from the source (e.g. robot), while preserving existing child IDs if names match. '''
     def update_children(self, raw_children):       
         # load already saved children
         existing_children = self.load_children()
@@ -60,7 +60,7 @@ class DataRepository:
         return children
 
 
-    # Load children from the JSON file
+    ''' Load children from the JSON file and convert them back to Child objects. Returns an empty list if no data file exists. '''
     def load_children(self):
         
         # If the data file doesn't exist, return an empty list
@@ -86,7 +86,8 @@ class DataRepository:
 
         return children_objects
     
-    # get last updated time (for testing purposes)
+    ''' Get the last updated timestamp from the meta file. Returns None if meta file doesn't exist or if last_updated is not present. 
+        For test purposes'''
     def get_last_updated(self):
         # If the meta file doesn't exist, return None
         if not os.path.exists(self.META_FILE):

@@ -4,6 +4,8 @@ from pixelbot_backend.pixelbot_model.SpeechSelfDisclosureDepth import SpeechSelf
 from pixelbot_backend.pixelbot_model.DrawingData import DrawingData
 import datetime
 
+'''Session represents a single interaction between the child and the Pixelbot robot. 
+    It contains all data related to that session, including the drawing, story summary, transcript, and various metrics.'''
 class Session:
     def __init__(self, session_id: str, session_date: datetime , drawing: DrawingData, story_summary: list, transcript: list,
                  speech_width: SpeechSelfDisclosureWidth, speech_depth: SpeechSelfDisclosureDepth,
@@ -21,6 +23,7 @@ class Session:
         # DrawingSelfDisclosureWidth object (drawing metrics: strokes, colors, area)
         self.drawing_width = drawing_width
 
+    '''Convert the Session object to a dictionary for JSON serialization.'''
     def to_dict(self):
         return {
             "sessionId": self.session_id,
@@ -77,9 +80,9 @@ class Session:
     def get_drawing_width(self):
         return self.drawing_width
    
+    ''' Reconstruct a Session object from a dictionary (loaded from JSON)'''
     @staticmethod
     def from_dict(data):
-    
         # Reconstruct a Session object from a dictionary (loaded from JSON)
         session_id = data["sessionId"]
         session_date_str = data["sessionDate"]

@@ -1,24 +1,16 @@
 import datetime
 from collections import defaultdict
 
+''' Utility functions for processing session data, calculating metrics, and growth rates. '''
 class Utils:
-
-    @staticmethod
-    def count_sessions_this_month(sessions: list, month: int, year: int):
-        total_sessions_this_month = 0
-
-        for session in sessions:
-            session_date = session.session_date
-            if session_date.month == month and session_date.year == year:
-                total_sessions_this_month += 1
-
-        return total_sessions_this_month
     
+    '''' Order a list of session dictionaries by their session date. Assumes each dictionary has a "sessionDate" key with a datetime value. '''
     @staticmethod
     def order_map_by_date(session_map):
         # session_map is {sessionId: Session}
         return sorted(session_map, key=lambda x: x["sessionDate"])
 
+    ''' Calculate the growth rate of the total sessions per month. Used for the line chart Total Sessions in recap.'''
     @staticmethod
     def get_session_frequency_monthly(sessions: list, year: int):
         monthlyCount = defaultdict(int)
@@ -36,11 +28,13 @@ class Utils:
             for month in sorted_months
         ]        
 
+    ''' Calculate the total word count accros all sessions.'''
     @staticmethod
     def get_total_word_count(sessions):
         return sum(session.get_total_word_count() for session in sessions)
     
-    # wourd count for each session, to show growth rate over time (Ordered by session date and only for this year)
+    ''' Calculate the total word count for each month. Used for the bar chart Word Count in recap. Only data for this year is considered,
+        but can be easily adapted to show data for previous years as well.'''
     @staticmethod
     def get_avg_word_count_growth_rate(sessions, this_year):
         word_growth_rate = [
@@ -49,17 +43,21 @@ class Utils:
             "sessionDate": session.session_date,
             "wordCount": session.get_total_word_count()
         }
+        # Only consider sessions from this year, since we want to show the trend for the current year in the recap.
         for session in sessions if session.session_date.year == this_year]
 
         ordered_list_word_growth_rate = Utils.order_map_by_date(word_growth_rate)
 
         return ordered_list_word_growth_rate
     
+    ''' Calculate the average word count for all the sessions. Used for the average line in Word Count in recap.
+        Only data for this year is considered.'''
     @staticmethod
-    def avg_word_count(sessions):
-        return sum(session.get_total_word_count() for session in sessions) / len(sessions)
+    def avg_word_count(sessions, this_year):
+        return sum(session.get_total_word_count() for session in sessions if session.session_date.year == this_year) / len(sessions)
 
-    # speech time for each session, to show growth rate over time (Ordered by session date and only for this year)
+    ''' Calculate the growth rate of the total speech time for each month. Used for the line chart Speech Time in recap. 
+        Only data for this year is considered.'''
     @staticmethod
     def get_speech_time_growth_rate(sessions, this_year):
         speech_time_growth_rate = [
@@ -74,17 +72,18 @@ class Utils:
 
         return ordered_list_speech_time_growth_rate
     
+    ''' Calculate the average speech time for all the sessions. Used for the average line in Speech Time in recap.'''
     @staticmethod
-    def get_avg_speech_time(sessions):
-        return sum(session.get_total_speech_time() for session in sessions) / len(sessions)
+    def get_avg_speech_time(sessions, this_year):
+        return sum(session.get_total_speech_time() for session in sessions if session.session_date.year == this_year) / len(sessions)
 
-
-    # red line on the chart for intimacy score
+    ''' Calculate the average intimacy score across all sessions. Used for the average line in Intimacy Score in recap.'''
     @staticmethod
-    def get_avg_intimacy_score(sessions):
-        return sum(session.get_avg_intimacy_score() for session in sessions) / len(sessions)
+    def get_avg_intimacy_score(sessions, this_year):
+        return sum(session.get_avg_intimacy_score() for session in sessions if session.session_date.year == this_year) / len(sessions)
 
-    # bar/line chart for intimacy score
+    ''' Calculate the intimacy score for each session. Used for the line chart Intimacy Score in recap. 
+        Only data for this year is considered.'''
     @staticmethod
     def get_intimacy_trend(sessions, year):
 
@@ -100,25 +99,27 @@ class Utils:
 
         return ordered_list_intimacy_trend
     
-    #Right below the drawing carrousel this metric can be shown
+    '''Calculate the average stroke count. Used below the drawing carrousel in the recap page.'''
     @staticmethod
     def get_avg_stroke_count(sessions):
         return sum(session.get_stroke_count_drawing() for session in sessions) / len(sessions)
     
-    #Right below the drawing carrousel this metric can be shown
+    '''Calculate the average filled area. Used below the drawing carrousel in the recap page.'''
     @staticmethod
     def get_avg_filled_area(sessions):
         return sum(session.get_filled_area_drawing() for session in sessions) / len(sessions)
     
-    #Right below the drawing carrousel this metric can be shown
+    '''Calculate the average number of colors used in the drawings. Used below the drawing carrousel in the recap page.'''
     @staticmethod 
     def get_avg_colors_used(sessions):
         return sum(session.get_colors_used_count_drawing() for session in sessions) / len(sessions)
     
+    '''Calculate the average number of objects in the story. Used for the story metrics in recap page'''
     @staticmethod
     def get_avg_number_objects(sessions):
         return sum(len(session.get_story_summary()) for session in sessions) / len(sessions)
     
+    '''Calculate the object diversity in the story. Used for the story metrics in recap page'''
     @staticmethod
     def get_object_diversity(sessions):
         objects = set()
@@ -129,7 +130,7 @@ class Utils:
                     objects.add(name)
         return len(objects)
 
-
+    '''Calculate the average number of sessions per day for the current year. Used for the heatmap in the summary page.'''
     @staticmethod
     def calculate_avg_sessions_per_day(sessions: list, year: int, now: datetime.datetime):
         # Count sessions in the current year
@@ -147,8 +148,20 @@ class Utils:
             return round (sessions_this_year / days_passed, 1)
         else:
             return 0
+        
+    ''' Count the number of sessions that occurred in a specific month and year. Used for the summary page. '''
+    @staticmethod
+    def count_sessions_this_month(sessions: list, month: int, year: int):
+        total_sessions_this_month = 0
 
-    
+        for session in sessions:
+            session_date = session.session_date
+            if session_date.month == month and session_date.year == year:
+                total_sessions_this_month += 1
+
+        return total_sessions_this_month    
+
+    '''Calculate the average sessions per child so far for the current year. Used for the summary page'''
     @staticmethod
     def calculate_avg_sessions_per_child_so_far(children: list, sessions: list, now: datetime.datetime):
         total_sessions = 0
@@ -160,6 +173,7 @@ class Utils:
         total_children = len(children)
         return round(total_sessions / total_children, 1) if total_children > 0 else 0
     
+    '''Calculate the difference in sessions count between this month and the previous month. Used for the summary page'''
     @staticmethod
     def calculate_sessions_growth_rate(sessions: list, month: int, year: int):
         JANUARY = 1
