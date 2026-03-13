@@ -36,3 +36,4 @@ def list_files(child_name: str, session_id: str):
   if not os.path.isdir(file_path):
     return {"Error": "File not found"}
   return {"files": os.listdir(file_path)}
+
