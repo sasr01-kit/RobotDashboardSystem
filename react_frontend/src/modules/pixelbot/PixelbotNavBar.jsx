@@ -20,7 +20,7 @@ export default function PixelbotNavBar() {
     useEffect(() => {
         if (childId) {
             if (children) {
-                const child = children.find(c => c.childId == childId);
+                const child = children.find(c => c.childId === childId);
                 if (child) {
                     setSelectedChildId(child.childId);
                 }
@@ -115,12 +115,12 @@ export default function PixelbotNavBar() {
                                 <div className="dropdown-panel sessions-panel">
                                     <div className="dropdown-items-grid">
                                         <div
-                                            className={`dropdown-item ${childId && sessionId == null ? 'session-selected' : ''}`}
+                                            className={`dropdown-item ${childId && sessionId === null ? 'session-selected' : ''}`}
                                             onClick={() => handleSessionSelect('recap')}
                                         >
                                             Recap
                                         </div>
-                                        {children.find(c => c.childId == selectedChildId).sessions.map((session, index) => (
+                                        {children.find(c => c.childId === selectedChildId).sessions.map((session, index) => (
                                             <div
                                                 key={index}
                                                 className={`dropdown-item ${sessionId === session.sessionId ? 'session-selected' : ''}`}

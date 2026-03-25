@@ -72,6 +72,24 @@ class PathController:
         self._ros.subscribe("/dock_status", "irobot_create_msgs/msg/DockStatus", self._dock_status_callback)
         print("[PathController] Subscribed to /dock_status")
 
+    def _dock_status_callback(self, msg: Dict[str, Any]) -> None:
+        """
+        msg from rosbridge for irobot_create_msgs/msg/DockStatus:
+        {
+        "is_docked": bool,
+        "dock_visible": bool,
+        ...
+        }
+        """
+        is_docked = bool(msg.get("is_docked", False))
+
+        # reflect in PathModel
+        self._loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(self._path_model.set_is_docked(is_docked))
+        )
+
+        print(f"[PathController] Dock status updated from robot: is_docked={is_docked}")
+
     def _pose_callback(self, message: Dict[str, Any]) -> None:
         """
         Update the robot pose in the map model.
