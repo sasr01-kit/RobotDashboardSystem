@@ -21,7 +21,7 @@ export default function TurtlebotStatusPage() {
     const { statusDTO, error } = useTurtlebotStatus();
 
     const batteryStatus =
-    statusDTO?.batteryPercentage == null ? "status-disconnected" : statusDTO.batteryPercentage < 50 ? "status-low-battery" : "status-high-battery";
+    statusDTO?.batteryPercentage === null ? "status-disconnected" : statusDTO.batteryPercentage < 50 ? "status-low-battery" : "status-high-battery";
     const wifiStatus = statusDTO?.isWifiConnected ? "status-connected" : "status-disconnected";
     const piStatus = statusDTO?.isRaspberryPiConnected ? "status-connected" : "status-disconnected";
     const commsStatus = statusDTO?.isCommsConnected ? "status-connected" : "status-disconnected";

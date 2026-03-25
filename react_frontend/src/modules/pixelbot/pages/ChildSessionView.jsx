@@ -10,7 +10,7 @@ export default function ChildSessionView() {
     const { children } = usePixelbotChildren(); // Fetch all children data with hook - ChildDTO
     const { session, isLoading } = usePixelbotSession(childId, sessionId); // Fetch specific session data with hook
 
-    const child = children ? children.find(c => c.childId == childId) : null;
+    const child = children ? children.find(c => c.childId === childId) : null;
     const name = child ? child.name : '';
 
     function handlePrint(elementId) { // Print function
